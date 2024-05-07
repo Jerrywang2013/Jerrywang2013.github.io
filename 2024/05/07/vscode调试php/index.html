@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>vscode调试php | Jerry Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="前提 已经安装apache、php（本地测试是用的宝塔面板批量安装的apache2.4以及php7.4)  已经安装vscode（测试安装的是vscode v1.87.0)  安装xdebug。vscode调试借助于xdebug，确保你的php已经安装了此插件，如果没有安装，可以去下载php_xdebug.dll，将其放入到php的ext目录。  vscode安装php debug插件（xdebu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="vscode调试php">
+<meta property="og:url" content="https://jerrywang2013.github.io/2024/05/07/vscode%E8%B0%83%E8%AF%95php/index.html">
+<meta property="og:site_name" content="Jerry Blogs">
+<meta property="og:description" content="前提 已经安装apache、php（本地测试是用的宝塔面板批量安装的apache2.4以及php7.4)  已经安装vscode（测试安装的是vscode v1.87.0)  安装xdebug。vscode调试借助于xdebug，确保你的php已经安装了此插件，如果没有安装，可以去下载php_xdebug.dll，将其放入到php的ext目录。  vscode安装php debug插件（xdebu">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-05-07T07:04:35.000Z">
+<meta property="article:modified_time" content="2024-05-07T07:13:28.598Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="c++ lua php js python">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Jerry Blogs" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jerry Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jerrywang2013.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-vscode调试php" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" class="article-date">
+  <time class="dt-published" datetime="2024-05-07T07:04:35.000Z" itemprop="datePublished">2024-05-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      vscode调试php
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h1><ul>
+<li><p>已经安装apache、php（本地测试是用的宝塔面板批量安装的apache2.4以及php7.4)</p>
+</li>
+<li><p>已经安装vscode（测试安装的是vscode v1.87.0)</p>
+</li>
+<li><p>安装xdebug。vscode调试借助于xdebug，确保你的php已经安装了此插件，如果没有安装，可以去下载php_xdebug.dll，将其放入到php的ext目录。</p>
+</li>
+<li><p>vscode安装php debug插件（xdebug.org出品）</p>
+</li>
+</ul>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><ul>
+<li><p>在php中配置xdebug</p>
+<p>​		打开php.ini文件，假如如下配置，注意端口配置项要和后面项目调试配置json文件中的端口保持一致；最后一行xdebug.remote_autostart&#x3D;1要加上。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[XDebug]</span><br><span class="line"></span><br><span class="line">xdebug.profiler_append = 0</span><br><span class="line"></span><br><span class="line">xdebug.profiler_enable = 1</span><br><span class="line"></span><br><span class="line">xdebug.profiler_enable_trigger = 0</span><br><span class="line"></span><br><span class="line">xdebug.profiler_output_dir =&quot;D:\BtSoft\temp\xdebug&quot;</span><br><span class="line"></span><br><span class="line">xdebug.trace_output_dir =&quot;D:\BtSoft\temp\xdebug&quot;</span><br><span class="line"></span><br><span class="line">xdebug.profiler_output_name = &quot;cache.out.%t-%s&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_enable = 1</span><br><span class="line"></span><br><span class="line">xdebug.remote_handler = &quot;dbgp&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_host = &quot;127.0.0.1&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_port = 9999</span><br><span class="line"></span><br><span class="line">zend_extension=php_xdebug.dll</span><br><span class="line"></span><br><span class="line">xdebug.remote_autostart = 1</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>配置php项目</p>
+<p>​	打开php项目，点击调试php，生成项目配置文件.vscode&#x2F;launch.json</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&quot;configurations&quot;: [</span><br><span class="line"></span><br><span class="line">​    &#123;</span><br><span class="line"></span><br><span class="line">​      &quot;name&quot;: &quot;Listen for Xdebug&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;type&quot;: &quot;php&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;request&quot;: &quot;launch&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;port&quot;: 9999,</span><br><span class="line"></span><br><span class="line">​      &quot;xdebugSettings&quot;: &#123;</span><br><span class="line"></span><br><span class="line">​        &quot;max_data&quot;: 10240</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>​		这里这里的port要和php.ini中配置xdebug的debug监听端口保持一致</p>
+<p>​	</p>
+<p>​	到此就可以愉快的断点、单步了！</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" data-id="clvw20ted00008k4q6x2vayn4" data-title="vscode调试php" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/05/05/libevent/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">libevent</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/">vscode调试php</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/05/libevent/">libevent</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">windows网络编程</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/30/Hexo-%E7%AE%80%E4%BB%8B/">在Github上部署Hexo</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/27/ThinkPHP%E4%B9%8BDB-Query/">ThinkPHP之DB::Query</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

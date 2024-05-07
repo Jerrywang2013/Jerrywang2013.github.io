@@ -72,6 +72,138 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vscode调试php" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" class="article-date">
+  <time class="dt-published" datetime="2024-05-07T07:04:35.000Z" itemprop="datePublished">2024-05-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/">vscode调试php</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h1><ul>
+<li><p>已经安装apache、php（本地测试是用的宝塔面板批量安装的apache2.4以及php7.4)</p>
+</li>
+<li><p>已经安装vscode（测试安装的是vscode v1.87.0)</p>
+</li>
+<li><p>安装xdebug。vscode调试借助于xdebug，确保你的php已经安装了此插件，如果没有安装，可以去下载php_xdebug.dll，将其放入到php的ext目录。</p>
+</li>
+<li><p>vscode安装php debug插件（xdebug.org出品）</p>
+</li>
+</ul>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><ul>
+<li><p>在php中配置xdebug</p>
+<p>​		打开php.ini文件，假如如下配置，注意端口配置项要和后面项目调试配置json文件中的端口保持一致；最后一行xdebug.remote_autostart&#x3D;1要加上。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[XDebug]</span><br><span class="line"></span><br><span class="line">xdebug.profiler_append = 0</span><br><span class="line"></span><br><span class="line">xdebug.profiler_enable = 1</span><br><span class="line"></span><br><span class="line">xdebug.profiler_enable_trigger = 0</span><br><span class="line"></span><br><span class="line">xdebug.profiler_output_dir =&quot;D:\BtSoft\temp\xdebug&quot;</span><br><span class="line"></span><br><span class="line">xdebug.trace_output_dir =&quot;D:\BtSoft\temp\xdebug&quot;</span><br><span class="line"></span><br><span class="line">xdebug.profiler_output_name = &quot;cache.out.%t-%s&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_enable = 1</span><br><span class="line"></span><br><span class="line">xdebug.remote_handler = &quot;dbgp&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_host = &quot;127.0.0.1&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_port = 9999</span><br><span class="line"></span><br><span class="line">zend_extension=php_xdebug.dll</span><br><span class="line"></span><br><span class="line">xdebug.remote_autostart = 1</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>配置php项目</p>
+<p>​	打开php项目，点击调试php，生成项目配置文件.vscode&#x2F;launch.json</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&quot;configurations&quot;: [</span><br><span class="line"></span><br><span class="line">​    &#123;</span><br><span class="line"></span><br><span class="line">​      &quot;name&quot;: &quot;Listen for Xdebug&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;type&quot;: &quot;php&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;request&quot;: &quot;launch&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;port&quot;: 9999,</span><br><span class="line"></span><br><span class="line">​      &quot;xdebugSettings&quot;: &#123;</span><br><span class="line"></span><br><span class="line">​        &quot;max_data&quot;: 10240</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>​		这里这里的port要和php.ini中配置xdebug的debug监听端口保持一致</p>
+<p>​	</p>
+<p>​	到此就可以愉快的断点、单步了！</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" data-id="clvw20ted00008k4q6x2vayn4" data-title="vscode调试php" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-libevent" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/05/libevent/" class="article-date">
+  <time class="dt-published" datetime="2024-05-05T14:54:09.000Z" itemprop="datePublished">2024-05-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/05/libevent/">libevent</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>libevent是一个跨平台高效的异步网络库，支持各平台最高效的异步模型，例如epoll和iocp。</p>
+<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><h3 id="设置debug级别日志记录策略"><a href="#设置debug级别日志记录策略" class="headerlink" title="设置debug级别日志记录策略"></a>设置debug级别日志记录策略</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void event_enable_debug_logging(ev_uint32_t which)</span><br></pre></td></tr></table></figure>
+
+<p>描述：</p>
+<p>说明： which可为 EVENT_DBG_NONE 和 EVENT_DBG_ALL</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define EVENT_DBG_NONE 0</span><br><span class="line"></span><br><span class="line">#define EVENT_DBG_ALL 0xffffffffu</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<p>​	设置为EVENT_DBG_NONE仍可用event_warn(“&#x3D;”);输出日志，因为此函数只控制debug级别的日志策略。</p>
+<h3 id="设置自定义日志handler"><a href="#设置自定义日志handler" class="headerlink" title="设置自定义日志handler"></a>设置自定义日志handler</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typedef void (*event_log_cb)(int severity, const char *msg);</span><br><span class="line">void event_set_log_callback(event_log_cb cb)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="设置自定义fatal日志handler"><a href="#设置自定义fatal日志handler" class="headerlink" title="设置自定义fatal日志handler"></a>设置自定义fatal日志handler</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typedef void (*event_fatal_cb)(int err);</span><br><span class="line">void event_set_fatal_callback(event_fatal_cb cb)</span><br></pre></td></tr></table></figure>
+
+<p>说明：默认libevent检测到不可恢复的内部错误默认行为是调用abort()或者exit()结束当前的进场，你也可以自定义处理致命错误。</p>
+<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>自定义内存分配&#x2F;释放函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void event_set_mem_functions(void *(*malloc_fn)(size_t sz),</span><br><span class="line">                             void *(*realloc_fn)(void *ptr, size_t sz),</span><br><span class="line">                             void (*free_fn)(void *ptr));</span><br></pre></td></tr></table></figure>
+
+<p>说明：比如可以自定义malloc等来实现更加安全的内存管理函数</p>
+<h1 id="锁和线程"><a href="#锁和线程" class="headerlink" title="锁和线程"></a>锁和线程</h1><p>Libevent 结构通常可以通过三种方式处理多线程。</p>
+<ul>
+<li>有些结构本质上是单线程的：同时从多个线程使用它们永远是不安全的。</li>
+<li>有些结构可以选择锁定：您可以告诉 Libevent 对于每个对象是否需要同时从多个线程使用它。</li>
+<li>有些结构始终是锁定的：如果 Libevent 在锁定支持下运行，那么它们始终可以安全地同时从多个线程使用。</li>
+</ul>
+<p>​	可以使用windows thread和posix thread，在windows平台，也是可以选择默认的os thread或者pthread。另外还可以使用自定义的线程库，写好自己的内存管理以及同步函数后，需要注册之：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int evthread_set_lock_callbacks(const struct evthread_lock_callbacks *);</span><br><span class="line">void evthread_set_id_callback(unsigned long (*id_fn)(void));</span><br><span class="line">int evthread_set_condition_callbacks(const struct evthread_condition_callbacks *);</span><br></pre></td></tr></table></figure>
+
+<p>​		上述的自定义线程库注册这种c的代码风格你可以理解为面向对象的的接口重写，比如IThread接口定义了create() &#x2F; destroy() &#x2F; lock() &#x2F; unlock()，自定义Thread库需要实现IThread的功能接口。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/05/05/libevent/" data-id="clvw1nt2x0000lc4qalev3uff" data-title="libevent" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-windows网络编程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="article-date">
@@ -232,7 +364,7 @@
 <li>可以结合linger选项来控制closesocket后的套接字接收发送行为</li>
 </ul>
 </li>
-<li><p>select</p>
+<li><p><strong>select</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, const timeval *timeout)</span><br></pre></td></tr></table></figure>
 
 <p><strong>描述：</strong>确定套接字状态，并在必要时等待执行同步IO</p>
@@ -1103,6 +1235,14 @@
       <ul>
         
           <li>
+            <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/">vscode调试php</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/05/libevent/">libevent</a>
+          </li>
+        
+          <li>
             <a href="/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">windows网络编程</a>
           </li>
         
@@ -1112,14 +1252,6 @@
         
           <li>
             <a href="/2024/04/27/ThinkPHP%E4%B9%8BDB-Query/">ThinkPHP之DB::Query</a>
-          </li>
-        
-          <li>
-            <a href="/2024/04/23/MarkDown%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">MarkDown基本语法</a>
-          </li>
-        
-          <li>
-            <a href="/2024/04/23/SelectPage/">SelectPage</a>
           </li>
         
       </ul>

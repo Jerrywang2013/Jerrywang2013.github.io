@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>libevent | Jerry Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="libevent是一个跨平台高效的异步网络库，支持各平台最高效的异步模型，例如epoll和iocp。 日志设置debug级别日志记录策略1void event_enable_debug_logging(ev_uint32_t which)  描述： 说明： which可为 EVENT_DBG_NONE 和 EVENT_DBG_ALL 123#define EVENT_DBG_NONE 0#defi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="libevent">
+<meta property="og:url" content="https://jerrywang2013.github.io/2024/05/05/libevent/index.html">
+<meta property="og:site_name" content="Jerry Blogs">
+<meta property="og:description" content="libevent是一个跨平台高效的异步网络库，支持各平台最高效的异步模型，例如epoll和iocp。 日志设置debug级别日志记录策略1void event_enable_debug_logging(ev_uint32_t which)  描述： 说明： which可为 EVENT_DBG_NONE 和 EVENT_DBG_ALL 123#define EVENT_DBG_NONE 0#defi">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-05-05T14:54:09.000Z">
+<meta property="article:modified_time" content="2024-05-05T23:40:05.716Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="c++ lua php js python">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Jerry Blogs" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jerry Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jerrywang2013.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-libevent" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/05/libevent/" class="article-date">
+  <time class="dt-published" datetime="2024-05-05T14:54:09.000Z" itemprop="datePublished">2024-05-05</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      libevent
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>libevent是一个跨平台高效的异步网络库，支持各平台最高效的异步模型，例如epoll和iocp。</p>
+<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><h3 id="设置debug级别日志记录策略"><a href="#设置debug级别日志记录策略" class="headerlink" title="设置debug级别日志记录策略"></a>设置debug级别日志记录策略</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void event_enable_debug_logging(ev_uint32_t which)</span><br></pre></td></tr></table></figure>
+
+<p>描述：</p>
+<p>说明： which可为 EVENT_DBG_NONE 和 EVENT_DBG_ALL</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define EVENT_DBG_NONE 0</span><br><span class="line"></span><br><span class="line">#define EVENT_DBG_ALL 0xffffffffu</span><br></pre></td></tr></table></figure>
+
+<p>注意：</p>
+<p>​	设置为EVENT_DBG_NONE仍可用event_warn(“&#x3D;”);输出日志，因为此函数只控制debug级别的日志策略。</p>
+<h3 id="设置自定义日志handler"><a href="#设置自定义日志handler" class="headerlink" title="设置自定义日志handler"></a>设置自定义日志handler</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typedef void (*event_log_cb)(int severity, const char *msg);</span><br><span class="line">void event_set_log_callback(event_log_cb cb)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="设置自定义fatal日志handler"><a href="#设置自定义fatal日志handler" class="headerlink" title="设置自定义fatal日志handler"></a>设置自定义fatal日志handler</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typedef void (*event_fatal_cb)(int err);</span><br><span class="line">void event_set_fatal_callback(event_fatal_cb cb)</span><br></pre></td></tr></table></figure>
+
+<p>说明：默认libevent检测到不可恢复的内部错误默认行为是调用abort()或者exit()结束当前的进场，你也可以自定义处理致命错误。</p>
+<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>自定义内存分配&#x2F;释放函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void event_set_mem_functions(void *(*malloc_fn)(size_t sz),</span><br><span class="line">                             void *(*realloc_fn)(void *ptr, size_t sz),</span><br><span class="line">                             void (*free_fn)(void *ptr));</span><br></pre></td></tr></table></figure>
+
+<p>说明：比如可以自定义malloc等来实现更加安全的内存管理函数</p>
+<h1 id="锁和线程"><a href="#锁和线程" class="headerlink" title="锁和线程"></a>锁和线程</h1><p>Libevent 结构通常可以通过三种方式处理多线程。</p>
+<ul>
+<li>有些结构本质上是单线程的：同时从多个线程使用它们永远是不安全的。</li>
+<li>有些结构可以选择锁定：您可以告诉 Libevent 对于每个对象是否需要同时从多个线程使用它。</li>
+<li>有些结构始终是锁定的：如果 Libevent 在锁定支持下运行，那么它们始终可以安全地同时从多个线程使用。</li>
+</ul>
+<p>​	可以使用windows thread和posix thread，在windows平台，也是可以选择默认的os thread或者pthread。另外还可以使用自定义的线程库，写好自己的内存管理以及同步函数后，需要注册之：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int evthread_set_lock_callbacks(const struct evthread_lock_callbacks *);</span><br><span class="line">void evthread_set_id_callback(unsigned long (*id_fn)(void));</span><br><span class="line">int evthread_set_condition_callbacks(const struct evthread_condition_callbacks *);</span><br></pre></td></tr></table></figure>
+
+<p>​		上述的自定义线程库注册这种c的代码风格你可以理解为面向对象的的接口重写，比如IThread接口定义了create() &#x2F; destroy() &#x2F; lock() &#x2F; unlock()，自定义Thread库需要实现IThread的功能接口。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/05/05/libevent/" data-id="clvw1nt2x0000lc4qalev3uff" data-title="libevent" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          vscode调试php
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">windows网络编程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/">vscode调试php</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/05/libevent/">libevent</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">windows网络编程</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/30/Hexo-%E7%AE%80%E4%BB%8B/">在Github上部署Hexo</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/27/ThinkPHP%E4%B9%8BDB-Query/">ThinkPHP之DB::Query</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
