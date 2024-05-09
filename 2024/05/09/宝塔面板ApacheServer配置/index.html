@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>宝塔面板ApacheServer配置 | Jerry Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="环境​	Windows + Apache2.4 + PHP7.4 + Mysql5.6 ​	直接安装宝塔面板，然后通过宝塔面板安装Apache、PHP、Mysql即可。 WebServer配置​	启动宝塔面板，进入宝塔控制后台，点击左侧菜单“网站”，点击“新建站点”，创建一个Web服务器，设置好域名、默认文档、伪静态、网站目录等，下面记录常见可能出问题的点。  域名​	在网站设置里头，可以点击左侧">
+<meta property="og:type" content="article">
+<meta property="og:title" content="宝塔面板ApacheServer配置">
+<meta property="og:url" content="https://jerrywang2013.github.io/2024/05/09/%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BFApacheServer%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="Jerry Blogs">
+<meta property="og:description" content="环境​	Windows + Apache2.4 + PHP7.4 + Mysql5.6 ​	直接安装宝塔面板，然后通过宝塔面板安装Apache、PHP、Mysql即可。 WebServer配置​	启动宝塔面板，进入宝塔控制后台，点击左侧菜单“网站”，点击“新建站点”，创建一个Web服务器，设置好域名、默认文档、伪静态、网站目录等，下面记录常见可能出问题的点。  域名​	在网站设置里头，可以点击左侧">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-05-09T06:31:22.000Z">
+<meta property="article:modified_time" content="2024-05-09T08:10:14.097Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="c++ lua php js python">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Jerry Blogs" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jerry Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jerrywang2013.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-宝塔面板ApacheServer配置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/09/%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BFApacheServer%E9%85%8D%E7%BD%AE/" class="article-date">
+  <time class="dt-published" datetime="2024-05-09T06:31:22.000Z" itemprop="datePublished">2024-05-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      宝塔面板ApacheServer配置
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><p>​	Windows + Apache2.4 + PHP7.4 + Mysql5.6</p>
+<p>​	直接安装宝塔面板，然后通过宝塔面板安装Apache、PHP、Mysql即可。</p>
+<h1 id="WebServer配置"><a href="#WebServer配置" class="headerlink" title="WebServer配置"></a>WebServer配置</h1><p>​	启动宝塔面板，进入宝塔控制后台，点击左侧菜单“网站”，点击“新建站点”，创建一个Web服务器，设置好域名、默认文档、伪静态、网站目录等，下面记录常见可能出问题的点。</p>
+<ul>
+<li><h3 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h3><p>​	在网站设置里头，可以点击左侧“域名管理”来配置域名，域名形如：<a href="http://www.domain.com:port，可以指定端口，不显示指定端口默认就是80。">www.domain.com:port，可以指定端口，不显示指定端口默认就是80。</a></p>
+<p>​	这里假设设置的域名是<a href="http://www.crm.com，端口80，这里对应的配置有两个地方：">www.crm.com，端口80，这里对应的配置有两个地方：</a></p>
+<ul>
+<li><p><strong>告诉apache监听端口</strong></p>
+</li>
+<li><p><strong>设置站点的VirtualHost配置</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>​	需要注意的是，如果我们修改站点的域名映射，比如新加一个域名<a href="http://www.crm-mini.com:8090，宝塔面板会修改apache/conf/httpd.conf文件，在顶部增加Listen">www.crm-mini.com:8090，宝塔面板会修改apache/conf/httpd.conf文件，在顶部增加Listen</a> 8090。问题是这个操作不是可靠的，反复修改站点域名映射有时候就能发现Listen的端口混乱，所以如果发现修改配置后没效果，可以检查下httpd.conf文件配置，手动修改；</p>
+<p>​	另外，同一个站点配置多个域名，不要用不同的端口，否则宝塔也会弄混淆，搞错监听端口。不同域名是通过在VirtualHost里头的ServerAlias来配置，例如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ServerAlias www.crm-mini.com 127.0.0.1</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><h3 id="伪静态"><a href="#伪静态" class="headerlink" title="伪静态"></a>伪静态</h3><p>​	伪静态是利用url重写技术，实现类似静态url的效果，本质是url rewrite。</p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;IfModule mod_rewrite.c&gt;</span><br><span class="line"> RewriteEngine on</span><br><span class="line"> RewriteBase /</span><br><span class="line"> RewriteCond %&#123;REQUEST_FILENAME&#125; !-d</span><br><span class="line"> RewriteCond %&#123;REQUEST_FILENAME&#125; !-f</span><br><span class="line"> RewriteRule ^(.*)$ index.php?s=/$1 [QSA,PT,L]</span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​	在web服务器的根目录的.htaccess文件中加入上述伪静态指令，当请求<a target="_blank" rel="noopener" href="http://doamin.com/aaa%E4%BC%9A%E5%B0%86%E8%AE%BF%E9%97%AE%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0index.php/s=aaa%EF%BC%88%E5%BD%93aaa%E4%B8%8D%E6%98%AF%E6%96%87%E4%BB%B6%E6%88%96%E8%80%85%E7%9B%AE%E5%BD%95%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%EF%BC%89">http://doamin.com/aaa会将访问重定向到index.php/s=aaa（当aaa不是文件或者目录的情况下）</a></p>
+<p>​	利用mod_rewrite功能，我们可以定义一些规则做请求的重定向。</p>
+</li>
+<li><p>重定向</p>
+<p>​	宝塔面板的重定向也是配置RewriteRule，尝试将&#x2F;crm的请求映射到另外一个web站点失败。</p>
+<p>例如：有两个站点 <a target="_blank" rel="noopener" href="http://www.crm-mini.com/">http://www.crm-mini.com</a> 和  <a target="_blank" rel="noopener" href="http://www.crm-normal.com对应本地的两个web目录,/">http://www.crm-normal.com对应本地的两个web目录，</a></p>
+<p>现在想只通过<a target="_blank" rel="noopener" href="http://www.crm-mini.com一个入口访问两个web目录,比如http//www.crm-mini.com/normal/%E8%87%AA%E5%8A%A8%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0crm-normal%E7%9B%AE%E5%BD%95">http://www.crm-mini.com一个入口访问两个web目录，比如http://www.crm-mini.com/normal/自动重定向到crm-normal目录</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;IfModule mod_rewrite.c&gt; </span><br><span class="line">	RewriteEngine on RewriteRule ^crm(.*) http://www.crm-normal.com$1 [L,R=301] </span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​	用上面的规则貌似无效，目前尚不知如何调试rewrite（日志or others）</p>
+<p>用到的一种另外实现方法是在VirtualHost中配置alias</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin webmaster@yourdomain.com</span><br><span class="line">    DocumentRoot &quot;/var/www/html&quot;</span><br><span class="line">    ServerName www.yourdomain.com</span><br><span class="line"></span><br><span class="line">	# 配置针对 crm-normal 的请求</span><br><span class="line">    Alias &quot;/crm-normal&quot; &quot;/var/www/html/crm-normal&quot;</span><br><span class="line">    &lt;Directory &quot;/var/www/html/crm-normal&quot;&gt;</span><br><span class="line">        Options Indexes FollowSymLinks</span><br><span class="line">        AllowOverride All</span><br><span class="line">        Require all granted</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">    # 配置针对 crm-mini 的请求</span><br><span class="line">    Alias &quot;/crm-mini&quot; &quot;/var/www/html/crm-mini&quot;</span><br><span class="line">    &lt;Directory &quot;/var/www/html/crm-mini&quot;&gt;</span><br><span class="line">        Options Indexes FollowSymLinks</span><br><span class="line">        AllowOverride All</span><br><span class="line">        Require all granted</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">    ErrorLog &quot;/var/log/apache2/yourdomain-error.log&quot;</span><br><span class="line">    CustomLog &quot;/var/log/apache2/yourdomain-access.log&quot; combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​		这样配置后，当访问 <code>http://www.yourdomain.com/crm-normal</code> 时，会展示 <code>crm-normal</code> 站点的内容，而访问 <code>http://www.yourdomain.com/crm-mini</code> 则会展示 <code>crm-mini</code> 站点的内容。</p>
+</li>
+<li></li>
+</ul>
+<p>​	</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/05/09/%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BFApacheServer%E9%85%8D%E7%BD%AE/" data-id="clvyyxm610000u84qakeg26ug" data-title="宝塔面板ApacheServer配置" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">vscode调试php</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/05/09/%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BFApacheServer%E9%85%8D%E7%BD%AE/">宝塔面板ApacheServer配置</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/">vscode调试php</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/05/libevent/">libevent</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">windows网络编程</a>
+          </li>
+        
+          <li>
+            <a href="/2024/04/30/Hexo-%E7%AE%80%E4%BB%8B/">在Github上部署Hexo</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
