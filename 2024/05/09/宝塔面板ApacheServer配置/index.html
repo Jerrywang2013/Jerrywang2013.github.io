@@ -14,7 +14,7 @@
 <meta property="og:description" content="环境​	Windows + Apache2.4 + PHP7.4 + Mysql5.6 ​	直接安装宝塔面板，然后通过宝塔面板安装Apache、PHP、Mysql即可。 WebServer配置​	启动宝塔面板，进入宝塔控制后台，点击左侧菜单“网站”，点击“新建站点”，创建一个Web服务器，设置好域名、默认文档、伪静态、网站目录等，下面记录常见可能出问题的点。  域名​	在网站设置里头，可以点击左侧">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-05-09T06:31:22.000Z">
-<meta property="article:modified_time" content="2024-05-09T08:10:14.097Z">
+<meta property="article:modified_time" content="2024-05-09T08:18:52.345Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="c++ lua php js python">
 <meta name="twitter:card" content="summary">
@@ -119,17 +119,45 @@
 <p>​	在web服务器的根目录的.htaccess文件中加入上述伪静态指令，当请求<a target="_blank" rel="noopener" href="http://doamin.com/aaa%E4%BC%9A%E5%B0%86%E8%AE%BF%E9%97%AE%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0index.php/s=aaa%EF%BC%88%E5%BD%93aaa%E4%B8%8D%E6%98%AF%E6%96%87%E4%BB%B6%E6%88%96%E8%80%85%E7%9B%AE%E5%BD%95%E7%9A%84%E6%83%85%E5%86%B5%E4%B8%8B%EF%BC%89">http://doamin.com/aaa会将访问重定向到index.php/s=aaa（当aaa不是文件或者目录的情况下）</a></p>
 <p>​	利用mod_rewrite功能，我们可以定义一些规则做请求的重定向。</p>
 </li>
-<li><p>重定向</p>
-<p>​	宝塔面板的重定向也是配置RewriteRule，尝试将&#x2F;crm的请求映射到另外一个web站点失败。</p>
-<p>例如：有两个站点 <a target="_blank" rel="noopener" href="http://www.crm-mini.com/">http://www.crm-mini.com</a> 和  <a target="_blank" rel="noopener" href="http://www.crm-normal.com对应本地的两个web目录,/">http://www.crm-normal.com对应本地的两个web目录，</a></p>
-<p>现在想只通过<a target="_blank" rel="noopener" href="http://www.crm-mini.com一个入口访问两个web目录,比如http//www.crm-mini.com/normal/%E8%87%AA%E5%8A%A8%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0crm-normal%E7%9B%AE%E5%BD%95">http://www.crm-mini.com一个入口访问两个web目录，比如http://www.crm-mini.com/normal/自动重定向到crm-normal目录</a></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;IfModule mod_rewrite.c&gt; </span><br><span class="line">	RewriteEngine on RewriteRule ^crm(.*) http://www.crm-normal.com$1 [L,R=301] </span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure>
+<li><h3 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h3><ul>
+<li><p><strong>Rewrite url</strong></p>
+<p>​		宝塔面板的重定向也是配置RewriteRule，尝试将&#x2F;crm的请求映射到另外一个web站点失败。</p>
+<p>例如：有两个站点 <a target="_blank" rel="noopener" href="http://www.crm-mini.com/">http://www.crm-mini.com</a> 和  <a target="_blank" rel="noopener" href="http://www.crm-normal.com对应本地的两个web目录,现在想只通过http//www.crm-mini.com%E4%B8%80%E4%B8%AA%E5%85%A5%E5%8F%A3%E8%AE%BF%E9%97%AE%E4%B8%A4%E4%B8%AAweb%E7%9B%AE%E5%BD%95%EF%BC%8C%E6%AF%94%E5%A6%82http://www.crm-mini.com/normal/%E8%87%AA%E5%8A%A8%E9%87%8D%E5%AE%9A%E5%90%91%E5%88%B0crm-normal%E7%9B%AE%E5%BD%95">http://www.crm-normal.com对应本地的两个web目录，现在想只通过http://www.crm-mini.com一个入口访问两个web目录，比如http://www.crm-mini.com/normal/自动重定向到crm-normal目录</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;IfModule mod_rewrite.c&gt;</span><br><span class="line"> RewriteEngine on</span><br><span class="line"> RewriteRule ^crm(.*)$ http://www.crm-normal.com/$1 [L,R=301]</span><br><span class="line"></span><br><span class="line"> RewriteBase /</span><br><span class="line"> RewriteCond %&#123;REQUEST_FILENAME&#125; !-d</span><br><span class="line"> RewriteCond %&#123;REQUEST_FILENAME&#125; !-f</span><br><span class="line"> RewriteRule ^(.*)$ index.php?s=/$1 [QSA,PT,L]</span><br><span class="line">&lt;/IfModule&gt;</span><br></pre></td></tr></table></figure>
 
-<p>​	用上面的规则貌似无效，目前尚不知如何调试rewrite（日志or others）</p>
-<p>用到的一种另外实现方法是在VirtualHost中配置alias</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    ServerAdmin webmaster@yourdomain.com</span><br><span class="line">    DocumentRoot &quot;/var/www/html&quot;</span><br><span class="line">    ServerName www.yourdomain.com</span><br><span class="line"></span><br><span class="line">	# 配置针对 crm-normal 的请求</span><br><span class="line">    Alias &quot;/crm-normal&quot; &quot;/var/www/html/crm-normal&quot;</span><br><span class="line">    &lt;Directory &quot;/var/www/html/crm-normal&quot;&gt;</span><br><span class="line">        Options Indexes FollowSymLinks</span><br><span class="line">        AllowOverride All</span><br><span class="line">        Require all granted</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">    # 配置针对 crm-mini 的请求</span><br><span class="line">    Alias &quot;/crm-mini&quot; &quot;/var/www/html/crm-mini&quot;</span><br><span class="line">    &lt;Directory &quot;/var/www/html/crm-mini&quot;&gt;</span><br><span class="line">        Options Indexes FollowSymLinks</span><br><span class="line">        AllowOverride All</span><br><span class="line">        Require all granted</span><br><span class="line">    &lt;/Directory&gt;</span><br><span class="line"></span><br><span class="line">    ErrorLog &quot;/var/log/apache2/yourdomain-error.log&quot;</span><br><span class="line">    CustomLog &quot;/var/log/apache2/yourdomain-access.log&quot; combined</span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<p>​		注意上述第三行，碰到dowmain&#x2F;后面接着是crm就跳转到<a href="http://www.crm-normal.com。`[L,R=301]`">http://www.crm-normal.com。`[L,R=301]`</a> 则指示 Apache 使用 301 永久重定向，L表示停止进一步的重写规则匹配。</p>
+</li>
+<li><p><strong>Alias</strong></p>
+<p>​	用到的一种另外实现方法是在VirtualHost中配置Alias</p>
+<pre><code>&lt;VirtualHost *:80&gt;
+    ServerAdmin webmaster@yourdomain.com
+    DocumentRoot &quot;/var/www/html&quot;
+    ServerName www.yourdomain.com
+    # 配置针对 crm-normal 的请求
+    Alias &quot;/crm-normal&quot; &quot;/var/www/html/crm-normal&quot;
+    &lt;Directory &quot;/var/www/html/crm-normal&quot;&gt;
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
 
+    # 配置针对 crm-mini 的请求
+    Alias &quot;/crm-mini&quot; &quot;/var/www/html/crm-mini&quot;
+    &lt;Directory &quot;/var/www/html/crm-mini&quot;&gt;
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+
+    ErrorLog &quot;/var/log/apache2/yourdomain-error.log&quot;
+    CustomLog &quot;/var/log/apache2/yourdomain-access.log&quot; combined
+&lt;/VirtualHost&gt;
+</code></pre>
 <p>​		这样配置后，当访问 <code>http://www.yourdomain.com/crm-normal</code> 时，会展示 <code>crm-normal</code> 站点的内容，而访问 <code>http://www.yourdomain.com/crm-mini</code> 则会展示 <code>crm-mini</code> 站点的内容。</p>
+<p>​	</p>
+<p>重定向能解决只用一个域名一个端口绑定多个web站点，无需每个域名对应一个站点。</p>
+</li>
+</ul>
 </li>
 <li></li>
 </ul>
