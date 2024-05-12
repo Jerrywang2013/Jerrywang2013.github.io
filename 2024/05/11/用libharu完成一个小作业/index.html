@@ -14,7 +14,7 @@
 <meta property="og:description" content="libharu是一个开源的pdf文件操作的C语言库。 因一个小作业需要用libharu而初步接触haru，这里简单记录一下自己的理解。	 下载 &amp; 安装 下载 1git clone https:&#x2F;&#x2F;github.com&#x2F;libharu&#x2F;libharu.git    安装 ​		参考readme和install说明。在windows下利用CMake进行安装。		     mkdir libh">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-05-10T23:35:56.000Z">
-<meta property="article:modified_time" content="2024-05-12T14:20:45.130Z">
+<meta property="article:modified_time" content="2024-05-12T15:03:45.549Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="c++ lua php js python">
 <meta name="twitter:card" content="summary">
@@ -268,6 +268,34 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">static HPDF_ByteType UTF8_Encoder_ByteType_Func (HPDF_Encoder encoder, HPDF_ParseText_Rec  *state);</span><br><span class="line"></span><br><span class="line">static HPDF_UNICODE UTF8_Encoder_ToUnicode_Func(HPDF_Encoder  encoder,         HPDF_UINT16 code);</span><br></pre></td></tr></table></figure>
 
 <p>​		这里主要是完成utf8-&gt;unicode的编码转换，其中UTF8_Encoder_ByteType_Func用于获取utf8字符串的字符个数（不是字节）；UTF8_Encoder_ToUnicode_Func用于将utf8编码的字符串转为unicode字符串。这里没有用第三方库进行编码转换，直接跟进UTF8编码规则，完成UTF和Unicode的编码拆组。</p>
+</li>
+<li><p><strong>文字高级渲染</strong></p>
+<ul>
+<li><p>HPDF_Page_SetTextMatrix</p>
+<p>控制文字变换矩阵。</p>
+<p>例如： </p>
+<p><strong>旋转矩阵</strong>：		</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a  b  0 </span><br><span class="line">c  d  0 </span><br><span class="line">0  0  1</span><br><span class="line"></span><br><span class="line">a = cos(θ)</span><br><span class="line">b = -sin(θ)</span><br><span class="line">c = sin(θ)</span><br><span class="line">d = cos(θ)</span><br></pre></td></tr></table></figure>
+
+<p>斜切矩阵：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1           tan(α)  0 </span><br><span class="line">tan(β)      1       0 </span><br><span class="line">0           0       1</span><br></pre></td></tr></table></figure>
+
+<p>缩放：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2  0  0</span><br><span class="line">0  2  0</span><br><span class="line">0  0  1</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>HPDF_Page_SetCharSpace</strong></p>
+<p>设置字符间距</p>
+</li>
+<li><p><strong>HPDF_Page_SetWordSpace</strong></p>
+<p>设置单词间距</p>
+</li>
+<li><p><strong>HPDF_Page_TextRect</strong></p>
+<p>支持文字绘制的对齐模式设置</p>
+</li>
+<li></li>
+</ul>
 </li>
 </ul>
 </li>
