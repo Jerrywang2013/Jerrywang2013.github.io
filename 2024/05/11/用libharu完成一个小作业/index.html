@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>用libharu完成一个小作业 | Jerry Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="因一个小作业需要用libharu而初步接触haru，这里简单记录一下自己的理解。  ​	libharu是一个开源的pdf文件操作的C语言库。 下载 &amp; 安装 下载 1git clone https:&#x2F;&#x2F;github.com&#x2F;libharu&#x2F;libharu.git    安装 ​		参考readme和install说明。在windows下利用CMake进行安装。		     mkdir l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用libharu完成一个小作业">
+<meta property="og:url" content="https://jerrywang2013.github.io/2024/05/11/%E7%94%A8libharu%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BD%9C%E4%B8%9A/index.html">
+<meta property="og:site_name" content="Jerry Blogs">
+<meta property="og:description" content="因一个小作业需要用libharu而初步接触haru，这里简单记录一下自己的理解。  ​	libharu是一个开源的pdf文件操作的C语言库。 下载 &amp; 安装 下载 1git clone https:&#x2F;&#x2F;github.com&#x2F;libharu&#x2F;libharu.git    安装 ​		参考readme和install说明。在windows下利用CMake进行安装。		     mkdir l">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-05-10T23:35:56.000Z">
+<meta property="article:modified_time" content="2024-05-12T11:08:30.973Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="c++ lua php js python">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Jerry Blogs" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jerry Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jerrywang2013.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-用libharu完成一个小作业" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/11/%E7%94%A8libharu%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BD%9C%E4%B8%9A/" class="article-date">
+  <time class="dt-published" datetime="2024-05-10T23:35:56.000Z" itemprop="datePublished">2024-05-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      用libharu完成一个小作业
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <pre><code> 因一个小作业需要用libharu而初步接触haru，这里简单记录一下自己的理解。
+</code></pre>
+<p>​	libharu是一个开源的pdf文件操作的C语言库。</p>
+<h1 id="下载-安装"><a href="#下载-安装" class="headerlink" title="下载 &amp; 安装"></a>下载 &amp; 安装</h1><ul>
+<li><p><strong>下载</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/libharu/libharu.git</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>安装</strong></p>
+<p>​		参考readme和install说明。在windows下利用CMake进行安装。		</p>
+<pre><code>    mkdir libharu_build
+    cd libharu_build
+    cmake ..\libharu
+</code></pre>
+<p>​		本机安装了vs2022, CMake会自动生成VS2022的工程文件。</p>
+</li>
+<li><p>编译</p>
+<p>​		打开VS2022，打开libharu_build\libharu.sln文件，可正常编译通过，生成库文件在libharu_build\src\debug\，配置文件在libharu_build\include。可自行修改项目配置设置编译后生成的库文件目录，或者直接在postbuild里头加个脚本做生成后的发布（拷贝）。</p>
+<p>​</p>
+</li>
+</ul>
+<p>		</p>
+<h1 id="libharu-功能"><a href="#libharu-功能" class="headerlink" title="libharu 功能"></a>libharu 功能</h1><p>​		简单看了下 <code>https://github.com/libharu/libharu/wiki</code>，了解一下haru的基本概念和一些设计思想。</p>
+<h3 id="图形"><a href="#图形" class="headerlink" title="图形"></a>图形</h3><ul>
+<li><h5 id="坐标系统"><a href="#坐标系统" class="headerlink" title="坐标系统"></a>坐标系统</h5><p>​		默认坐标轴原点(0,0)是页面左下角，右上角坐标是(页面宽，页面高)，xy轴方向分别是往右和往上；默认分辨率是72dpi。</p>
+<p>​		可以用HPDF_Page_Concat()修改默认坐标系。	</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HPDF_STATUS HPDF_Page_Concat  (HPDF_Page    page,</span><br><span class="line">                               HPDF_REAL    a,</span><br><span class="line">                               HPDF_REAL    b,</span><br><span class="line">                               HPDF_REAL    c,</span><br><span class="line">                               HPDF_REAL    d,</span><br><span class="line">                               HPDF_REAL    x,</span><br><span class="line">                               HPDF_REAL    y);</span><br></pre></td></tr></table></figure>
+
+<p>​		wiki中没有讲参数含义，大概猜测这里的abcd是旋转矩阵的四个变量，xy应该是偏移量。</p>
+<p><strong>例如：</strong></p>
+<p>将坐标系沿着XY正方向偏移（100， 100）像素，新的原点是原来坐标系(100, 100)。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Page_Concat(page, 1, 0, 0, 1, 100, 100);</span><br></pre></td></tr></table></figure>
+
+<p>​		</p>
+</li>
+<li><p><strong>图形模式</strong></p>
+<p>​		libharu为每个pdf文档的每一页维护一个图形模式标志，用于控制绘图操作。图形模式不需要显示的去设置，而是通过相关的绘图函数来控制的，同样的，不同的图像模式下可以调用的函数也是不同的，必须保证函数能在合适的图像模式下调用，常见的调用错误是：</p>
+<table>
+<thead>
+<tr>
+<th align="left">HPDF_PAGE_INVALID_GMODE</th>
+<th>0x1051</th>
+<th>See Graphics mode.</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>常见的三种GMode</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#define  HPDF_GMODE_PAGE_DESCRIPTION    0x0001</span><br><span class="line">  </span><br><span class="line">#define  HPDF_GMODE_PATH_OBJECT       0x0002</span><br><span class="line">  </span><br><span class="line">#define  HPDF_GMODE_TEXT_OBJECT       0x0004</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>HPDF_GMODE_PAGE_DESCRIPTION</strong></p>
+<p>可用操作：</p>
+<ul>
+<li><p>General graphics state</p>
+</li>
+<li><p>Special graphics state</p>
+</li>
+<li><p>Color</p>
+</li>
+<li><p>Text state</p>
+</li>
+</ul>
+</li>
+<li><p><strong>HPDF_GMODE_PATH_OBJECT</strong></p>
+<p>可用操作：</p>
+<ul>
+<li>Path Construction</li>
+</ul>
+<p>	</p>
+<p><strong>状态机：</strong></p>
+<ul>
+<li><p>调用绘图函数(Path Construction)进入</p>
+</li>
+<li><p>调用Path Painting Operators退出到<strong>HPDF_GMODE_PAGE_DESCRIPTION</strong></p>
+</li>
+</ul>
+</li>
+<li><p><strong>HPDF_GMODE_TEXT_OBJECT</strong></p>
+<p><strong>可用操作：</strong></p>
+<ul>
+<li>Graphics state</li>
+<li>Color</li>
+<li>Text state</li>
+<li>Text-showing</li>
+<li>Text-positioning</li>
+</ul>
+<p><strong>状态机：</strong></p>
+<ul>
+<li><p>调用HPDF_Page_BeginText()进入</p>
+</li>
+<li><p>调用HPDF_Page_EndText()退出到<strong>HPDF_GMODE_PAGE_DESCRIPTION</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>Graphpics State</strong> 操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Page_Concat()</span><br><span class="line">HPDF_Page_SetDash()</span><br><span class="line">HPDF_Page_SetFlat()</span><br><span class="line">HPDF_Page_SetLineCap()</span><br><span class="line">HPDF_Page_SetLineJoin()</span><br><span class="line">HPDF_Page_SetLineWidth()</span><br><span class="line">HPDF_Page_SetMiterLimit()</span><br></pre></td></tr></table></figure>
+
+<p><strong>Color</strong>操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Page_SetCMYKFill()</span><br><span class="line">HPDF_Page_SetCMYKStroke()</span><br><span class="line">HPDF_Page_SetGrayFill()</span><br><span class="line">HPDF_Page_SetGrayStroke()</span><br><span class="line">HPDF_Page_SetRGBFill()</span><br><span class="line">HPDF_Page_SetRGBStroke()</span><br></pre></td></tr></table></figure>
+
+<p><strong>Path Construction</strong>操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Page_Arc()</span><br><span class="line">HPDF_Page_Circle()</span><br><span class="line">HPDF_Page_CurveTo()</span><br><span class="line">HPDF_Page_CurveTo2()</span><br><span class="line">HPDF_Page_CurveTo3()</span><br><span class="line">HPDF_Page_LineTo()</span><br><span class="line">HPDF_Page_MoveTo()</span><br><span class="line">HPDF_Page_Rectangle()</span><br></pre></td></tr></table></figure>
+
+<p><strong>Path Painting</strong>操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Page_ClosePathFillStroke()</span><br><span class="line">HPDF_Page_ClosePathEofillStroke()</span><br><span class="line">HPDF_Page_ClosePathStroke()</span><br><span class="line">HPDF_Page_Eofill()</span><br><span class="line">HPDF_Page_EofillStroke()</span><br><span class="line">HPDF_Page_EndPath()</span><br><span class="line">HPDF_Page_Fill()</span><br><span class="line">HPDF_Page_FillStroke()</span><br><span class="line">HPDF_Page_Stroke()</span><br></pre></td></tr></table></figure>
+
+<p><strong>总结：</strong></p>
+<p>​	简单说就是在description状态下调用绘图函数(Path Construction)进入绘图状态，调用绘图结束函数Path Painting)结束绘图；调用HPDF_Page_BeginText()进入文字绘制状态，调用HPDF_Page_EndText()退出文字绘制状态。</p>
+<p>​	特别注意绘制状态，刚接触很容易碰到绘制状态不对导致的绘制函数调用错误（错误码0x1051）</p>
+</li>
+<li><p><strong>图形绘制</strong></p>
+</li>
+</ul>
+<p>​		大部分功能和windows的gdi绘制差不多，有stoke和fill相关的设置；有绘制line&#x2F;rectangle&#x2F;triangle&#x2F;cricle等等，方法也都类似。</p>
+<ul>
+<li><p><strong>文字绘制</strong></p>
+<p>​	绘制文字接口有HPDF_Page_ShowText()、TextOut()、TextRect()、ShowTextNextLine()等接口。关于文字绘制，需要注意的地方：</p>
+<ul>
+<li><p>位置属性的更新。比如我们要在指定位置绘制文字，可以用TextOut()方法指定posx&#x2F;posy绘制，也可以用ShowText()方法。使用ShowText()方法要注意，需要先定位好位置，也就是调用HPDF_Page_MoveTextPos()方法，此方法的参数x&#x2F;y是相对当前未知的偏移，这个特别要注意。另外，当你在同一行用MoveTextPos()在x轴偏移了，然后当你想换行在最左开始绘制新的文字，这时候要注意了，需要将位置重定位到x&#x3D;0的位置，而MoveTextPos()方法是偏移相对位置。</p>
+</li>
+<li><p>中英文汉字绘制问题。需要设置字体和编码，字体用GB-EUC-H编码，文字用GBK可以。</p>
+<ul>
+<li><strong>GB编码支持</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Font font = HPDF_GetFont(pdf, fontName, &quot;GB-EUC-H&quot;);</span><br><span class="line">HPDF_REAL size = 32;</span><br><span class="line">HPDF_Page_SetFontAndSize(page, font, size);</span><br></pre></td></tr></table></figure>
+
+<p>注意，需要在之前调用HPDF_UseCNSEncodings(pdf);</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HPDF_UseCNSFonts(pdf);</span><br><span class="line">HPDF_UseCNSEncodings(pdf);</span><br></pre></td></tr></table></figure>
+
+<p>​		GB-EUC-H支持GB2312简体中文编码，实现文件在hpdf_encoder_cns.c，可以看看文件中的GB_EUC_IsLeadByte函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">static HPDF_BOOL</span><br><span class="line">GB_EUC_IsLeadByte (HPDF_Encoder encoder, HPDF_BYTE b)</span><br><span class="line">&#123;</span><br><span class="line">  HPDF_UNUSED (encoder);</span><br><span class="line">  return (b &gt;= 0xa1 &amp;&amp; b &lt;= 0xfe);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​		可以看出这个是简单的判断是否是GB2312 汉字的首字节编码范围。</p>
+<ul>
+<li><strong>UTF8支持</strong></li>
+</ul>
+<p>	</p>
+<p>GB-EUC-H不支持多国语言，想要更通用的多国语言支持，建议使用UTF8编码。调用HPDF_UseUTFEncodings来开启UTF8编码的支持，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HPDF_EXPORT(HPDF_STATUS) HPDF_UseUTFEncodings(HPDF_Doc pdf)</span><br></pre></td></tr></table></figure>
+
+<p>​		libharu对于utf8的支持在hpdf_encoder_utf.c文件实现，主要有下面几个函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">static HPDF_ByteType UTF8_Encoder_ByteType_Func (HPDF_Encoder encoder, HPDF_ParseText_Rec  *state);</span><br><span class="line"></span><br><span class="line">static HPDF_UNICODE UTF8_Encoder_ToUnicode_Func(HPDF_Encoder  encoder,         HPDF_UINT16 code);</span><br></pre></td></tr></table></figure>
+
+<p>​		这里主要是完成utf8-&gt;unicode的编码转换，其中UTF8_Encoder_ByteType_Func用于获取utf8字符串的字符个数（不是字节）；UTF8_Encoder_ToUnicode_Func用于将utf8编码的字符串转为unicode字符串。这里没有用第三方库进行编码转换，直接跟进UTF8编码规则，完成UTF和Unicode的编码拆组。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>大纲绘制</strong>		</p>
+<p>​		利用HPDF_CreateOutline函数可以创建树形大纲列表，HPDF_Outline_SetOpened函数可以设置大纲项打开状态，HPDF_Outline_SetDestination可以用于目标位置的关联。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Outline HPDF_CreateOutline(HPDF_Doc pdf, HPDF_Outline parent, const char *title, HPDF_Encoder encoder);</span><br><span class="line">HPDF_EXPORT(HPDF_STATUS) HPDF_Outline_SetOpened  (HPDF_Outline  outline, HPDF_BOOL opened)</span><br><span class="line">HPDF_EXPORT(HPDF_STATUS) HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination  dst)</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/05/11/%E7%94%A8libharu%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BD%9C%E4%B8%9A/" data-id="clw3fmoli0000f04q3zzfeb7w" data-title="用libharu完成一个小作业" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/05/09/%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BFApacheServer%E9%85%8D%E7%BD%AE/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">宝塔面板ApacheServer配置</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/05/11/%E7%94%A8libharu%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BD%9C%E4%B8%9A/">用libharu完成一个小作业</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/09/%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BFApacheServer%E9%85%8D%E7%BD%AE/">宝塔面板ApacheServer配置</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/">vscode调试php</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/05/libevent/">libevent</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">windows网络编程</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
