@@ -211,10 +211,19 @@
 <p>​	特别注意绘制状态，刚接触很容易碰到绘制状态不对导致的绘制函数调用错误（错误码0x1051）</p>
 </li>
 <li><p><strong>图形绘制</strong></p>
-</li>
-</ul>
 <p>​		大部分功能和windows的gdi绘制差不多，有stoke和fill相关的设置；有绘制line&#x2F;rectangle&#x2F;triangle&#x2F;cricle等等，方法也都类似。</p>
 <ul>
+<li><strong>HPDF_Page_Stroke</strong>  绘制路径</li>
+<li>**HPDF_Page_FillStroke  **填充路径</li>
+<li><strong>HPDF_Page_ClosePathFillStroke</strong> 封闭路径并且填充</li>
+<li><strong>HPDF_Page_ClosePathStroke</strong> 封闭路径然后绘制路径</li>
+<li><strong>HPDF_Page_EndPath</strong> 指示路径结束</li>
+<li><strong>HPDF_Page_SetRGBFill</strong> 设置填充颜色</li>
+<li><strong>HPDF_Page_SetRGBStroke</strong> 设置描边颜色</li>
+<li><strong>HPDF_Page_SetRGBFill</strong> 设置填充灰度颜色</li>
+<li><strong>HPDF_Page_SetGrayStroke</strong> 设置描边灰度颜色</li>
+</ul>
+</li>
 <li><p><strong>文字绘制</strong></p>
 <p>​	绘制文字接口有HPDF_Page_ShowText()、TextOut()、TextRect()、ShowTextNextLine()等接口。关于文字绘制，需要注意的地方：</p>
 <ul>
@@ -251,6 +260,7 @@
 <p>​		利用HPDF_CreateOutline函数可以创建树形大纲列表，HPDF_Outline_SetOpened函数可以设置大纲项打开状态，HPDF_Outline_SetDestination可以用于目标位置的关联。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Outline HPDF_CreateOutline(HPDF_Doc pdf, HPDF_Outline parent, const char *title, HPDF_Encoder encoder);</span><br><span class="line">HPDF_EXPORT(HPDF_STATUS) HPDF_Outline_SetOpened  (HPDF_Outline  outline, HPDF_BOOL opened)</span><br><span class="line">HPDF_EXPORT(HPDF_STATUS) HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination  dst)</span><br></pre></td></tr></table></figure></li>
 </ul>
+<p>​		</p>
 
       
     </div>
