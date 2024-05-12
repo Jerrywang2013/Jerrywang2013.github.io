@@ -213,16 +213,31 @@
 <li><p><strong>图形绘制</strong></p>
 <p>​		大部分功能和windows的gdi绘制差不多，有stoke和fill相关的设置；有绘制line&#x2F;rectangle&#x2F;triangle&#x2F;cricle等等，方法也都类似。</p>
 <ul>
-<li><strong>HPDF_Page_Stroke</strong>  绘制路径</li>
-<li>**HPDF_Page_FillStroke  **填充路径</li>
-<li><strong>HPDF_Page_ClosePathFillStroke</strong> 封闭路径并且填充</li>
-<li><strong>HPDF_Page_ClosePathStroke</strong> 封闭路径然后绘制路径</li>
-<li><strong>HPDF_Page_EndPath</strong> 指示路径结束</li>
-<li><strong>HPDF_Page_SetRGBFill</strong> 设置填充颜色</li>
-<li><strong>HPDF_Page_SetRGBStroke</strong> 设置描边颜色</li>
-<li><strong>HPDF_Page_SetRGBFill</strong> 设置填充灰度颜色</li>
-<li><strong>HPDF_Page_SetGrayStroke</strong> 设置描边灰度颜色</li>
+<li><p><strong>HPDF_Page_Stroke</strong>  绘制路径</p>
+</li>
+<li><p>**HPDF_Page_FillStroke  **填充路径</p>
+</li>
+<li><p><strong>HPDF_Page_ClosePathFillStroke</strong> 封闭路径并且填充</p>
+</li>
+<li><p><strong>HPDF_Page_ClosePathStroke</strong> 封闭路径然后绘制路径</p>
+</li>
+<li><p><strong>HPDF_Page_EndPath</strong> 指示路径结束</p>
+</li>
+<li><p><strong>HPDF_Page_SetRGBFill</strong> 设置填充颜色</p>
+</li>
+<li><p><strong>HPDF_Page_SetRGBStroke</strong> 设置描边颜色</p>
+</li>
+<li><p><strong>HPDF_Page_SetRGBFill</strong> 设置填充灰度颜色</p>
+</li>
+<li><p><strong>HPDF_Page_SetGrayStroke</strong> 设置描边灰度颜色</p>
+</li>
 </ul>
+</li>
+<li><p><strong>高级绘制功能</strong></p>
+<p>libharu提供了extgstate相关的函数，可以控制透明度、混合模式，具体实现在hpdf_ext_gstate.c，示例代码：  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Page_GSave (page);</span><br><span class="line">gstate = HPDF_CreateExtGState (pdf);</span><br><span class="line">HPDF_ExtGState_SetAlphaFill (gstate, 0.8);</span><br><span class="line">HPDF_ExtGState_SetAlphaStroke (gstate, 0.8);</span><br><span class="line">HPDF_Page_SetExtGState (page, gstate);</span><br><span class="line">draw_circles (page, &quot;alpha fill = 0.8&quot;, 230.0f, PAGE_HEIGHT - 170);</span><br><span class="line">HPDF_Page_GRestore (page);</span><br></pre></td></tr></table></figure>
+
+
 </li>
 <li><p><strong>文字绘制</strong></p>
 <p>​	绘制文字接口有HPDF_Page_ShowText()、TextOut()、TextRect()、ShowTextNextLine()等接口。关于文字绘制，需要注意的地方：</p>
