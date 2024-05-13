@@ -110,7 +110,7 @@
 </code></pre>
 <p>​		本机安装了vs2022, CMake会自动生成VS2022的工程文件。</p>
 </li>
-<li><p>编译</p>
+<li><p><strong>编译</strong></p>
 <p>​		打开VS2022，打开libharu_build\libharu.sln文件，可正常编译通过，生成库文件在libharu_build\src\debug\，配置文件在libharu_build\include。可自行修改项目配置设置编译后生成的库文件目录，或者直接在postbuild里头加个脚本做生成后的发布（拷贝）。</p>
 <p>​</p>
 </li>
@@ -277,10 +277,10 @@
 <p><strong>旋转矩阵</strong>：		</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">a  b  0 </span><br><span class="line">c  d  0 </span><br><span class="line">0  0  1</span><br><span class="line"></span><br><span class="line">a = cos(θ)</span><br><span class="line">b = -sin(θ)</span><br><span class="line">c = sin(θ)</span><br><span class="line">d = cos(θ)</span><br></pre></td></tr></table></figure>
 
-<p>斜切矩阵：</p>
+<p><strong>斜切矩阵：</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1           tan(α)  0 </span><br><span class="line">tan(β)      1       0 </span><br><span class="line">0           0       1</span><br></pre></td></tr></table></figure>
 
-<p>缩放：</p>
+<p><strong>缩放：</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2  0  0</span><br><span class="line">0  2  0</span><br><span class="line">0  0  1</span><br></pre></td></tr></table></figure>
 
 
@@ -294,14 +294,13 @@
 <li><p><strong>HPDF_Page_TextRect</strong></p>
 <p>支持文字绘制的对齐模式设置</p>
 </li>
-<li></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><p><strong>大纲绘制</strong>		</p>
 <p>​		利用HPDF_CreateOutline函数可以创建树形大纲列表，HPDF_Outline_SetOpened函数可以设置大纲项打开状态，HPDF_Outline_SetDestination可以用于目标位置的关联。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Outline HPDF_CreateOutline(HPDF_Doc pdf, HPDF_Outline parent, const char *title, HPDF_Encoder encoder);</span><br><span class="line">HPDF_EXPORT(HPDF_STATUS) HPDF_Outline_SetOpened  (HPDF_Outline  outline, HPDF_BOOL opened)</span><br><span class="line">HPDF_EXPORT(HPDF_STATUS) HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination  dst)</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Outline HPDF_CreateOutline(HPDF_Doc pdf, </span><br><span class="line">		HPDF_Outline parent, </span><br><span class="line">		const char *title, </span><br><span class="line">		HPDF_Encoder encoder);</span><br><span class="line">HPDF_STATUS HPDF_Outline_SetOpened  (HPDF_Outline outline, HPDF_BOOL opened)</span><br><span class="line">HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination dst)</span><br></pre></td></tr></table></figure></li>
 </ul>
 <p>​		</p>
 
