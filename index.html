@@ -522,21 +522,25 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
     <div class="e-content article-entry" itemprop="articleBody">
       
         <p>libevent是一个跨平台高效的异步网络库，支持各平台最高效的异步模型，例如epoll和iocp。</p>
-<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><h3 id="设置debug级别日志记录策略"><a href="#设置debug级别日志记录策略" class="headerlink" title="设置debug级别日志记录策略"></a>设置debug级别日志记录策略</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void event_enable_debug_logging(ev_uint32_t which)</span><br></pre></td></tr></table></figure>
+<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><ul>
+<li><p><strong>设置debug级别日志记录策略</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void event_enable_debug_logging(ev_uint32_t which)</span><br></pre></td></tr></table></figure>
 
 <p>描述：</p>
 <p>说明： which可为 EVENT_DBG_NONE 和 EVENT_DBG_ALL</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define EVENT_DBG_NONE 0</span><br><span class="line"></span><br><span class="line">#define EVENT_DBG_ALL 0xffffffffu</span><br></pre></td></tr></table></figure>
 
-<p>注意：</p>
-<p>​	设置为EVENT_DBG_NONE仍可用event_warn(“&#x3D;”);输出日志，因为此函数只控制debug级别的日志策略。</p>
-<h3 id="设置自定义日志handler"><a href="#设置自定义日志handler" class="headerlink" title="设置自定义日志handler"></a>设置自定义日志handler</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typedef void (*event_log_cb)(int severity, const char *msg);</span><br><span class="line">void event_set_log_callback(event_log_cb cb)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="设置自定义fatal日志handler"><a href="#设置自定义fatal日志handler" class="headerlink" title="设置自定义fatal日志handler"></a>设置自定义fatal日志handler</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typedef void (*event_fatal_cb)(int err);</span><br><span class="line">void event_set_fatal_callback(event_fatal_cb cb)</span><br></pre></td></tr></table></figure>
+<p>注意：设置为EVENT_DBG_NONE仍可用event_warn(“&#x3D;”);输出日志，因为此函数只控制debug级别的日志策略。</p>
+</li>
+<li><p><strong>设置自定义日志handler</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typedef void (*event_log_cb)(int severity, const char *msg);</span><br><span class="line">void event_set_log_callback(event_log_cb cb)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>设置自定义fatal日志handler</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typedef void (*event_fatal_cb)(int err);</span><br><span class="line">void event_set_fatal_callback(event_fatal_cb cb)</span><br></pre></td></tr></table></figure>
 
 <p>说明：默认libevent检测到不可恢复的内部错误默认行为是调用abort()或者exit()结束当前的进场，你也可以自定义处理致命错误。</p>
+</li>
+</ul>
 <h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>自定义内存分配&#x2F;释放函数</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void event_set_mem_functions(void *(*malloc_fn)(size_t sz),</span><br><span class="line">                             void *(*realloc_fn)(void *ptr, size_t sz),</span><br><span class="line">                             void (*free_fn)(void *ptr));</span><br></pre></td></tr></table></figure>
 
@@ -551,6 +555,110 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int evthread_set_lock_callbacks(const struct evthread_lock_callbacks *);</span><br><span class="line">void evthread_set_id_callback(unsigned long (*id_fn)(void));</span><br><span class="line">int evthread_set_condition_callbacks(const struct evthread_condition_callbacks *);</span><br></pre></td></tr></table></figure>
 
 <p>​		上述的自定义线程库注册这种c的代码风格你可以理解为面向对象的的接口重写，比如IThread接口定义了create() &#x2F; destroy() &#x2F; lock() &#x2F; unlock()，自定义Thread库需要实现IThread的功能接口。</p>
+<h1 id="Event使用"><a href="#Event使用" class="headerlink" title="Event使用"></a>Event使用</h1><h3 id="Event"><a href="#Event" class="headerlink" title="Event"></a>Event</h3><p>​	libevent的event代表一组条件，包括：</p>
+<h3 id="事件标志"><a href="#事件标志" class="headerlink" title="事件标志"></a>事件标志</h3><ul>
+<li><p>EV_TIMEOUT</p>
+<p>​	构造事件的时候EV_TIMEOUT会被忽略，需要在event_add()中设置操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ev1 = event_new(base, 0, EV_TIMEOUT|EV_PERSIST, cb_func,(char*)&quot;Reading event&quot;);</span><br><span class="line">struct timeval tv;</span><br><span class="line">tv.tv_sec = 5;</span><br><span class="line">tv.tv_usec = 0;</span><br><span class="line">event_add(timeout_event, &amp;tv); </span><br></pre></td></tr></table></figure>
+
+<p>相关函数或者宏：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">evtimer_assign(ev, b, cb, arg)</span><br><span class="line">evtimer_new(b, cb, arg)	</span><br><span class="line">evtimer_add(ev, tv)</span><br><span class="line">evtimer_del(ev)</span><br><span class="line">evtimer_pending(ev, tv)</span><br><span class="line">evtimer_initialized(ev)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>EV_READ</p>
+</li>
+<li><p>EV_WRITE</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE); </span><br><span class="line">bufferevent_setcb(bev, conn_readcb, conn_writecb, conn_eventcb, NULL);</span><br><span class="line">bufferevent_enable(bev, EV_READ | EV_WRITE);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>EV_SIGNAL</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">signal_event = evsignal_new(base, SIGINT, signal_cb, (void *)base);</span><br><span class="line">event_add(signal_event, NULL)</span><br></pre></td></tr></table></figure>
+
+<p>相关函数或者宏：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">evsignal_add(ev, tv)</span><br><span class="line">evsignal_assign(ev, b, x, cb, arg)</span><br><span class="line">evsignal_new(b, x, cb, arg)</span><br><span class="line">evsignal_del(ev)</span><br><span class="line">evsignal_pending(ev, tv)</span><br><span class="line">evsignal_initialized(ev)</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong></p>
+<p>​		对于大多数后端来说，每个进程只有一个event_base可以监听信号，如果同时向多个event_base添加信号事件，即便信号不同，也只有一个event_base会收到新招。kqueeue后端没有此限制。</p>
+</li>
+<li><p>用户触发事件</p>
+<p>所谓的用户事件就是不与预定义那些事件关联，一般我们把event_new()参数的event参数设置为0即可。</p>
+<p>示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct event_base *base = event_base_new(); </span><br><span class="line">struct event *user_event = event_new(base, -1, 0, user_event_cb, NULL); </span><br><span class="line">event_add(user_event, NULL); </span><br><span class="line">event_active(user_event, EV_WRITE, 0);  // 触发用户事件 </span><br><span class="line">event_base_dispatch(base);</span><br><span class="line">event_free(user_event);</span><br><span class="line">event_base_free(base); </span><br></pre></td></tr></table></figure>
+
+<p>相关函数或者宏：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">evuser_new(b, cb, arg)</span><br><span class="line">evuser_del(ev)</span><br><span class="line">evuser_pending(ev, tv)</span><br><span class="line">evuser_initialized(ev)</span><br><span class="line">evuser_trigger(ev)	</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>EV_PERSIST</p>
+<p>​		通常情况下，当事件被激活后，它会被移除并在回调函数中处理。但是，如果事件被设置了 <code>EV_PERSIST</code> 标志，那么即使在回调函数中处理后，它仍然会留在事件循环中，并等待下一次相同类型的事件发生。使用 <code>EV_PERSIST</code> 标志的事件通常用于需要持续监听某种类型事件的场景，例如长期监听套接字的可读、可写事件等。</p>
+</li>
+</ul>
+<h3 id="event-self-cbarg"><a href="#event-self-cbarg" class="headerlink" title="event_self_cbarg()"></a>event_self_cbarg()</h3><p>​		这个函数是libevent预定义的一个函数，用于返回一个magic指针，告诉event_new创建一个接受自己作为回调函数参数的event。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ev = event_new(base, -1, EV_PERSIST, cb_func, event_self_cbarg());</span><br></pre></td></tr></table></figure>
+
+<p>此函数创建一个event，并且让事件触发的时候执行cb_func()时，将ev参数传给cb_func()。因为调用者调用event_new()时对象还不存在，这里用event_self_cbarg()原理也很简单，相当于给传一个flag告知event_new()。</p>
+<h3 id="事件待处理-非待处理"><a href="#事件待处理-非待处理" class="headerlink" title="事件待处理&#x2F;非待处理"></a>事件待处理&#x2F;非待处理</h3><p>​		事件被创建后，不会执行任何操作，直到你通过event_add()将其处于挂起状态。</p>
+<ul>
+<li><p>event_add</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int event_add(struct event *ev, const struct timeval *tv);</span><br></pre></td></tr></table></figure>
+
+<p>​		对于已挂起的事件调用event_add()，会将其保持挂起状态，并使用提供的超时重新设置。如果事件已经挂起，然后使用超时NULL重新设置它，则event_add()不起作用。</p>
+</li>
+<li><p>event_del</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int event_del(struct event *ev);</span><br></pre></td></tr></table></figure>
+
+<p>​		event_del会使得事件变为非挂起 、非活动状态。如果event本来是非挂起非激活状态，调用event_del没有效果。</p>
+</li>
+<li><p>event_remove_timer</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int event_remove_timer(struct event *ev);</span><br></pre></td></tr></table></figure>
+
+<p>​		删除挂起事件的超时，而无需删除事件的IO或者信号组件。如果event没有超时挂起，则event_remove_timer()无效。如果event只有超时但没有IO或者信号组件，则event_remove_timer()和event_del()效果一样。</p>
+</li>
+</ul>
+<h3 id="event优先级"><a href="#event优先级" class="headerlink" title="event优先级"></a>event优先级</h3><ul>
+<li><p>event_priority_set</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int event_priority_set(struct event *event, int priority);</span><br></pre></td></tr></table></figure>
+
+<p>​		priority是0-1的数字。当多个事件变为活动状态时，低优先级的不会运行。libevent会运行高优先级事件，然后再次检测事件，只有没有高优先级事件处于活动状态时，低优先级事件才会运行。</p>
+</li>
+</ul>
+<h3 id="检测事件状态"><a href="#检测事件状态" class="headerlink" title="检测事件状态"></a>检测事件状态</h3><ul>
+<li><p>常用接口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">int event_pending(const struct event *ev, short what, struct timeval *tv_out);</span><br><span class="line"></span><br><span class="line">#define event_get_signal(ev) /* ... */</span><br><span class="line">evutil_socket_t event_get_fd(const struct event *ev);</span><br><span class="line">struct event_base *event_get_base(const struct event *ev);</span><br><span class="line">short event_get_events(const struct event *ev);</span><br><span class="line">event_callback_fn event_get_callback(const struct event *ev);</span><br><span class="line">void *event_get_callback_arg(const struct event *ev);</span><br><span class="line">int event_get_priority(const struct event *ev);</span><br><span class="line"></span><br><span class="line">void event_get_assignment(const struct event *event,</span><br><span class="line">        struct event_base **base_out,</span><br><span class="line">        evutil_socket_t *fd_out,</span><br><span class="line">        short *events_out,</span><br><span class="line">        event_callback_fn *callback_out,</span><br><span class="line">        void **arg_out);</span><br><span class="line">struct event *event_base_get_running_event(struct event_base *base);</span><br></pre></td></tr></table></figure>
+
+<p>event_pending()： 判断event是待处理还是活动的。</p>
+<p>event_get_fd()&#x2F;event_get_signal()： 返回event的描述符或者信号</p>
+<p>event_get_base(): 返回event的event_base</p>
+<p>event_get_events(): 返回event的时间标记(EV_READ&#x2F;EV_WRITE等)</p>
+<p>event_get_callback(): 返回callback函数</p>
+<p>event_get_callback_arg(): 返回回调函数参数指针</p>
+<p>event_get_priority(): 返回event优先级</p>
+<p>event_base_get_running_event(): 获得指向当前正在运行的event指针</p>
+</li>
+</ul>
+<h3 id="配置一次性事件"><a href="#配置一次性事件" class="headerlink" title="配置一次性事件"></a>配置一次性事件</h3><ul>
+<li><p>event_base_once()</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int event_base_once(struct event_base *, evutil_socket_t, short,</span><br><span class="line">  void (*)(evutil_socket_t, short, void *), void *, const struct timeval *);</span><br></pre></td></tr></table></figure>
+
+<p>​		参数和event_new()类似，只不过它不支持EV_SIGNAL和EV_PERSIST。在回调完成后，libevent会释放event结构。event_base_once()插入的事件无法删除或者手动激活；如果想取消event，只能使用常规的event_new()或者event_assign()创建。</p>
+</li>
+</ul>
+<h3 id="手动激活"><a href="#手动激活" class="headerlink" title="手动激活"></a>手动激活</h3><ul>
+<li><p>event_active</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void event_active(struct event *ev, int what, short ncalls);</span><br></pre></td></tr></table></figure>
+
+<p>​		手动激活的事件不需要先处于挂起状态，并且激活它也不会使其处于挂起状态。</p>
+</li>
+</ul>
+<h3 id="定时器事件优化"><a href="#定时器事件优化" class="headerlink" title="定时器事件优化"></a>定时器事件优化</h3><p><strong>公共超时</strong></p>
+<p>​		Libevent 使用二进制堆算法来跟踪待处理事件的超时。二叉堆为添加和删除每个事件超时提供了 O(lg n) 阶的性能。如果您要添加具有随机分布的超时值集的事件，则这是最佳选择，但如果您有大量具有相同超时值的事件，则这不是最佳选择。</p>
+<p>例如，假设您有一万个事件，每个事件都应在添加后五秒触发超时。在这种情况下，通过使用双链接队列实现，您可以在每次超时时获得 O(1) 性能。</p>
+<p>当然，您不会希望对所有超时值使用队列，因为队列仅对于恒定超时值更快。如果某些超时或多或少是随机分布的，那么将其中一个超时添加到队列将花费 O(n) 时间，这比二进制堆要糟糕得多。</p>
+<p>Libevent 可以让您通过将一些超时放入队列中，将其他超时放入二进制堆中来解决此问题。为此，您需要向 Libevent 请求一个特殊的“公共超时”时间值，然后使用该时间值添加具有该时间值的事件。如果您有大量具有单个公共超时的事件，则使用此优化应该可以提高超时性能。</p>
+<ul>
+<li><strong>TODO 这块得研究一下</strong></li>
+</ul>
 
       
     </div>
