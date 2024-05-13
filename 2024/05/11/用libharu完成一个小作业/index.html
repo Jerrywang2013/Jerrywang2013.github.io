@@ -14,7 +14,7 @@
 <meta property="og:description" content="libharu是一个开源的pdf文件操作的C语言库。 因一个小作业需要用libharu而初步接触haru，这里简单记录一下自己的理解。	 下载 &amp; 安装 下载 1git clone https:&#x2F;&#x2F;github.com&#x2F;libharu&#x2F;libharu.git    安装 ​		参考readme和install说明。在windows下利用CMake进行安装。		     mkdir libh">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-05-10T23:35:56.000Z">
-<meta property="article:modified_time" content="2024-05-13T02:21:28.942Z">
+<meta property="article:modified_time" content="2024-05-13T02:23:07.186Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="c++ lua php js python">
 <meta name="twitter:card" content="summary">
@@ -300,7 +300,17 @@
 </li>
 <li><p><strong>大纲绘制</strong>		</p>
 <p>​		利用HPDF_CreateOutline函数可以创建树形大纲列表，HPDF_Outline_SetOpened函数可以设置大纲项打开状态，HPDF_Outline_SetDestination可以用于目标位置的关联。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">HPDF_Outline HPDF_CreateOutline(HPDF_Doc pdf, </span><br><span class="line">		HPDF_Outline parent, </span><br><span class="line">		const char *title, </span><br><span class="line">		HPDF_Encoder encoder);</span><br><span class="line">HPDF_STATUS HPDF_Outline_SetOpened  (HPDF_Outline outline, HPDF_BOOL opened)</span><br><span class="line">HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination dst)</span><br></pre></td></tr></table></figure></li>
+<ul>
+<li><pre><code>HPDF_Outline HPDF_CreateOutline(HPDF_Doc pdf, 
+            HPDF_Outline parent, 
+            const char *title, 
+            HPDF_Encoder encoder);
+HPDF_STATUS HPDF_Outline_SetOpened  (HPDF_Outline outline, HPDF_BOOL opened)
+HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination dst)
+</code></pre>
+</li>
+</ul>
+</li>
 </ul>
 <p>​		</p>
 
