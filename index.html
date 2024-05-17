@@ -72,6 +72,224 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-c-调试" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/14/c-%E8%B0%83%E8%AF%95/" class="article-date">
+  <time class="dt-published" datetime="2024-05-13T22:52:45.000Z" itemprop="datePublished">2024-05-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/14/c-%E8%B0%83%E8%AF%95/">c++调试</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>好多年都没怎用c&#x2F;c++了，最近因为用到某个库写个小工具用到c++，这里简单记录下c++调试。</p>
+<p>环境：VS2022</p>
+<p>编译环境：x64 debug</p>
+<h1 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h1><h2 id="简单的函数调用示例"><a href="#简单的函数调用示例" class="headerlink" title="简单的函数调用示例"></a>简单的函数调用示例</h2><ul>
+<li><p>代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">sum</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a + b + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="type">int</span> a = <span class="number">1</span>;</span><br><span class="line">    <span class="type">int</span> b = <span class="number">3</span>;</span><br><span class="line">    <span class="type">int</span> s = <span class="built_in">sum</span>(a, b);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;sum:&quot;</span> &lt;&lt; s &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码只有一个简单的函数调用，我们通过这个案例主要了解一下c++代码背后的机器码的样子，以及程序运行过程中栈和寄存器的变化。</p>
+</li>
+<li><p>反汇编</p>
+<ul>
+<li><strong>sum() 反汇编</strong>(被调用函数)</li>
+</ul>
+<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240514070514439.png" alt="image-20240514070514439"></p>
+<p>部分反汇编代码解释：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">push rbp; rbp值入栈，用于保存rbp寄存器，后面恢复用</span><br><span class="line">push rdi; rdi寄存器入栈，后面会用到rdi寄存器，这里值先保存</span><br><span class="line">sub rsp 0e8h; 将rsp减去0e8h，保留栈空间用于本函数(局部变量等）的使用</span><br><span class="line">mov eax, dword ptr[a]; 将a值赋值给eax寄存器</span><br><span class="line">mov ecx, dword ptr[b]; 将b值赋值给ecx寄存器</span><br><span class="line">lea eax, [rax+rcx+1]; 计算rax+rcx+1结果保存到eax</span><br><span class="line">lea rsp,[rbp+0c8h]; 恢复rsp，之前rsp用rbp+0e8h,然后rbp-=20h</span><br><span class="line">pop rdi; 恢复rdi寄存器</span><br><span class="line">pop rbp; 恢复rbp寄存器</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><strong>main() 反汇编</strong>(调用函数)</li>
+</ul>
+<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240514070345762.png" alt="image-20240514070345762"></p>
+<p>主要看main函数调用sum()前后部分反汇编代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mov edx, dword ptr[b];   变量b的值赋值给edx寄存器</span><br><span class="line">mov ecx, dword ptr[a];  变量a的值赋值给ecx寄存器</span><br><span class="line">call sum(07FF71D5411E5h); 调用sum函数</span><br></pre></td></tr></table></figure>
+
+<p><strong>x64架构调用约定：</strong></p>
+<ul>
+<li><p>在x64 window平台下，函数参数传递默认情况下前四个整形或者指针参数统计寄存器传递(rcx, rdx, r8, r9)，后面的参数通过压栈传参。可以看到，这里2个参数是用了ecx和edx传参。</p>
+<p>测试5个参数的传参：</p>
+<pre><code>00007FF758712370  push        rbp  
+00007FF758712372  push        rdi  
+00007FF758712373  sub         rsp,158h  
+00007FF75871237A  lea         rbp,[rsp+30h]
+int s = sum(a, b, 3, 4, 5);
+00007FF758712399  mov         dword ptr [rsp+20h],5    
+00007FF7587123A1  mov         r9d,4  
+00007FF7587123A7  mov         r8d,3  
+00007FF7587123AD  mov         edx,dword ptr [b]  
+00007FF7587123B0  mov         ecx,dword ptr [a]  
+00007FF7587123B3  call        sum (07FF758711465h) 
+</code></pre>
+<p>​		可以看到参数处理是从左往右，前面四个参数用rcx、rdx、r8、r9传递，后面的参数压入栈传递（自左往右）， 第五个参数压入到rsp+20h位置，如果有第六个参数，则第六个参数在第五个参数之后入栈，对应位置在rsp+28h;</p>
+</li>
+<li><p>前4个参数如果是浮点参数，通过SSE寄存器xmm0-xmm3传递</p>
+</li>
+<li><p>由调用者为寄存器中的参数传递保留栈上的空间（至少分配32字节的阴影空间），被调用者可以访问这个栈空间来讲寄存器中的内容写回栈空间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">lea rbp,[rsp+30h]; </span><br><span class="line">这个代码就是为参数保留栈空间，以便调用者调用到。一般来说总长度是(总的参数个数)*8</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>不要以为前面四个参数是通过寄存器传递给被调用函数可以不用为参数保留栈空间，哪怕调用者这边不用，也需要保留参数的栈空间，因为被调用者那边约定是将寄存器的内容写入到栈中。有个疑问，这样用寄存器传递参数不是多此一举，比直接用栈传递参数还少拷贝两次吗？</p>
+</li>
+<li><p>返回整数或者指针通过rax寄存器完成，浮点数返回值通过xmm0传递</p>
+</li>
+<li><p>堆栈保持16字节对齐（叶函数除外）</p>
+</li>
+<li><p>x64没有x86的stdcall&#x2F;cdecl&#x2F;fastcall&#x2F;thiscall等，只有一个x64调用约定</p>
+</li>
+</ul>
+<p> 备注：</p>
+<ol>
+<li><p>call会将返回地址压入堆栈（esp&#x3D;esp-8)</p>
+</li>
+<li><p>栈是沿低地址延伸的，栈底地址是大于栈顶地址。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">push rax  等价于 rsp--; *rsp = rax;</span><br><span class="line">pop rax 等价于rax = *rsp; rsp++;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>栈布局图</strong></p>
+<img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240515000343120.png" alt="image-20240515000343120" style="zoom: 33%;">
+
+<p><img src="https://learn.microsoft.com/en-us/cpp/build/media/vcamd_conv_ex_5.png?view=msvc-170" alt="Diagram of the stack layout for the x64 conversion example."></p>
+</li>
+</ul>
+<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240516120003269.png" alt="image-20240516120003269"></p>
+<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240517133710237.png" alt="image-20240517133710237"></p>
+<h2 id="volatile-non-volatile-register"><a href="#volatile-non-volatile-register" class="headerlink" title="volatile &amp; non-volatile register"></a>volatile &amp; non-volatile register</h2><p>​		volatile register通常又称之为可变寄存器。可变的意思是在函数调用过程中寄存器值可能发生变化。</p>
+<ul>
+<li><p>常见volatile register</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RAX, RCX, RDX, R8, R9, R10, R11</span><br><span class="line">// 这几个寄存器常用语参数传递</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>常见的non-volatile register</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RBX，RDI,RSI,RBP,RSP,R12,R13,R14,R15</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="x64函数中的Prolog和Epilog"><a href="#x64函数中的Prolog和Epilog" class="headerlink" title="x64函数中的Prolog和Epilog"></a>x64函数中的Prolog和Epilog</h2><p>x64 push&#x2F;pop指令限定在prolog和epilog中使用，因为在prolog和epilog之间rsp是不会被修改的。</p>
+<h3 id="prolog"><a href="#prolog" class="headerlink" title="prolog"></a>prolog</h3><ul>
+<li><p>将寄存器参数保存到调用函数分配的参数所在的栈空间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">   通常代码如下，上面的4个mov指令是将寄存器参数保存到栈里头，对被调用函数而言，这段代码寻址是固定的，因为rsp指向的是返回地址，它的上面才是参数，所以第一个参数地址永远是rsp+8；第二个参数地址是rsp+10h，以此类推。</span><br><span class="line">*/</span><br><span class="line"> mov     dword ptr [rsp+20h],r9d</span><br><span class="line"> mov     dword ptr [rsp+18h],r8d</span><br><span class="line"> mov     dword ptr [rsp+10h],edx</span><br><span class="line"> mov     dword ptr [rsp+8],ecx</span><br><span class="line"> sub     rsp,18h</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>保存本函数可能修改的volatile寄存器的值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 类似如下反汇编代码，保存non-volatile寄存器</span><br><span class="line">00007FF78B541CE2  push        rbp  </span><br><span class="line">00007FF78B541CE3  push        rdi</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>为函数局部变量分配栈空间，如果此函数有调用其他函数，还要为调用函数的参数分配空间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">00007FF78B541CE4  sub         rsp,108h  </span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Epilog"><a href="#Epilog" class="headerlink" title="Epilog"></a>Epilog</h3><ul>
+<li>清理函数在prolog中为其变量分配的堆栈空间以及函数参数堆栈空间</li>
+<li>恢复non-volatile寄存器</li>
+<li>返回到调用者</li>
+</ul>
+<p>x86堆栈操作与x64主要差别</p>
+<p>​	x86堆栈操作严重以来ebp；而x64不依赖。</p>
+<h1 id="调用约定"><a href="#调用约定" class="headerlink" title="调用约定"></a>调用约定</h1><p>​	在c&#x2F;c++中，调用约定指的是编译器如果安排函数调用中参数传递顺序、调用栈空间的清理、函数返回值传递等规则。不同平台和编译器有不同的函数调用约定，主要有三个：</p>
+<ul>
+<li><p>__cdecl</p>
+<p>​	默认调用约定。参数从右往左压入堆栈，调用方负责清理堆栈，返回值通过寄存器传递。</p>
+</li>
+<li><p>__stdcall</p>
+<p>​	windows平台常用。参数从右往左压入堆栈，被调用函数清理堆栈，返回值通过寄存器传递。</p>
+</li>
+<li><p>__thiscall</p>
+<p>​		常用语类成员函数，将this指针作为隐式参数传递给函数，其它参数从右往左压入堆栈，调用者负责清理堆栈。</p>
+</li>
+</ul>
+<p>​		不用太纠结用那个调用约定，本身只是一个规则而已。一般来说，通过返回指令ret 和 ret X能判断出是否是stdcall或者cdecl。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://eli.thegreenplace.net/2011/09/06/stack-frame-layout-on-x86-64">x86-64 上的堆栈框架布局 - Eli Bendersky 的网站 (thegreenplace.net)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wingsummer/p/16076345.html">x64 番外篇——知识铺垫 - 寂静的羽夏 - 博客园 (cnblogs.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/build/x64-software-conventions?view=msvc-170&redirectedfrom=MSDN">x64 ABI 约定 |Microsoft学习</a></p>
+<p><a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/cpp/build/x64-calling-convention?view=msvc-170">x64 calling convention | Microsoft Learn</a></p>
+<p><a target="_blank" rel="noopener" href="https://medium.com/@sruthk/cracking-assembly-introduction-to-assembly-language-a4ad14e601a1">破解程序集 — 程序集语言简介 |由 Sruthi K |中等 (medium.com)</a></p>
+<h1 id="常用windbg命令"><a href="#常用windbg命令" class="headerlink" title="常用windbg命令"></a>常用windbg命令</h1><p>​		这里仅仅记录调试常用的命令，不全。需要详细的命令可以查看dbghelp.chm文件(debug tools for windwos包)</p>
+<ul>
+<li>设置符号&#x2F;源文件路径</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.sympath + &lt;pdb文件路径&gt;</span><br><span class="line">.srcpath + &lt;.cpp文件路径&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​		也可以在界面’文件‘菜单中点击’Symbol File Path‘设置符号文件路径；点击”Source File Path”打开代码文件路径。</p>
+<ul>
+<li><p>d </p>
+<p>查看内存</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">d addr</span><br><span class="line">// 默认以字节为单位显示，也可以用db | dw | dd | dq来显示指定显示格式</span><br><span class="line">// 查看堆栈附近内存</span><br><span class="line">d rsp</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>uf </p>
+<p>查看函数汇编代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">uf [Module!]Function</span><br><span class="line">uf [Module!]Address</span><br><span class="line">address是函数地址，可以用名称，例如 </span><br><span class="line">uf ConsoleApplicaiton!main</span><br><span class="line">uf main</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>切换调试模型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">l+t 设置调试模式为源码模式</span><br><span class="line">l-t 设置调试模式为反汇编模式</span><br><span class="line">l+s 命令行显示行号</span><br><span class="line">l-s 命令行不显示行号</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>!analyze</p>
+<p>分析dump文件用到。</p>
+</li>
+<li><p>lm</p>
+<p>显示模块信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lmOptions [a Address] [m Pattern | M Pattern]</span><br><span class="line">eg:</span><br><span class="line">lmDvm *Console*!*</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>x</p>
+<p>查看符号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">x [opts] Module!Symbol</span><br><span class="line">x * // ！！！注意，这个是显示局部变量！！！</span><br><span class="line">eg:</span><br><span class="line">x sample!*main*</span><br><span class="line">支持*通配符，列出sample模块的所有含有字符串main的函数</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>b</p>
+<p>设置断点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bm sample!*main*   // bm设置函数断点</span><br><span class="line">bp address  // 设置地址断点</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>r</p>
+<p>显示寄存器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0:000&gt; r</span><br><span class="line">rax=0000000000000006 rbx=0000000000000000 rcx=0000000000000006</span><br><span class="line">rdx=0000000000000001 rsi=0000000000000000 rdi=0000000000000000</span><br><span class="line">rip=00007ff696776656 rsp=00000051766ff640 rbp=00000051766ff670</span><br><span class="line"> r8=0000000000000002  r9=00000051766ff728 r10=0000000000000012</span><br><span class="line">r11=00000051766ff7d0 r12=0000000000000000 r13=0000000000000000</span><br><span class="line">r14=0000000000000000 r15=0000000000000000</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>k</p>
+<p>查看堆栈，如果要显示所有线程的堆栈：~*k</p>
+</li>
+<li><p>.formats</p>
+<p>显示表达式和符号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.formats expression</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>常见操作片段</p>
+<p>假设调试ConsoleApplication1.exe</p>
+<p>查看模块	 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//所有模块，然后点击某个模块可以列出函数</span><br><span class="line">lm</span><br><span class="line">// 查看某个模块</span><br><span class="line">lmv m Console*</span><br></pre></td></tr></table></figure>
+
+<p>查看ConsoleApplicaiton1中的函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// 列出ConsoleApplication1中所有函数</span><br><span class="line">x ConsoleA*!*</span><br><span class="line">// 如果函数太多，可以用DML格式来显示。注意/D 后面接的是modulename（可统配），不要带方法</span><br><span class="line">x /D Console*!a*</span><br><span class="line">// 查看某个方法地址，从上面的DML显示中直接点击或者用通配符 找到函数符号和地址</span><br><span class="line">x /D ConsoleApplicati*!s*</span><br><span class="line">// 用bm或者bp设置断点。注意bp不会检测断点地址；bm会检测符号是否存在</span><br><span class="line">bm ConsoleApplication1!sum</span><br><span class="line">bp 00007ff7`8b541cc0</span><br><span class="line">// 恢复程序运行</span><br><span class="line">g</span><br><span class="line">// ....</span><br><span class="line">// 运行到断点处触发断点，程序中断</span><br><span class="line">// 显示局部变量</span><br><span class="line">dv</span><br><span class="line">dv /v 显示变量和变量的地址</span><br><span class="line">// 显示堆栈</span><br><span class="line">k</span><br><span class="line">// 显示内存</span><br><span class="line">db Address</span><br><span class="line">// 看寄存器</span><br><span class="line">r</span><br><span class="line">// 查看汇编</span><br><span class="line">u Address</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>​</p>
+</li>
+</ul>
+<p>	</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/" data-id="clwaa0xzo0000704q8qbkdiq6" data-title="c++调试" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-用libharu完成一个小作业" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/11/%E7%94%A8libharu%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BD%9C%E4%B8%9A/" class="article-date">
@@ -1706,6 +1924,10 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       <ul>
         
           <li>
+            <a href="/2024/05/14/c-%E8%B0%83%E8%AF%95/">c++调试</a>
+          </li>
+        
+          <li>
             <a href="/2024/05/11/%E7%94%A8libharu%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BD%9C%E4%B8%9A/">用libharu完成一个小作业</a>
           </li>
         
@@ -1719,10 +1941,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
         
           <li>
             <a href="/2024/05/05/libevent/">libevent</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">windows网络编程</a>
           </li>
         
       </ul>
