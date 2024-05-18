@@ -98,15 +98,14 @@
 <p><strong>A：</strong>尝试使用离线安装包（qt-creator-opensource-windows-x86_64-13.0.1.exe），里头可选择安装项目。</p>
 <p><strong>Q：QtCreator编译后如何部署</strong></p>
 <p>A：编译后会生成可执行环境，进入到生成目录直接运行exe文件无法启动，提示依赖库不存在，不过可以在Creator中调试（会自动设置好依赖库路径）。发布的时候需要部署，qt自带了部署工具windeployqt.exe，具体的在开发包5.12.12\msvc2017_64\bin\（x64）或者5.12.12\msvc2017\bin\（x86）下面，此命令只需要一个exe文件名即可。例如：你可以将生成的output.exe文件拷贝到你要部署的目录，然后在部署目录下执行windeployqt.exe output.exe即可。</p>
-<p>​		当然，我们也可以借助QtCreator工具来部署，在Kit中点击Run，打开运行配置，最上面就是部署配置，可以创建部署步骤(Customer Process Step)，例如我们先拷贝输出文件到部署目录然后部署，下面是示例：</p>
-<p><img src="/2024/05/18/QT/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240518091304577.png" alt="image-20240518091304577"></p>
-<p><img src="/2024/05/18/QT/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240518090437817.png" alt="image-20240518090437817"></p>
+<p>​		当然，我们也可以借助QtCreator工具来部署，在Kit中点击Run，打开运行配置，最上面就是部署配置，可以创建部署步骤(Customer Process Step)，例如我们先拷贝输出文件到部署目录然后部署，下面是示例&gt;2：</p>
+<p><img src="/2024/05/18/QT/image-20240518091304577.png" alt="image-20240518091304577"></p>
 <p><strong>注意：</strong>这里步骤一是想用copy命令拷贝，不要直接在command：里头输入copy，他会提示：invalid command。我们需要用cmd.exe &#x2F;c copy来执行拷贝，Command填入cmd.exe即可， &#x2F;c copy 填在arguments里头。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/05/18/QT/" data-id="clwbfduv70004qc4q1b9fel9h" data-title="QT" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://jerrywang2013.github.io/2024/05/18/QT/" data-id="clwbg5x4k0003z44q9fcu4qwg" data-title="QT" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -151,7 +150,9 @@
 </li>
 <li><p>反汇编</p>
 <ul>
-<li><strong>sum() 反汇编</strong>(被调用函数)</li>
+<li><p><strong>sum() 反汇编</strong>(被调用函数)</p>
+<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/project\hexo\github-blog\source_posts\c-调试\image-20240514070514439.png" alt="image-20240514070514439"></p>
+</li>
 </ul>
 <p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240514070514439.png" alt="image-20240514070514439"></p>
 <p>部分反汇编代码解释：</p>
@@ -324,7 +325,7 @@ int s = sum(a, b, 3, 4, 5);
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/" data-id="clwbfduv80005qc4qdtw2b2bl" data-title="c++调试" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/" data-id="clwbg5x4l0005z44qcmrhab55" data-title="c++调试" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -581,7 +582,7 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/05/11/%E7%94%A8libharu%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BD%9C%E4%B8%9A/" data-id="clwbfduva000aqc4qbf6j7xd7" data-title="用libharu完成一个小作业" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://jerrywang2013.github.io/2024/05/11/%E7%94%A8libharu%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BD%9C%E4%B8%9A/" data-id="clwbg5x4n000az44qe72ffg9u" data-title="用libharu完成一个小作业" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -687,7 +688,7 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/05/09/%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BFApacheServer%E9%85%8D%E7%BD%AE/" data-id="clwbfduv90009qc4q80xx8s5v" data-title="宝塔面板ApacheServer配置" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://jerrywang2013.github.io/2024/05/09/%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BFApacheServer%E9%85%8D%E7%BD%AE/" data-id="clwbg5x4n0009z44q663wfnwo" data-title="宝塔面板ApacheServer配置" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -751,7 +752,7 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" data-id="clwbfduv80007qc4qhvzff3hh" data-title="vscode调试php" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://jerrywang2013.github.io/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" data-id="clwbg5x4m0007z44q41aabiul" data-title="vscode调试php" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -927,7 +928,7 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/05/05/libevent/" data-id="clwbfduv80006qc4q2etd42vw" data-title="libevent" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://jerrywang2013.github.io/2024/05/05/libevent/" data-id="clwbg5x4m0006z44qf23gch0w" data-title="libevent" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1156,7 +1157,7 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" data-id="clwbfduv90008qc4q1en0gf5f" data-title="windows网络编程" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://jerrywang2013.github.io/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" data-id="clwbg5x4m0008z44qb6jc0x1a" data-title="windows网络编程" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1313,7 +1314,7 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/04/30/Hexo-%E7%AE%80%E4%BB%8B/" data-id="clwbfduv20000qc4q7kmv33hr" data-title="在Github上部署Hexo" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://jerrywang2013.github.io/2024/04/30/Hexo-%E7%AE%80%E4%BB%8B/" data-id="clwbg5x4f0000z44qdvc2c6i5" data-title="在Github上部署Hexo" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1761,7 +1762,7 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/04/27/ThinkPHP%E4%B9%8BDB-Query/" data-id="clwbfduv70003qc4q90so90jh" data-title="ThinkPHP之DB::Query" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://jerrywang2013.github.io/2024/04/27/ThinkPHP%E4%B9%8BDB-Query/" data-id="clwbg5x4l0004z44qfy6ab9hx" data-title="ThinkPHP之DB::Query" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
@@ -1889,7 +1890,7 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/04/23/MarkDown%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" data-id="clwbfduv50001qc4q27aycnpl" data-title="MarkDown基本语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      <a data-url="https://jerrywang2013.github.io/2024/04/23/MarkDown%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" data-id="clwbg5x4i0001z44q4lst6lc9" data-title="MarkDown基本语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
       
       
       
