@@ -13,19 +13,18 @@
 <meta property="og:site_name" content="Jerry Blogs">
 <meta property="og:description" content="好多年都没怎用c&#x2F;c++了，最近因为用到某个库写个小工具用到c++，这里简单记录下c++调试。 环境：VS2022 编译环境：x64 debug 栈简单的函数调用示例 代码如下： 123456789101112131415#include &lt;iostream&gt;using namespace std;int sum(int a, int b)&#123;    return a">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/project/hexo/github-blog/source_posts/c-%E8%B0%83%E8%AF%95/image-20240514070514439.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/Users/Administrator/AppData/Roaming/Typora/typora-user-images/image-20240514070514439.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/Users/Administrator/AppData/Roaming/Typora/typora-user-images/image-20240514070345762.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/Users/Administrator/AppData/Roaming/Typora/typora-user-images/image-20240515000343120.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/image-20240514070514439.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/image-20240514070345762.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/image-20240515000343120.png">
 <meta property="og:image" content="https://learn.microsoft.com/en-us/cpp/build/media/vcamd_conv_ex_5.png?view=msvc-170">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/Users/Administrator/AppData/Roaming/Typora/typora-user-images/image-20240516120003269.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/Users/Administrator/AppData/Roaming/Typora/typora-user-images/image-20240517133710237.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/image-20240516120003269.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/image-20240517133710237.png">
 <meta property="article:published_time" content="2024-05-13T22:52:45.000Z">
-<meta property="article:modified_time" content="2024-05-18T23:28:43.422Z">
+<meta property="article:modified_time" content="2024-05-18T23:36:29.721Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="c++ lua php js python">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/project/hexo/github-blog/source_posts/c-%E8%B0%83%E8%AF%95/image-20240514070514439.png">
+<meta name="twitter:image" content="https://jerrywang2013.github.io/2024/05/14/c-%E8%B0%83%E8%AF%95/image-20240514070514439.png">
   
     <link rel="alternate" href="/atom.xml" title="Jerry Blogs" type="application/atom+xml">
   
@@ -114,22 +113,19 @@
 <li><p>反汇编</p>
 <ul>
 <li><p><strong>sum() 反汇编</strong>(被调用函数)</p>
-<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/project\hexo\github-blog\source_posts\c-调试\image-20240514070514439.png" alt="image-20240514070514439"></p>
-</li>
-</ul>
-<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240514070514439.png" alt="image-20240514070514439"></p>
+<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/image-20240514070514439.png" alt="image-20240514070514439"></p>
 <p>部分反汇编代码解释：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">push rbp; rbp值入栈，用于保存rbp寄存器，后面恢复用</span><br><span class="line">push rdi; rdi寄存器入栈，后面会用到rdi寄存器，这里值先保存</span><br><span class="line">sub rsp 0e8h; 将rsp减去0e8h，保留栈空间用于本函数(局部变量等）的使用</span><br><span class="line">mov eax, dword ptr[a]; 将a值赋值给eax寄存器</span><br><span class="line">mov ecx, dword ptr[b]; 将b值赋值给ecx寄存器</span><br><span class="line">lea eax, [rax+rcx+1]; 计算rax+rcx+1结果保存到eax</span><br><span class="line">lea rsp,[rbp+0c8h]; 恢复rsp，之前rsp用rbp+0e8h,然后rbp-=20h</span><br><span class="line">pop rdi; 恢复rdi寄存器</span><br><span class="line">pop rbp; 恢复rbp寄存器</span><br></pre></td></tr></table></figure>
 
 
-
-<ul>
-<li><strong>main() 反汇编</strong>(调用函数)</li>
-</ul>
-<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240514070345762.png" alt="image-20240514070345762"></p>
+</li>
+<li><p><strong>main() 反汇编</strong>(调用函数)</p>
+<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/image-20240514070345762.png" alt="image-20240514070345762"></p>
 <p>主要看main函数调用sum()前后部分反汇编代码：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mov edx, dword ptr[b];   变量b的值赋值给edx寄存器</span><br><span class="line">mov ecx, dword ptr[a];  变量a的值赋值给ecx寄存器</span><br><span class="line">call sum(07FF71D5411E5h); 调用sum函数</span><br></pre></td></tr></table></figure>
-
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mov edx, dword ptr[b];   变量b的值赋值给edx寄存器</span><br><span class="line">mov ecx, dword ptr[a];  变量a的值赋值给ecx寄存器</span><br><span class="line">call sum(07FF71D5411E5h); 调用sum函数</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
 <p><strong>x64架构调用约定：</strong></p>
 <ul>
 <li><p>在x64 window平台下，函数参数传递默认情况下前四个整形或者指针参数统计寄存器传递(rcx, rdx, r8, r9)，后面的参数通过压栈传参。可以看到，这里2个参数是用了ecx和edx传参。</p>
@@ -170,13 +166,14 @@ int s = sum(a, b, 3, 4, 5);
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">push rax  等价于 rsp--; *rsp = rax;</span><br><span class="line">pop rax 等价于rax = *rsp; rsp++;</span><br></pre></td></tr></table></figure></li>
 </ol>
 <p><strong>栈布局图</strong></p>
-<img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240515000343120.png" alt="image-20240515000343120" style="zoom: 33%;">
+<img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/image-20240515000343120.png" alt="image-20240515000343120" style="zoom:50%;">
+
+
 
 <p><img src="https://learn.microsoft.com/en-us/cpp/build/media/vcamd_conv_ex_5.png?view=msvc-170" alt="Diagram of the stack layout for the x64 conversion example."></p>
-</li>
-</ul>
-<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240516120003269.png" alt="image-20240516120003269"></p>
-<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240517133710237.png" alt="image-20240517133710237"></p>
+<p><img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/image-20240516120003269.png" alt="image-20240516120003269"></p>
+<img src="/2024/05/14/c-%E8%B0%83%E8%AF%95/image-20240517133710237.png" alt="image-20240517133710237" style="zoom:80%;">
+
 <h2 id="volatile-non-volatile-register"><a href="#volatile-non-volatile-register" class="headerlink" title="volatile &amp; non-volatile register"></a>volatile &amp; non-volatile register</h2><p>​		volatile register通常又称之为可变寄存器。可变的意思是在函数调用过程中寄存器值可能发生变化。</p>
 <ul>
 <li><p>常见volatile register</p>
