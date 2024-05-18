@@ -72,6 +72,51 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-QT问题记录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/18/QT%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2024-05-18T00:56:13.000Z" itemprop="datePublished">2024-05-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/18/QT%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/">QT问题记录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h1><p>Q： 在线安装频繁提示网络错误，用代理和不用代理一样</p>
+<p>A：尝试使用离线安装包（qt-creator-opensource-windows-x86_64-13.0.1.exe），里头可选择安装项目。</p>
+<p>Q：QtCreator编译后如何部署</p>
+<p>A：编译后会生成可执行环境，进入到生成目录直接运行exe文件无法启动，提示依赖库不存在，不过可以在Creator中调试（会自动设置好依赖库路径）。发布的时候需要部署，qt自带了部署工具windeployqt.exe，具体的在开发包5.12.12\msvc2017_64\bin\（x64）或者5.12.12\msvc2017\bin\（x86）下面，此命令只需要一个exe文件名即可。例如：你可以将生成的output.exe文件拷贝到你要部署的目录，然后在部署目录下执行windeployqt.exe output.exe即可。</p>
+<p>​		当然，我们也可以借助QtCreator工具来部署，在Kit中点击Run，打开运行配置，最上面就是部署配置，可以创建部署步骤(Customer Process Step)，例如我们先拷贝输出文件到部署目录然后部署，下面是示例：</p>
+<p><img src="/2024/05/18/QT%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20240518090437817.png" alt="image-20240518090437817"></p>
+<p><strong>注意：</strong>这里步骤一是想用copy命令拷贝，不要直接在command：里头输入copy，他会提示：invalid command。我们需要用cmd.exe &#x2F;c copy来执行拷贝，Command填入cmd.exe即可， &#x2F;c copy 填在arguments里头。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/05/18/QT%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/" data-id="clwber01600008w4q9rdia8vl" data-title="QT问题记录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-c-调试" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/14/c-%E8%B0%83%E8%AF%95/" class="article-date">
@@ -1855,45 +1900,12 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
 
 
   
-    <article id="post-SelectPage" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/04/23/SelectPage/" class="article-date">
-  <time class="dt-published" datetime="2024-04-23T13:03:31.000Z" itemprop="datePublished">2024-04-23</time>
-</a>
+
+
+  <nav id="page-nav">
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/04/23/SelectPage/">SelectPage</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/04/23/SelectPage/" data-id="clvnklkjf0002co4q22tqgv36" data-title="SelectPage" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
 
 </section>
         
@@ -1924,6 +1936,10 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       <ul>
         
           <li>
+            <a href="/2024/05/18/QT%E9%97%AE%E9%A2%98%E8%AE%B0%E5%BD%95/">QT问题记录</a>
+          </li>
+        
+          <li>
             <a href="/2024/05/14/c-%E8%B0%83%E8%AF%95/">c++调试</a>
           </li>
         
@@ -1937,10 +1953,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
         
           <li>
             <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/">vscode调试php</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/05/libevent/">libevent</a>
           </li>
         
       </ul>
