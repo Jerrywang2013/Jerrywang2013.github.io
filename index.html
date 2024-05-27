@@ -72,6 +72,44 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-c-11" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/27/c-11/" class="article-date">
+  <time class="dt-published" datetime="2024-05-27T03:49:14.000Z" itemprop="datePublished">2024-05-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/27/c-11/">c++11</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/05/27/c-11/" data-id="clwofja4x0000oo4q1oi39uw7" data-title="c++11" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-QT" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/18/QT/" class="article-date">
@@ -94,13 +132,87 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h1><p><strong>Q： 在线安装频繁提示网络错误，用代理和不用代理一样</strong></p>
-<p><strong>A：</strong>尝试使用离线安装包（qt-creator-opensource-windows-x86_64-13.0.1.exe），里头可选择安装项目。</p>
-<p><strong>Q：QtCreator编译后如何部署</strong></p>
-<p>A：编译后会生成可执行环境，进入到生成目录直接运行exe文件无法启动，提示依赖库不存在，不过可以在Creator中调试（会自动设置好依赖库路径）。发布的时候需要部署，qt自带了部署工具windeployqt.exe，具体的在开发包5.12.12\msvc2017_64\bin\（x64）或者5.12.12\msvc2017\bin\（x86）下面，此命令只需要一个exe文件名即可。例如：你可以将生成的output.exe文件拷贝到你要部署的目录，然后在部署目录下执行windeployqt.exe output.exe即可。</p>
+        <h1 id="QA"><a href="#QA" class="headerlink" title="QA"></a>QA</h1><h2 id="Q：如何理解qt中的signal和slot"><a href="#Q：如何理解qt中的signal和slot" class="headerlink" title="Q：如何理解qt中的signal和slot"></a>Q：<strong>如何理解qt中的signal和slot</strong></h2><p>A：简单点说，signal类似事件或者消息，slot类似事件或者消息handler；常见的需求是动作发生后对应的事件（或者消息）被触发进而触发对应的handler处理，这样的话，只需要捕获动作对应的事件和消息即可。slot这里可以自定义，也有一部分预先定义好的，比如window有一个关闭的slot，那么我们可以将一个按钮的点击信号关联到窗口的关闭handler，实现点击按钮就关闭窗口的效果。</p>
+<p>​		用slot这个概念很形象，功能handler就像一个插槽一样，这里的siganal和slot就像将电线接到插槽上形成通路一样，signal发出就会触发handler执行。</p>
+<p>signale和slot的连接通过 <code>**QObject::connect**</code>实现</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">FooObjectA *fooA = new FooObjectA();</span><br><span class="line">FooObjectB *fooB = new FooObjectB();</span><br><span class="line"></span><br><span class="line">QObject::connect(fooA, SIGNAL (bared()), fooB, SLOT (baz()));</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>signal可以连接signal，从这个角度看，signal可以充当信号中转</p>
+<h2 id="Q：Qt-Designer对mainwindow重置布局就会导致程序崩溃"><a href="#Q：Qt-Designer对mainwindow重置布局就会导致程序崩溃" class="headerlink" title="Q：Qt Designer对mainwindow重置布局就会导致程序崩溃"></a><strong>Q：Qt Designer对mainwindow重置布局就会导致程序崩溃</strong></h2><p><strong>A：</strong>暂时不知！</p>
+<h2 id="Q：界面ui文件如何生成相应的代码"><a href="#Q：界面ui文件如何生成相应的代码" class="headerlink" title="Q：界面ui文件如何生成相应的代码"></a><strong>Q：界面ui文件如何生成相应的代码</strong></h2><p><strong>A：</strong>默认情况下，通过designer创建一个界面(例如mainwindow.ui)文件，会同步自动创建对应的界面类mainwindow.h和mainwindow.cpp文件，并且在编译之后在编译目录生成ui_mainwindow.h文件，此文件是解析界面mainwindow.ui文件(xml)，生成对应窗口的创建代码。</p>
+<p>​		对应的mainwindow.h定义的是类MainWindow，生成的ui_mainwindow.h对应的是界面类UI::MainWindow(等价于编译生成文件中的Ui_MainWindow类)，然后MainWindow类中成员ui指针类型是UI::MainWindow*，MainWindow构造函数会new UI::MainWindow对象赋值给ui，然后调用UI::MainWindow::setupUi来初始化界面元素。</p>
+<h2 id="Q：为何有些ui文件编译时不会生成对应的ui-xxx-h文件？"><a href="#Q：为何有些ui文件编译时不会生成对应的ui-xxx-h文件？" class="headerlink" title="Q：为何有些ui文件编译时不会生成对应的ui_xxx.h文件？"></a><strong>Q：为何有些ui文件编译时不会生成对应的ui_xxx.h文件？</strong></h2><p><strong>A：</strong>项目编译的时候，会用预处理工具uic对ui文件进行处理，生成对应的头文件，并非所有的ui文件在编译的时候都会生成对应的头文件，因为uic只会对工程pro文件中的FORMS参数中的ui进行预编译生成对应的头文件。用qt creator创建ui文件一般会自动添加到项目中，会自动修改pro文件，将ui追加到FORMS变量中。</p>
+<h2 id="Q：mainwindow-cpp为何可以直接-include-“ui-mainwindow-h”？他们并不在同一个目录"><a href="#Q：mainwindow-cpp为何可以直接-include-“ui-mainwindow-h”？他们并不在同一个目录" class="headerlink" title="Q：mainwindow.cpp为何可以直接#include “ui_mainwindow.h”？他们并不在同一个目录"></a><strong>Q：mainwindow.cpp为何可以直接#include “ui_mainwindow.h”？他们并不在同一个目录</strong></h2><p><strong>A：</strong>ui文件不一定非要放在项目目录下，比如放在&#x2F;ui&#x2F;mainwindow.ui，只需要修改pro文件FORMS中ui文件的路径即可，例如FORMS +&#x3D; ui&#x2F;mainwindow.ui。ui编译后生成的ui_mainwindow.h文件在build目录下，mainwindow.cpp是直接include ui_mainwindow.h，哪里头文件搜索路径在哪里设置的？pro文件并没有看到include文件搜索路径。</p>
+<p>​		pro文件确实没有，这个是qt默认的生成规则，qmake在处理pro文件的时候会生成makefile文件，我们可以打开makefile.debug文件看一下，里头INCPATH并没有包括了build目录。这是因为生成的ui_mainwindow.h文件和makefile文件是同一个目录，所以对ui_mainwindow.h文件的引用并不需要在incpath中添加路径。但是mainwindow.cpp文件在项目目录而不是build目录，和ui_mainwindow.h文件不在同一个目录之所以能直接#include “ui_maindown.h”，是因为makefile文件中mainwindow.cpp目标依赖是..\..\mainwindow.cpp。</p>
+<h2 id="Q：除了用uic编译ui文件生成-h文件，还有没有其他办法使用ui文件？"><a href="#Q：除了用uic编译ui文件生成-h文件，还有没有其他办法使用ui文件？" class="headerlink" title="Q：除了用uic编译ui文件生成.h文件，还有没有其他办法使用ui文件？"></a><strong>Q：除了用uic编译ui文件生成.h文件，还有没有其他办法使用ui文件？</strong></h2><p><strong>A：</strong>还可以用QUiLoader，需要使用QtUiTools库（修改pro文件的QT +&#x3D; widgets uitools）。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 这里calculatorform.ui是在资源文件下的forms过滤器下</span><br><span class="line">QFile file(&quot;:/forms/calculatorform.ui&quot;);</span><br><span class="line">file.open(QFile::ReadOnly);</span><br><span class="line">QWidget *formWidget = loader.load(&amp;file, this);</span><br><span class="line">file.close();</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Q-QObject-findChild"><a href="#Q-QObject-findChild" class="headerlink" title="Q:  QObject::findChild"></a><strong>Q:  QObject::findChild</strong></h2><p><strong>A:</strong> 可用于Widget查找子窗体。todo…</p>
+<h2 id="Q-QObject-staticMetaObject"><a href="#Q-QObject-staticMetaObject" class="headerlink" title="Q: QObject::staticMetaObject"></a><strong>Q: QObject::staticMetaObject</strong></h2><p><strong>A:</strong><code>staticMetaObject</code> 是 Qt 中 QObject 类的静态成员，它返回与特定对象类型相关联的元对象。元对象（Meta Object）是 QObject 的一个重要概念，它包含了有关对象类型的元信息，比如对象的类名、父类、属性、信号和槽等信息。</p>
+<p>对于任何继承自 QObject 的类，都可以使用 <code>staticMetaObject</code> 来获取与其相关联的元对象。这个元对象是在编译时生成的，包含了所有静态信息，因此可以在运行时快速地访问对象的元信息。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;QObject&gt;</span><br><span class="line"></span><br><span class="line">// 定义一个继承自 QObject 的类</span><br><span class="line">class MyClass : public QObject</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line">    // 其他类定义</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 在需要获取元对象的地方，使用 staticMetaObject</span><br><span class="line">const QMetaObject *metaObject = MyClass::staticMetaObject;</span><br></pre></td></tr></table></figure>
+
+<p>​		上面的代码定义了一个继承自 QObject 的类 MyClass，并在需要的地方使用了 <code>staticMetaObject</code> 获取了 MyClass 类的元对象。一旦获取了元对象，就可以通过元对象访问对象的各种属性、信号和槽等元信息。</p>
+<ul>
+<li><p><strong>访问属性信息</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 获取属性个数</span><br><span class="line">int propertyCount = metaObject-&gt;propertyCount();</span><br><span class="line"></span><br><span class="line">// 遍历所有属性</span><br><span class="line">for (int i = 0; i &lt; propertyCount; ++i) &#123;</span><br><span class="line">    QMetaProperty property = metaObject-&gt;property(i);</span><br><span class="line">    qDebug() &lt;&lt; &quot;Property Name: &quot; &lt;&lt; property.name();</span><br><span class="line">    qDebug() &lt;&lt; &quot;Property Type: &quot; &lt;&lt; property.typeName();</span><br><span class="line">    qDebug() &lt;&lt; &quot;Is Readable: &quot; &lt;&lt; property.isReadable();</span><br><span class="line">    qDebug() &lt;&lt; &quot;Is Writable: &quot; &lt;&lt; property.isWritable();</span><br><span class="line">    // 其他属性信息</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>访问信号信息</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 获取信号个数</span><br><span class="line">int signalCount = metaObject-&gt;methodCount();</span><br><span class="line">for (int i = metaObject-&gt;methodOffset(); i &lt; signalCount; ++i) &#123;</span><br><span class="line">    QMetaMethod method = metaObject-&gt;method(i);</span><br><span class="line">    if (method.methodType() == QMetaMethod::Signal) &#123;</span><br><span class="line">        qDebug() &lt;&lt; &quot;Signal Name: &quot; &lt;&lt; method.name();</span><br><span class="line">        qDebug() &lt;&lt; &quot;Parameter Types: &quot; &lt;&lt; method.parameterTypes();</span><br><span class="line">        // 其他信号信息</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>访问slot信息</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 获取槽个数</span><br><span class="line">int slotCount = metaObject-&gt;methodCount();</span><br><span class="line">for (int i = metaObject-&gt;methodOffset(); i &lt; slotCount; ++i) &#123;</span><br><span class="line">    QMetaMethod method = metaObject-&gt;method(i);</span><br><span class="line">    if (method.methodType() == QMetaMethod::Slot) &#123;</span><br><span class="line">        qDebug() &lt;&lt; &quot;Slot Name: &quot; &lt;&lt; method.name();</span><br><span class="line">        qDebug() &lt;&lt; &quot;Parameter Types: &quot; &lt;&lt; method.parameterTypes();</span><br><span class="line">        // 其他槽信息</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>调用槽函数</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 创建一个对象</span><br><span class="line">QObject *obj = new QObject();</span><br><span class="line"></span><br><span class="line">// 获取槽函数的索引</span><br><span class="line">int slotIndex = metaObject-&gt;indexOfSlot(&quot;slotFunctionName()&quot;);</span><br><span class="line"></span><br><span class="line">// 调用槽函数</span><br><span class="line">if (slotIndex != -1) &#123;</span><br><span class="line">    QMetaMethod slotMethod = metaObject-&gt;method(slotIndex);</span><br><span class="line">    slotMethod.invoke(obj);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Q：解析一下：moc-classname-cpp文件"><a href="#Q：解析一下：moc-classname-cpp文件" class="headerlink" title="Q：解析一下：moc_classname.cpp文件"></a><strong>Q：解析一下：moc_classname.cpp文件</strong></h2><p><strong>A：</strong>对象声明文件中如果有Q_OBJECT宏，则会生成moc_classname.cpp文件。</p>
+<p><code>qt_meta_stringdata_TextFinder</code>：signal和slot声明的函数原型涉及到的返回值、函数名、参数类型、参数名等等的字符串表。本质是一个字符串表，里头把所有用到的字符串去重后统一存在一个字符数组中，然后建立一个索引表（索引数组，可以用于遍历字符串表），每个索引项记录了字符串的起始指针和长度</p>
+<p><code>qt_meta_data_TextFinder</code>: uint数组，内部结构其实是QMetaObjectPrivate，在QMetaObjectPrivate后面跟着是method(signal&#x2F;slot)的原型定义。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">struct QMetaObjectPrivate</span><br><span class="line">&#123;</span><br><span class="line">  // revision 7 is Qt 5.0 everything lower is not supported</span><br><span class="line">  // revision 8 is Qt 5.12: It adds the enum name to QMetaEnum</span><br><span class="line">  enum &#123; OutputRevision = 8 &#125;; // Used by moc, qmetaobjectbuilder and qdbus</span><br><span class="line">  int revision;</span><br><span class="line">  int className;</span><br><span class="line">  int classInfoCount, classInfoData;</span><br><span class="line">  int methodCount, methodData;</span><br><span class="line">  int propertyCount, propertyData;</span><br><span class="line">  int enumeratorCount, enumeratorData;</span><br><span class="line">  int constructorCount, constructorData;</span><br><span class="line">  int flags;</span><br><span class="line">  int signalCount;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>示例（相关的注释在代码中）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">// 字符串表总体结构，其中data是字符串表的索引信息，stringdata0是压缩在一起的所有字符串的字节数组。</span><br><span class="line">// 字符串表 = 字符串索引表 + 所有字符串连接起来的大字节数组</span><br><span class="line">struct qt_meta_stringdata_TextFinder_t &#123;</span><br><span class="line">    QByteArrayData data[16];</span><br><span class="line">    char stringdata0[160];</span><br><span class="line">&#125;;</span><br><span class="line">// 计算字字符串表中的每个字符串的索引信息，每个字符串在字符串表中的索引信息</span><br><span class="line">// 注意：字符串的索引信息包括字符串长度size和字符串偏移offset。其中offset并非在字符串表中的偏移，而是相对于当前字符串索引项指针的偏移</span><br><span class="line">// 例如：假设ptr是执行字符串表的索引表的第n个字符串指针，是QByteArrayData*ptr，那么对应的字符串的地址是(char *)ptr+offset</span><br><span class="line">// 可以参考下面QArrayData::data()代码实现来理解</span><br><span class="line">#define QT_MOC_LITERAL(idx, ofs, len) \</span><br><span class="line">    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \</span><br><span class="line">    qptrdiff(offsetof(qt_meta_stringdata_TextFinder_t, stringdata0) + ofs \</span><br><span class="line">        - idx * sizeof(QByteArrayData)) \</span><br><span class="line">    )</span><br><span class="line">    // 构造字符串表：字符串索引表 + 大的字符串字节数组</span><br><span class="line">static const qt_meta_stringdata_TextFinder_t qt_meta_stringdata_TextFinder = &#123;</span><br><span class="line">    &#123;</span><br><span class="line">QT_MOC_LITERAL(0, 0, 10), // &quot;TextFinder&quot;</span><br><span class="line">QT_MOC_LITERAL(1, 11, 14), // &quot;custom_clicked&quot;</span><br><span class="line">QT_MOC_LITERAL(2, 26, 0), // &quot;&quot;</span><br><span class="line">QT_MOC_LITERAL(3, 27, 7), // &quot;checked&quot;</span><br><span class="line">QT_MOC_LITERAL(4, 35, 15), // &quot;custom_clicked2&quot;</span><br><span class="line">QT_MOC_LITERAL(5, 51, 1), // &quot;a&quot;</span><br><span class="line">QT_MOC_LITERAL(6, 53, 11), // &quot;const char*&quot;</span><br><span class="line">QT_MOC_LITERAL(7, 65, 1), // &quot;s&quot;</span><br><span class="line">QT_MOC_LITERAL(8, 67, 15), // &quot;custom_clicked3&quot;</span><br><span class="line">QT_MOC_LITERAL(9, 83, 1), // &quot;c&quot;</span><br><span class="line">QT_MOC_LITERAL(10, 85, 5), // &quot;char*&quot;</span><br><span class="line">QT_MOC_LITERAL(11, 91, 1), // &quot;b&quot;</span><br><span class="line">QT_MOC_LITERAL(12, 93, 15), // &quot;custom_clicked4&quot;</span><br><span class="line">QT_MOC_LITERAL(13, 109, 6), // &quot;int8_t&quot;</span><br><span class="line">QT_MOC_LITERAL(14, 116, 20), // &quot;on_btnSearch_clicked&quot;</span><br><span class="line">QT_MOC_LITERAL(15, 137, 22) // &quot;on_btnSearch_pressdown&quot;</span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line">    //</span><br><span class="line">    &quot;TextFinder\0custom_clicked\0\0checked\0&quot;</span><br><span class="line">    &quot;custom_clicked2\0a\0const char*\0s\0&quot;</span><br><span class="line">    &quot;custom_clicked3\0c\0char*\0b\0custom_clicked4\0&quot;</span><br><span class="line">    &quot;int8_t\0on_btnSearch_clicked\0&quot;</span><br><span class="line">    &quot;on_btnSearch_pressdown&quot;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line">#undef QT_MOC_LITERAL</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">struct Q_CORE_EXPORT QArrayData</span><br><span class="line">&#123;</span><br><span class="line">  QtPrivate::RefCount ref;</span><br><span class="line">  int size;</span><br><span class="line">  uint alloc : 31;</span><br><span class="line">  uint capacityReserved : 1;</span><br><span class="line">  qptrdiff offset; // in bytes from beginning of header</span><br><span class="line">  // QArrayData::data()就是上述获取其指向的数据的内容，可以看到offset是相对于自己(QArrayData *this)而言的</span><br><span class="line">  void *data()</span><br><span class="line">  &#123;</span><br><span class="line">​    Q_ASSERT(size == 0</span><br><span class="line">​        || offset &lt; 0 || size_t(offset) &gt;= sizeof(QArrayData));</span><br><span class="line">​    return reinterpret_cast&lt;char *&gt;(this) + offset;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>staticMetaObject</code>: QObject对象的静态metaobject</p>
+<p>另外还有为用户定义的信号（signal函数）生成实现代码。注意，用户定义的信号只需要在头文件的类中给出函数申明即可，不需要定义。</p>
+<p><strong>Q：QT布局</strong></p>
+<p><strong>A：</strong>QT UI系统通过Layout&#x2F;sizePolicy&#x2F;StretchFactor来控制布局和控件的大小。</p>
+<ul>
+<li>布局控制<strong>子元素</strong>的排列，比如如果widget是QHBoxLayout布局，那么其所有子元素会水平布局</li>
+<li>sizePolicy控制<strong>控件自己</strong>尺寸的行为，有下列选项<ul>
+<li><strong>Fixed</strong>：控件将保持其固定大小，并不会改变。</li>
+<li><strong>Minimum</strong>：控件将尽可能小，以适应其内容，但不会超过其最小尺寸。</li>
+<li><strong>Maximum</strong>：控件将尽可能大，以填充可用空间，但不会超过其最大尺寸。</li>
+<li><strong>Preferred</strong>：控件希望具有适当的大小，以显示其内容，但它可能会根据可用空间进行扩展或收缩。</li>
+<li><strong>Expanding</strong>：控件希望尽可能大，以填充可用空间。如果可用空间增加，它将尝试扩展以填充更多空间。</li>
+<li><strong>MinimumExpanding</strong>：控件希望尽可能大，以填充可用空间，并且具有最小尺寸。</li>
+<li><strong>Ignored</strong>：布局管理器会忽略控件的大小，控件可以是任何大小。</li>
+</ul>
+</li>
+<li>StretchFactor</li>
+</ul>
+<p><strong>备注：</strong>在水平布局中，假设里头有2个子控件，默认设置sizePolicy水平方向均为prefered或者extended，父窗口调整大小，两个子控件会自动调整宽度以完全适应父窗口宽度。如果想在中间假如间隔，可以假如一个horzSpacer弹簧。如果想控制其中一个子控件宽度不变，修改该子控件sizePolicy水平为fixed还不行，还需要修改minimumsize.x为你相设置的宽度（不要尝试修改geometry的宽度，在布局下面，控件的geometry无法修改）</p>
+<h2 id="Q：qrc文件"><a href="#Q：qrc文件" class="headerlink" title="Q：qrc文件"></a><strong>Q：qrc文件</strong></h2><p><strong>A：</strong>通过makefile可以看到编译时会用rcc.exe来编译qrc文件，生成对应的cpp文件。然后在程序入口地方可以用Q_INIT_RESOURCE(XXX);来初始化资源，内部调用qRegisterResourceData函数来注册资源数据。</p>
+<h2 id="Q：-在线安装频繁提示网络错误，用代理和不用代理一样"><a href="#Q：-在线安装频繁提示网络错误，用代理和不用代理一样" class="headerlink" title="Q： 在线安装频繁提示网络错误，用代理和不用代理一样"></a><strong>Q： 在线安装频繁提示网络错误，用代理和不用代理一样</strong></h2><p><strong>A：</strong>尝试使用离线安装包（qt-creator-opensource-windows-x86_64-13.0.1.exe），里头可选择安装项目。</p>
+<h2 id="Q：QtCreator编译后如何部署"><a href="#Q：QtCreator编译后如何部署" class="headerlink" title="Q：QtCreator编译后如何部署"></a><strong>Q：QtCreator编译后如何部署</strong></h2><p>A：编译后会生成可执行环境，进入到生成目录直接运行exe文件无法启动，提示依赖库不存在，不过可以在Creator中调试（会自动设置好依赖库路径）。发布的时候需要部署，qt自带了部署工具windeployqt.exe，具体的在开发包5.12.12\msvc2017_64\bin\（x64）或者5.12.12\msvc2017\bin\（x86）下面，此命令只需要一个exe文件名即可。例如：你可以将生成的output.exe文件拷贝到你要部署的目录，然后在部署目录下执行windeployqt.exe output.exe即可。</p>
 <p>​		当然，我们也可以借助QtCreator工具来部署，在Kit中点击Run，打开运行配置，最上面就是部署配置，可以创建部署步骤(Customer Process Step)，例如我们先拷贝输出文件到部署目录然后部署，下面是示例&gt;2：</p>
 <p><img src="/2024/05/18/QT/image-20240518091304577.png" alt="image-20240518091304577"></p>
 <p><strong>注意：</strong>这里步骤一是想用copy命令拷贝，不要直接在command：里头输入copy，他会提示：invalid command。我们需要用cmd.exe &#x2F;c copy来执行拷贝，Command填入cmd.exe即可， &#x2F;c copy 填在arguments里头。</p>
+<h1 id="附录："><a href="#附录：" class="headerlink" title="附录："></a>附录：</h1><p>1、<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/">清华大学开源软件镜像站</a></p>
+<p>2、<a target="_blank" rel="noopener" href="https://download.qt.io/">qt官方下载站</a></p>
 
       
     </div>
@@ -1772,134 +1884,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
 
 
   
-    <article id="post-MarkDown基本语法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/04/23/MarkDown%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" class="article-date">
-  <time class="dt-published" datetime="2024-04-23T13:25:07.000Z" itemprop="datePublished">2024-04-23</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/04/23/MarkDown%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">MarkDown基本语法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>一、前言<br>    由于有些语法无法在博客园展示，推荐使用<a target="_blank" rel="noopener" href="https://www.typora.io/">Typora解锁全套</a><br>    推荐使用<a target="_blank" rel="noopener" href="https://www.cnblogs.com/nickchen121/p/10722733.html">jupyter</a><br>    <a target="_blank" rel="noopener" href="https://www.cnblogs.com/nickchen121/p/11746655.html">markdown数学公式大全</a></p>
-<p>二、MD工具</p>
-<ul>
-<li><strong>离线工具</strong>：<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/guoxuanhan/p/16841068.html">typora</a>：markdown编辑器和阅读器，分割简单多种主题，支持windows&#x2F;linux&#x2F;macOS。</li>
-<li><strong>在线编辑器</strong>：<br><a target="_blank" rel="noopener" href="https://maxiang.io/">马克飞象</a><br><a target="_blank" rel="noopener" href="http://daringfireball.net/projects/markdown/dingus">dingus</a></li>
-</ul>
-<p>二、MD基本语法</p>
-<ul>
-<li><p>2.1 标题<br><strong>代码</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 一级标题</span><br><span class="line">## 二级标题</span><br><span class="line">### 三级标题</span><br><span class="line">#### 四级标题</span><br></pre></td></tr></table></figure>
-<p><strong>效果</strong>：</p>
-<h1 id="一级标题"><a href="#一级标题" class="headerlink" title="一级标题"></a>一级标题</h1><h2 id="二级标题"><a href="#二级标题" class="headerlink" title="二级标题"></a>二级标题</h2><h3 id="三级标题"><a href="#三级标题" class="headerlink" title="三级标题"></a>三级标题</h3><h4 id="四级标题"><a href="#四级标题" class="headerlink" title="四级标题"></a>四级标题</h4></li>
-<li><p>2.2 加粗<br>语法：使用**或者__<br><strong>代码</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">**我被加粗了**</span><br></pre></td></tr></table></figure>
-<p><strong>效果</strong>：<br>&nbsp;&nbsp;&nbsp;&nbsp;我被<strong>加粗</strong>了倾斜</p>
-</li>
-<li><p>2.3 斜体<br>语法：使用*或者_<br><strong>代码</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*我被倾斜了*</span><br></pre></td></tr></table></figure>
-<p><strong>效果</strong>：<br>&nbsp;&nbsp;&nbsp;&nbsp;<em>我被倾斜了</em></p>
-</li>
-<li><p>2.4 高亮<br>语法：使用*或者_<br>  我被&#x3D;&#x3D;高亮&#x3D;&#x3D;</p>
-</li>
-<li><p>2.5 代码引用(&gt;)</p>
-</li>
-<li><p>2.6 代码引用(<code>\`\`\`</code>)</p>
-</li>
-<li><p>2.7 代码引用(`)</p>
-</li>
-<li><p>2.8 插入连接<br>Markdown支持两种链接： <strong><em>内联</em></strong> 和 <strong><em>引用</em></strong></p>
-</li>
-<li><p>内联<br><strong>代码</strong>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This is [an example](http://example.com/ &quot;Here is Title&quot;) inline link</span><br></pre></td></tr></table></figure>
-<p><strong>效果</strong>：<br>This is <a target="_blank" rel="noopener" href="http://example.com/" title="Here is Title">an example</a> inline link</p>
-</li>
-<li><p>引用<br> &lt;&gt;<br> <a href></a></p>
-</li>
-<li><p>2.9 插入图片链接   </p>
-</li>
-<li><p>2.11 有序列表</p>
-<ol>
-<li>one</li>
-<li>two</li>
-</ol>
-</li>
-<li><p>2.12 无序列表</p>
-<ul>
-<li>one</li>
-<li>two</li>
-</ul>
-</li>
-<li><p>2.13 水平分割线<br><strong>代码</strong>:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">---- 或者 *** 或者 * * * 或者 - - -</span><br></pre></td></tr></table></figure>
-<p><strong>效果</strong>:</p>
-</li>
-</ul>
-<hr>
-<ul>
-<li>2.14 表格</li>
-<li>2.15 数学公式（行内嵌）</li>
-<li>2.16 数学公式（块状）</li>
-</ul>
-<hr>
-<h3 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h3><table>
-<thead>
-<tr>
-<th align="left">Item</th>
-<th align="right">Value</th>
-<th align="center">Qty</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">Computer</td>
-<td align="right">1600 USD</td>
-<td align="center">5</td>
-</tr>
-<tr>
-<td align="left">Phone</td>
-<td align="right">12 USD</td>
-<td align="center">12</td>
-</tr>
-<tr>
-<td align="left">Pipe</td>
-<td align="right">1 USD</td>
-<td align="center">234</td>
-</tr>
-</tbody></table>
-<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h3><p>flow<br>st&#x3D;&gt;start: Start<br>e&#x3D;&gt;end<br>op&#x3D;&gt;operation: My Operation<br>cond&#x3D;&gt;condition: Yes or No?</p>
-<p>st-&gt;op-&gt;cond<br>cond(yes)-&gt;e<br>cond(no)-&gt;op</p>
-<p>以及时序图:</p>
-<p>sequence<br>Alice-&gt;Bob: Hello Bob, how are you?<br>Note right of Bob: Bob thinks<br>Bob–&gt;Alice: I am good thanks!</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/04/23/MarkDown%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" data-id="clwbg5x4i0001z44q4lst6lc9" data-title="MarkDown基本语法" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -1936,6 +1920,10 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       <ul>
         
           <li>
+            <a href="/2024/05/27/c-11/">c++11</a>
+          </li>
+        
+          <li>
             <a href="/2024/05/18/QT/">QT</a>
           </li>
         
@@ -1949,10 +1937,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
         
           <li>
             <a href="/2024/05/09/%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BFApacheServer%E9%85%8D%E7%BD%AE/">宝塔面板ApacheServer配置</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/">vscode调试php</a>
           </li>
         
       </ul>
