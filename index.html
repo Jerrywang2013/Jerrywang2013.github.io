@@ -95,6 +95,206 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <p>接触QT，里头用到C++11新特性，打算简单了解一下。</p>
+<h1 id="列表初始化"><a href="#列表初始化" class="headerlink" title="列表初始化"></a>列表初始化</h1><p>​		扩大列表初始化使用范围，对所有内置类型和自定义类型都可以用列表初始化方法，并且可以省略&#x3D;号。另外还支持部分内置容器的初始化列表</p>
+<ul>
+<li><p>示例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">struct Point &#123;</span><br><span class="line">​		int x;</span><br><span class="line">​		int y;</span><br><span class="line">&#125;</span><br><span class="line">Point p=&#123;1,2&#125;; // OK</span><br><span class="line">Point p&#123;1,2&#125;; // 自定义类型OK 省略=</span><br><span class="line">int a&#123;100&#125;;  // 内置类型OK 省略=</span><br><span class="line">std::vector&lt;int&gt; v&#123;1,2,3&#125;; // OK</span><br><span class="line">std::initializer_list&lt;int&gt; il&#123; 2,3,4,5 &#125;;</span><br><span class="line">v = il; // OK</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="变量类型推导"><a href="#变量类型推导" class="headerlink" title="变量类型推导"></a>变量类型推导</h1><p>​		c++11提供了多种简化声明的方式，特别是使用模板时。</p>
+<ul>
+<li><p>auto关键字		</p>
+<p>​		自动类型推导，要求显示初始化。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">void sum(int a, int b)&#123;&#125;</span><br><span class="line">int aaa = 1;</span><br><span class="line">auto ap1 = aaa;</span><br><span class="line">auto ap2 = sum;</span><br><span class="line">auto it = vec.begin(); // vec::iterator</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>auto elem 是推导出值类型，不影响原始数据；auto &amp;elem是推导出引用类型，直接影响原始数据。</p>
+</li>
+<li><p>decltype</p>
+<p>​	将变量类型声明为表达式指定的类型。注意，参数是一个表达式，不能是一个类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">auto ap2 = sum;</span><br><span class="line">decltype(ap2) c;</span><br><span class="line">cout &lt;&lt; typeid(c).name() &lt;&lt; endl; // int (__cdecl*)(int,int)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="nullptr"><a href="#nullptr" class="headerlink" title="nullptr"></a>nullptr</h1><p>​	c++11之前空指针用NULL，这个起始和0没区别，容易引起歧义（比如函数重载）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void fn(int); </span><br><span class="line">void fn(int*)</span><br><span class="line">fn(NULL)可能会调用fn(int)</span><br><span class="line">fn(nullptr)明确调用fn(int*)</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="范围循环"><a href="#范围循环" class="headerlink" title="范围循环"></a>范围循环</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for (auto&amp; elem : vec) &#123;</span><br><span class="line">    cout &lt;&lt; &quot;   item:&quot; &lt;&lt; elem &lt;&lt; endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="final"><a href="#final" class="headerlink" title="final"></a>final</h1><p>修饰类时，指示类不可被继承；修饰函数时，指示函数不可被重写。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class A final </span><br><span class="line">&#123;&#125;</span><br><span class="line"></span><br><span class="line">class B : public A  // error</span><br><span class="line">&#123;&#125;</span><br><span class="line"></span><br><span class="line">class A</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    virutal void fun() final</span><br><span class="line">    &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class B : public A</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">    virtual void fun() &#123;  // error    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="override"><a href="#override" class="headerlink" title="override"></a>override</h1><p>检查派生类虚函数是否是重写了基类的某个虚函数，如果没有重写则编译报错</p>
+<h1 id="新增容器"><a href="#新增容器" class="headerlink" title="新增容器"></a>新增容器</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array</span><br><span class="line">forward_list</span><br><span class="line">unordered_map</span><br><span class="line">unordered_set</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="default"><a href="#default" class="headerlink" title="default"></a>default</h1><p><code>default</code> 关键字可以用于以下几种成员函数：</p>
+<ol>
+<li><strong>默认构造函数</strong></li>
+<li><strong>析构函数</strong></li>
+<li><strong>拷贝构造函数</strong></li>
+<li><strong>拷贝赋值运算符</strong></li>
+<li><strong>移动构造函数</strong></li>
+<li><strong>移动赋值运算符</strong></li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">class MyClass &#123; </span><br><span class="line">public:    </span><br><span class="line">	MyClass() = default;                     // 默认构造函数    </span><br><span class="line">	~MyClass() = default;                    // 析构函数    </span><br><span class="line">	MyClass(const MyClass&amp;) = default;       // 拷贝构造函数    </span><br><span class="line">	MyClass&amp; operator=(const MyClass&amp;) = default;  // 拷贝赋值运算符</span><br><span class="line">	MyClass(MyClass&amp;&amp;) = default;            // 移动构造函数    </span><br><span class="line">	MyClass&amp; operator=(MyClass&amp;&amp;) = default; // 移动赋值运算符 </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>应用场景：</p>
+<p>比如你写了一个自定义带参数的构造函数，那么编译器不会给你生成默认构造函数，此时你直接用MyClass()会报错，这种情况下，可以用MyClass()&#x3D;default;就可以用MyClass c;</p>
+<h1 id="右值引用"><a href="#右值引用" class="headerlink" title="右值引用"></a>右值引用</h1><p>​	在c++11之前只有左值引用。所谓左值是指出现在等号左边，比如常见的变量可以在等号左边，它是左值。常量不能出现在等号左边，所以它是右值。</p>
+<ul>
+<li><p>左值&amp;右值</p>
+<p>​		左值：可以取其地址，例如：变量、引用等；</p>
+<p>​		右值：表示一个临时对象或者字面值，通常无法取其地址。例如：字面值、临时对象、表达式的结果等；</p>
+</li>
+<li><p>右值引用语法：&amp;&amp;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int&amp;&amp; rvalueRef = 10;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>右值引用用途</p>
+<ul>
+<li><p>移动语义</p>
+<p>​		移动语义让我们‘移动’资源而不是拷贝资源，提高性能。移动操作只需要转移资源的所有权，而不需要实际的数据拷贝。</p>
+</li>
+<li><p>完美转发</p>
+<ul>
+<li><p>通用引用(universal reference) </p>
+<p>template<T> void func(T&amp;&amp; value){}</T></p>
+<p>​		当模版参数T是通过类型推导获得时，T&amp;&amp;被称之为通用引用，通用引用是可以绑定到左值或者右值的，而不是表面上看上去的右值。</p>
+</li>
+<li><p>折叠规则</p>
+<p>c++有一套引用折叠规则：</p>
+<ul>
+<li>T&amp; &amp;、T&amp; &amp;&amp;和T&amp;&amp; &amp;都折叠为T&amp;</li>
+<li>T&amp;&amp; &amp;&amp;折叠为T&amp;&amp;</li>
+</ul>
+</li>
+</ul>
+<p>完美转发示例：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">void processValue(int&amp; value)</span><br><span class="line"> &#123;</span><br><span class="line">    std::cout &lt;&lt; &quot;Lvalue: &quot; &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">    value = 42;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void processValue(int&amp;&amp; value) &#123;</span><br><span class="line">    std::cout &lt;&lt; &quot;Rvalue: &quot; &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template&lt;typename T&gt;</span><br><span class="line">void forwardValue(T&amp;&amp; value) </span><br><span class="line">&#123;</span><br><span class="line">    processValue(std::forward&lt;T&gt;(value));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    int x = 10;</span><br><span class="line">    forwardValue(x);  // 传递左值</span><br><span class="line">    std::cout &lt;&lt; &quot;After forwarding, x = &quot; &lt;&lt; x &lt;&lt; std::endl;</span><br><span class="line">    forwardValue(20);  // 传递右值</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>右值引用规则</p>
+<ul>
+<li>引用折叠</li>
+<li>标准库中的右值引用</li>
+</ul>
+</li>
+<li></li>
+</ul>
+<p>​	左值引用只能引用左值，不能引用右值；</p>
+<p>​	通常临时变量是不能左值引用的，例如int &amp;a &#x3D; 123;这个就是错误的。但是通过常量引用，可以对临时变量或者函数返回的临时对象进行引用，此举相当于告诉编译器将临时变量的生命空间延长，与引用变量的生命空间保持一致。</p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"> int a = 10;</span><br><span class="line"> int&amp; b = a;</span><br><span class="line"> int&amp; c = 10;  // error 非常量引用的初始值必须为左值</span><br><span class="line"> const int&amp; d = 10; // ok</span><br><span class="line"> const string&amp; str2 = &quot;abc&quot;; // ok，提升临时变量的生命空间和str2保持一致</span><br><span class="line"> const string&amp; str3 = [str2](const char *str) -&gt; string&#123;</span><br><span class="line">	return str + str2;</span><br><span class="line">	&#125;(&quot;123&quot;);// ok 提升临时变量的生命空间和str3一致</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">bool isOdd(int&amp; num)</span><br><span class="line">&#123;</span><br><span class="line">	return 0 == num % 2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">bool isOdd_r(int&amp;&amp; num) &#123;</span><br><span class="line">	return 0 == num % 2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void test() &#123;</span><br><span class="line">	int a = 10;</span><br><span class="line">	cout &lt;&lt; isOdd(2); // error 非常量引用的初始值必须为左值</span><br><span class="line">	cout &lt;&lt; isOdd(a); // ok</span><br><span class="line">    cout &lt;&lt; isOdd(a+2); // error 非常量引用的初始值必须为左值</span><br><span class="line">    </span><br><span class="line">    cout &lt;&lt; isOdd_r(2);  // ok</span><br><span class="line">	cout &lt;&lt; isOdd_r(a); // error 右值引用初始值必须是右值</span><br><span class="line">	cout &lt;&lt; isOdd_r(a + 2); // ok</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​	右值除了可以是字面常量、还可以是临时对象，例如表达式返回值、传值返回类型的返回值（不能是引用返回类型）等。</p>
+<p>​	右值引用允许我们操作右值（临时对象、字面常量等），从而避免不必要的拷贝。右值引用其实是告诉编译器这是一个可移动对象。当我们写 MyClass c &#x3D; xxx; 时，编译器会根据 xxx 的类型来选择合适的构造函数。如果 xxx 是一个可移动的对象（即右值引用），并且 MyClass 有一个移动构造函数，那么编译器会调用移动构造函数来构造 c 对象。</p>
+<p><strong>构造函数选择的规则</strong></p>
+<ul>
+<li><p>如果 xxx 是一个右值：</p>
+<ul>
+<li>​	编译器会优先选择移动构造函数（MyClass(MyClass&amp;&amp;)），如果存在的话。</li>
+<li>如果没有移动构造函数，编译器会尝试使用拷贝构造函数（MyClass(const MyClass&amp;)）。</li>
+</ul>
+</li>
+<li><p>如果 xxx 是一个左值：</p>
+<p>编译器会选择拷贝构造函数（MyClass(const MyClass&amp;)）。</p>
+</li>
+</ul>
+<p><strong>移动构造函数和移动赋值操作</strong></p>
+<ul>
+<li><p>手动实现拷贝构造和拷贝赋值函数</p>
+</li>
+<li><p>如果没有手动实现拷贝构造和拷贝赋值方法，编译器会生成默认的移动构造和移动赋值函数。</p>
+<p>如果是可移动对象，但是没有移动构造（比如手动实现了拷贝构造但是没有实现移动构造）和移动赋值函数，那么编译器会用拷贝构造和赋值操作替代。</p>
+</li>
+</ul>
+<h1 id="using"><a href="#using" class="headerlink" title="using"></a>using</h1><p>在以前的c++中，using用于引入命名空间，在c++11中，using可以用于定义类型别名，相当于typedef。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个 vector&lt;int&gt; 的别名</span></span><br><span class="line"><span class="keyword">using</span> IntVector = std::vector&lt;<span class="type">int</span>&gt;;</span><br><span class="line"><span class="comment">// 定义一个 map&lt;string, int&gt; 的别名</span></span><br><span class="line"><span class="keyword">using</span> StringIntMap = std::map&lt;std::string, <span class="type">int</span>&gt;;</span><br><span class="line">IntVector vec = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line">StringIntMap map = &#123;&#123;<span class="string">&quot;one&quot;</span>, <span class="number">1</span>&#125;, &#123;<span class="string">&quot;two&quot;</span>, <span class="number">2</span>&#125;&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="std-iota"><a href="#std-iota" class="headerlink" title="std::iota"></a>std::iota</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">iota</span>(arr.<span class="built_in">begin</span>(), arr.<span class="built_in">end</span>(), <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="std-generate"><a href="#std-generate" class="headerlink" title="std::generate"></a>std::generate</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">generate</span>(arr.<span class="built_in">begin</span>(), arr.<span class="built_in">end</span>(), [&amp;n]() &#123; <span class="keyword">return</span> n += <span class="number">2</span>; &#125;); <span class="comment">// 生成2的倍数</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="std-fill"><a href="#std-fill" class="headerlink" title="std::fill"></a>std::fill</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">fill</span>(arr.<span class="built_in">begin</span>(), arr.<span class="built_in">end</span>(), <span class="number">42</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="资源管理指针"><a href="#资源管理指针" class="headerlink" title="资源管理指针"></a>资源管理指针</h1><ul>
+<li><p>unique_ptr</p>
+<p>独占式智能指针，用于管理唯一对象，确保只有一个指针可以访问该对象；unique_ptr可以自动释放动态分配的内存，当指针超过作用域或者被重置，会自动删除所管理的对象。</p>
+<p>注意：unique_ptr是不能用左值赋值的，只能用右值引用赋值，因为默认拷贝构造函数和赋值运算符操作都被禁止。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">unique_ptr(const unique_ptr&amp;)            = delete;</span><br><span class="line"> unique_ptr&amp; operator=(const unique_ptr&amp;) = delete;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>shared_ptr</p>
+<p>共享智能指针，引用计数技术实现。当引用技术为0时自动销毁对象，com技术里头主要用到的就是共享智能指针。</p>
+</li>
+<li><p>weak_ptr</p>
+<p>弱指针，不会增长引用计数，它可以解决shared_ptr循环引用问题。当所有的shared_ptr超出作用域之后，哪怕还有weak_ptr，所管理的对象也会被销毁。</p>
+<p>例如：两个share_ptr<Node> 指针AB，Node里头又有一个shared_ptr<Node> next，A的next成员指向B，B的next成员指向A，这样就会出现循环引用。解决办法是将Node的next成员改为weak_ptr类型</Node></Node></p>
+</li>
+</ul>
+<h1 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h1><p>语法：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[capture list](parameters) -&gt; return_type &#123;</span><br><span class="line">    // 函数体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>capture_list：要捕获的变量列表（类似其他语言的using），匿名函数中需要用到的外部变量列表</p>
+<p>parameters：参数列表</p>
+<p>return_type： 返回值类型，可以用auto自动推导</p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">auto f_sum = [](int a, int b)-&gt;auto &#123;</span><br><span class="line">		return a * b;</span><br><span class="line">	&#125;;</span><br><span class="line">cout &lt;&lt; f_sum(2, 3) &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="变参模版"><a href="#变参模版" class="headerlink" title="变参模版"></a>变参模版</h1><p>​		允许函数或者类模版接受可变数量参数，使用…表示可变参数。</p>
+<p>例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// c++10/14</span><br><span class="line">// 处理单个参数的函数</span><br><span class="line">void print() &#123;</span><br><span class="line">    std::cout &lt;&lt; &quot;End of recursion\n&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 处理参数包的函数</span><br><span class="line">template&lt;typename T, typename... Args&gt;</span><br><span class="line">void print(T first, Args... args) &#123;</span><br><span class="line">    std::cout &lt;&lt; first &lt;&lt; &quot; &quot;;</span><br><span class="line">    print(args...); // 递归调用，展开参数包</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    print(1, 2, 3.5, &quot;Hello&quot;, &#x27;c&#x27;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">对于c++17</span><br><span class="line">// 使用折叠表达式处理参数包</span><br><span class="line">template&lt;typename... Args&gt;</span><br><span class="line">void print(Args... args) &#123;</span><br><span class="line">    (std::cout &lt;&lt; ... &lt;&lt; args) &lt;&lt; &#x27;\n&#x27;; // 左折叠表达式</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>c++11&#x2F;14采用递归方式来进行可变参数展开；c++17采用折叠表达式展开可变参数。</p>
+<p>折叠表达式的基本形式如下：</p>
+<ol>
+<li><strong>一元左折叠</strong>：<code>(... op pack)</code></li>
+<li><strong>一元右折叠</strong>：<code>(pack op ...)</code></li>
+<li><strong>二元左折叠</strong>：<code>(init op ... op pack)</code></li>
+<li><strong>二元右折叠</strong>：<code>(pack op ... op init)</code></li>
+</ol>
+<p>其中，<code>op</code> 是一个二元运算符，<code>pack</code> 是参数包，<code>init</code> 是初始值。</p>
+<h2 id="一元左折叠"><a href="#一元左折叠" class="headerlink" title="一元左折叠"></a>一元左折叠</h2><p>一元左折叠的语法是 <code>(... op pack)</code>，表示从左到右依次将参数包中的每个参数与运算符 <code>op</code> 进行运算。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Args&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">sum</span><span class="params">(Args... args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (... + args); <span class="comment">// 一元左折叠</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">sum</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>) &lt;&lt; std::endl; <span class="comment">// 输出 15</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="一元右折叠"><a href="#一元右折叠" class="headerlink" title="一元右折叠"></a>一元右折叠</h2><p>一元右折叠的语法是 <code>(pack op ...)</code>，表示从右到左依次将参数包中的每个参数与运算符 <code>op</code> 进行运算。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Args&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">sum</span><span class="params">(Args... args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (args + ...); <span class="comment">// 一元右折叠</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">sum</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>) &lt;&lt; std::endl; <span class="comment">// 输出 15</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二元左折叠"><a href="#二元左折叠" class="headerlink" title="二元左折叠"></a>二元左折叠</h2><p>二元左折叠的语法是 <code>(init op ... op pack)</code>，其中 <code>init</code> 是初始值，表示从左到右依次将初始值和参数包中的每个参数与运算符 <code>op</code> 进行运算。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Args&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">sum</span><span class="params">(Args... args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (<span class="number">0</span> + ... + args); <span class="comment">// 二元左折叠，初始值为 0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">sum</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>) &lt;&lt; std::endl; <span class="comment">// 输出 15</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二元右折叠"><a href="#二元右折叠" class="headerlink" title="二元右折叠"></a>二元右折叠</h2><p>二元右折叠的语法是 <code>(pack op ... op init)</code>，其中 <code>init</code> 是初始值，表示从右到左依次将参数包中的每个参数和初始值与运算符 <code>op</code> 进行运算。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span>... Args&gt;</span></span><br><span class="line"><span class="function"><span class="keyword">auto</span> <span class="title">sum</span><span class="params">(Args... args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (args + ... + <span class="number">0</span>); <span class="comment">// 二元右折叠，初始值为 0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="built_in">sum</span>(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>) &lt;&lt; std::endl; <span class="comment">// 输出 15</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="支持的运算符"><a href="#支持的运算符" class="headerlink" title="支持的运算符"></a>支持的运算符</h2><p>折叠表达式支持多种二元运算符，包括但不限于：</p>
+<ul>
+<li>算术运算符：<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>%</code></li>
+<li>逻辑运算符：<code>&amp;&amp;</code>, <code>||</code></li>
+<li>位运算符：<code>&amp;</code>, <code>|</code>, <code>^</code></li>
+<li>比较运算符：<code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code></li>
+<li>其他运算符：<code>,</code>, <code>.*</code>, <code>-&gt;*</code></li>
+</ul>
+<h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><p>Q：vs宏__cplusplus始终显示199711L</p>
+<p>A：在vs项目属性设置里头的“c++语言标准”里头设置了c++11或者c++17版本，代码里头看到__cplusplus宏始终显示199711L，这是考虑到历史代码兼容性问题（很多老代码用到此宏），编译器不会修改此宏，除非通过 &#x2F;Zc:cplusplus显示设置。在vc中可以使用_MSVC_LANG宏来获取当前用的语言标准版本</p>
+<p>Q：MSVC中函数传值返回一个对象，调试发现并没有调用移动构造函数</p>
+<p>A：这是因为MSVC编译器有可能做了RVO（返回值优化），通常是默认开启的，测试发现哪怕禁用优化，RVO还是生效。此种情况下，编译器可能直接在调用者的变量空间中构造返回的对象。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/650986900">https://zhuanlan.zhihu.com/p/650986900</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/455848360">https://zhuanlan.zhihu.com/p/455848360</a></p>
+<p><a target="_blank" rel="noopener" href="https://en.cppreference.com/w/">https://en.cppreference.com/w/</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/650986900">https://zhuanlan.zhihu.com/p/650986900</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/139515439">https://zhuanlan.zhihu.com/p/139515439</a></p>
 
       
     </div>
