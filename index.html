@@ -145,21 +145,12 @@
 <p>应用场景：</p>
 <p>比如你写了一个自定义带参数的构造函数，那么编译器不会给你生成默认构造函数，此时你直接用MyClass()会报错，这种情况下，可以用MyClass()&#x3D;default;就可以用MyClass c;</p>
 <h1 id="右值引用"><a href="#右值引用" class="headerlink" title="右值引用"></a>右值引用</h1><p>​	在c++11之前只有左值引用。所谓左值是指出现在等号左边，比如常见的变量可以在等号左边，它是左值。常量不能出现在等号左边，所以它是右值。</p>
-<ul>
-<li><p>左值&amp;右值</p>
-<p>​		左值：可以取其地址，例如：变量、引用等；</p>
+<h2 id="左值-右值"><a href="#左值-右值" class="headerlink" title="左值&amp;右值"></a>左值&amp;右值</h2><p>​		左值：可以取其地址，例如：变量、引用等；</p>
 <p>​		右值：表示一个临时对象或者字面值，通常无法取其地址。例如：字面值、临时对象、表达式的结果等；</p>
-</li>
-<li><p>右值引用语法：&amp;&amp;</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int&amp;&amp; rvalueRef = 10;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>右值引用用途</p>
-<ul>
-<li><p>移动语义</p>
-<p>​		移动语义让我们‘移动’资源而不是拷贝资源，提高性能。移动操作只需要转移资源的所有权，而不需要实际的数据拷贝。</p>
-</li>
-<li><p>完美转发</p>
-<ul>
+<h2 id="右值引用语法："><a href="#右值引用语法：" class="headerlink" title="右值引用语法：&amp;&amp;"></a>右值引用语法：&amp;&amp;</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int&amp;&amp; rvalueRef = 10;</span><br></pre></td></tr></table></figure>
+
+<h2 id="右值引用用途"><a href="#右值引用用途" class="headerlink" title="右值引用用途"></a>右值引用用途</h2><h3 id="移动语义"><a href="#移动语义" class="headerlink" title="移动语义"></a>移动语义</h3><p>​		移动语义让我们‘移动’资源而不是拷贝资源，提高性能。移动操作只需要转移资源的所有权，而不需要实际的数据拷贝。</p>
+<h3 id="完美转发"><a href="#完美转发" class="headerlink" title="完美转发"></a>完美转发</h3><ul>
 <li><p>通用引用(universal reference) </p>
 <p>template<T> void func(T&amp;&amp; value){}</T></p>
 <p>​		当模版参数T是通过类型推导获得时，T&amp;&amp;被称之为通用引用，通用引用是可以绑定到左值或者右值的，而不是表面上看上去的右值。</p>
@@ -173,16 +164,15 @@
 </li>
 </ul>
 <p>完美转发示例：</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">void processValue(int&amp; value)</span><br><span class="line"> &#123;</span><br><span class="line">    std::cout &lt;&lt; &quot;Lvalue: &quot; &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">    value = 42;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void processValue(int&amp;&amp; value) &#123;</span><br><span class="line">    std::cout &lt;&lt; &quot;Rvalue: &quot; &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template&lt;typename T&gt;</span><br><span class="line">void forwardValue(T&amp;&amp; value) </span><br><span class="line">&#123;</span><br><span class="line">    processValue(std::forward&lt;T&gt;(value));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    int x = 10;</span><br><span class="line">    forwardValue(x);  // 传递左值</span><br><span class="line">    std::cout &lt;&lt; &quot;After forwarding, x = &quot; &lt;&lt; x &lt;&lt; std::endl;</span><br><span class="line">    forwardValue(20);  // 传递右值</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">void processValue(int&amp; value)</span><br><span class="line"> &#123;</span><br><span class="line">    std::cout &lt;&lt; &quot;Lvalue: &quot; &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">    value = 42;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void processValue(int&amp;&amp; value) &#123;</span><br><span class="line">    std::cout &lt;&lt; &quot;Rvalue: &quot; &lt;&lt; value &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">template&lt;typename T&gt;</span><br><span class="line">void forwardValue(T&amp;&amp; value) </span><br><span class="line">&#123;</span><br><span class="line">    processValue(std::forward&lt;T&gt;(value));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    int x = 10;</span><br><span class="line">    forwardValue(x);  // 传递左值</span><br><span class="line">    std::cout &lt;&lt; &quot;After forwarding, x = &quot; &lt;&lt; x &lt;&lt; std::endl;</span><br><span class="line">    forwardValue(20);  // 传递右值</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
 <li><p>右值引用规则</p>
 <ul>
 <li>引用折叠</li>
 <li>标准库中的右值引用</li>
 </ul>
 </li>
-<li></li>
 </ul>
 <p>​	左值引用只能引用左值，不能引用右值；</p>
 <p>​	通常临时变量是不能左值引用的，例如int &amp;a &#x3D; 123;这个就是错误的。但是通过常量引用，可以对临时变量或者函数返回的临时对象进行引用，此举相当于告诉编译器将临时变量的生命空间延长，与引用变量的生命空间保持一致。</p>
@@ -239,7 +229,8 @@
 </li>
 <li><p>weak_ptr</p>
 <p>弱指针，不会增长引用计数，它可以解决shared_ptr循环引用问题。当所有的shared_ptr超出作用域之后，哪怕还有weak_ptr，所管理的对象也会被销毁。</p>
-<p>例如：两个share_ptr<Node> 指针AB，Node里头又有一个shared_ptr<Node> next，A的next成员指向B，B的next成员指向A，这样就会出现循环引用。解决办法是将Node的next成员改为weak_ptr类型</Node></Node></p>
+<p>例如：两个share_ptr<Node> 指针AB，Node里头又有一个shared_ptr<Node> next，A的next成员指向B，B的next成员指向A，这样就会出现循环引用。解决办法是将Node的next成员改为weak_ptr类型。</Node></Node></p>
+<p>注意：weak_ptr弱引用是维护的智能指针控制块的weak_refcount，shared_ptr维护的是refcount，是两个独立的计数。weakptr需要和sharedptr引用的是同一个控制块！</p>
 </li>
 </ul>
 <h1 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h1><p>语法：</p>
