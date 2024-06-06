@@ -72,6 +72,47 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-QObject简单笔记" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/" class="article-date">
+  <time class="dt-published" datetime="2024-06-06T13:04:13.000Z" itemprop="datePublished">2024-06-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/">&#39;QObject简单笔记&#39;</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>记录一下QObject有关元对象一些数据和实现细节。</p>
+<p>用ProcessOn在线画了一张图，导出为图片，直接附上。</p>
+<p><img src="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0%5CQObject%E7%B1%BB%E5%9B%BE.png" alt="QObject类图"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/" data-id="clx39vhck0000yc4q3h2q21z1" data-title="&#39;QObject简单笔记&#39;" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-c-11" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/05/27/c-11/" class="article-date">
@@ -237,6 +278,13 @@
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[capture list](parameters) -&gt; return_type &#123;</span><br><span class="line">    // 函数体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>capture_list：要捕获的变量列表（类似其他语言的using），匿名函数中需要用到的外部变量列表</p>
+<ul>
+<li>[&#x3D;] 表示捕获外部作用域的所有变量</li>
+<li>[&amp;]按照引用捕获外部作用域所有变量</li>
+<li>[a, &amp;b]按照值捕获变量a，按照引用捕获变量b</li>
+<li>[this]捕获当前对象的this指针</li>
+<li>[] 不捕获任何变量</li>
+</ul>
 <p>parameters：参数列表</p>
 <p>return_type： 返回值类型，可以用auto自动推导</p>
 <p>例如：</p>
@@ -1697,454 +1745,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
 
 
   
-    <article id="post-ThinkPHP之DB-Query" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/04/27/ThinkPHP%E4%B9%8BDB-Query/" class="article-date">
-  <time class="dt-published" datetime="2024-04-27T09:16:13.000Z" itemprop="datePublished">2024-04-27</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/04/27/ThinkPHP%E4%B9%8BDB-Query/">ThinkPHP之DB::Query</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>Query是ThinkPHP数据库操作的一个非常重要的类，大部分查询相关的操作功能都是通过此类来实现的，本文主要记录ThinkPHP5.0 Query类的部分重要函数。</p>
-<h1 id="Query文件路径"><a href="#Query文件路径" class="headerlink" title="Query文件路径"></a>Query文件路径</h1><p><code>thinkphp\library\think\db\Query.php</code></p>
-<h1 id="重要函数"><a href="#重要函数" class="headerlink" title="重要函数"></a>重要函数</h1><ul>
-<li><strong>Query::table</strong><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 指定当前操作的数据表</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@access</span> public</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> mixed $table 表名</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> $this</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">table</span>(<span class="params"><span class="variable">$table</span></span>)</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<p><strong>描述：</strong>设置当前操作的表，内部主要设置options的table属性：$this-&gt;options[‘table’] &#x3D; $table;</p>
-<p><strong>范例：</strong>Db::table(‘fa_admin’)-&gt;where(“id”, 1)-&gt;find();</p>
-<ul>
-<li><strong>Query::name</strong><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 指定默认的数据表名（不含前缀）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@access</span> public</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $name</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> $this</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">name</span>(<span class="params"><span class="variable">$name</span></span>)</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<p><strong>描述</strong>：设置当前操作的表，和Query::table函数不同的是$name是不带前缀(前缀配置dbconfig[‘prefix’])的表名。</p>
-<p><strong>范例</strong>：**Db::name(‘admin’)-&gt;where(“id”, 1)-&gt;find();</p>
-<p><strong>备注:</strong> 也可以用helper函数db(“admin”)来获取dbconnection对象，例如：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">db</span>(<span class="string">&quot;admin&quot;</span>)-&gt;<span class="title function_ invoke__">where</span>(<span class="string">&quot;id&quot;</span>, <span class="number">1</span>)-&gt;<span class="title function_ invoke__">find</span>();</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>Query::value</strong><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 得到某个字段的值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@access</span> public</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $field   字段名</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> mixed  $default 默认值</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> bool   $force   强制转为数字类型</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> mixed</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">value</span>(<span class="params"><span class="variable">$field</span>, <span class="variable">$default</span> = <span class="literal">null</span>, <span class="variable">$force</span> = <span class="literal">false</span></span>)</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<p><strong>描述：</strong>查询符合条件的某个记录的某个字段的值，注意只查询一条记录(limit(1))</p>
-<p><strong>范例：</strong> Db::table(‘fa_admin’)-&gt;where(“id”, 1)-&gt;value(“uername”);</p>
-<ul>
-<li><p><strong>Query::column</strong></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 得到某个列的数组</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@access</span> public</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $field 字段名 多个字段用逗号分隔</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $key   索引</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> array</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">column</span>(<span class="params"><span class="variable">$field</span>, <span class="variable">$key</span> = <span class="string">&#x27;&#x27;</span></span>)</span></span><br></pre></td></tr></table></figure>
-<p><strong>描述：</strong>指定符合条件记录的指定字段<br><strong>范例：</strong> Db::table(‘fa_admin’)-&gt;column(“nickname, id, nickname, username”);<br><strong>备注：</strong> $field是以逗号分隔的字段名字符串，形如”field1, field2…”。<br>column()函数会将$field去重；其次如果指定了$key，则以$key为返回记录的key；否则以$field字符串中第一个字段作为key</p>
-</li>
-<li><p><strong>Query::find</strong></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 查找单条记录</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@access</span> public</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> array|string|Query|\Closure $data</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> array|false|\PDOStatement|string|Model</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> DbException</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> ModelNotFoundException</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> DataNotFoundException</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">find</span>(<span class="params"><span class="variable">$data</span> = <span class="literal">null</span></span>)</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<p><strong>描述：</strong>查找单挑记录，返回的是</p>
-<p><strong>范例：</strong> Db::name(‘admin’)-&gt;where(“id”, 1)-&gt;find();</p>
-<ul>
-<li><strong>Query::chunk</strong><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 分批数据返回处理</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@access</span> public</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> integer  $count    每次处理的数据数量</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> callable $callback 处理回调方法</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string   $column   分批处理的字段名</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string   $order    排序规则</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> boolean</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> \LogicException</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">chunk</span>(<span class="params"><span class="variable">$count</span>, <span class="variable">$callback</span>, <span class="variable">$column</span> = <span class="literal">null</span>, <span class="variable">$order</span> = <span class="string">&#x27;asc&#x27;</span></span>)</span></span><br></pre></td></tr></table></figure>
-<strong>描述：</strong>分批处理数据<br><strong>范例：</strong></li>
-</ul>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Db</span>::<span class="title function_ invoke__">table</span>(<span class="string">&#x27;think_user&#x27;</span>)-&gt;<span class="title function_ invoke__">chunk</span>(<span class="number">100</span>, function(<span class="variable">$users</span>) <span class="keyword">use</span>(&amp;$<span class="title">outer</span>) &#123;</span><br><span class="line">    <span class="title">foreach</span> ($<span class="title">users</span> <span class="keyword">as</span> $<span class="title">user</span>) &#123;</span><br><span class="line">        // 处理结果集...</span><br><span class="line">        <span class="title">if</span>($<span class="title">user</span>-&gt;<span class="title">status</span>==0)&#123;</span><br><span class="line">            <span class="title">return</span> <span class="title">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p><strong>说明：</strong> </p>
-<ol>
-<li>可以通过callback函数return false终止后续数据集的处理。这里，这里我们使用use将外部变量$outer传递给<br>   匿名函数，php中变量按照值传递，而不是引用，所以匿名函数内部的修改不会影响到外部$outer变量。这里我们如果想在<br>   匿名函数内部修改$outer，需要用**&amp;$outer**。</li>
-<li>一般用于命令行处理db数据，不适合web访问处理大量数据，容易造成超时。</li>
-</ol>
-<ul>
-<li><strong>Query::where</strong><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 指定AND查询条件</span><br><span class="line"> * @access public</span><br><span class="line"> * @param mixed $field     查询字段</span><br><span class="line"> * @param mixed $op        查询表达式</span><br><span class="line"> * @param mixed $condition 查询条件</span><br><span class="line"> * @return $this</span><br><span class="line"> */</span><br><span class="line">public function where($field, $op = null, $condition = null)</span><br><span class="line">&#123;</span><br><span class="line">    $param = func_get_args();</span><br><span class="line">    array_shift($param);</span><br><span class="line">    $this-&gt;parseWhereExp(&#x27;AND&#x27;, $field, $op, $condition, $param);</span><br><span class="line">    return $this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<strong>描述：</strong>设置AND查询条件，使用形式：where(‘字段名’, ‘表达式’, ‘查询条件’)<br><strong>表达式：</strong><br>  <strong>数值关系比较：</strong> &#x3D; | &lt;&gt; | &gt; | &gt;&#x3D; | &lt; | &lt;&#x3D;</li>
-</ul>
-<p>​	<strong>时间：</strong> &gt; TIME | &lt; TIME | &gt;&#x3D; TIME | &lt;&#x3D; TIME </p>
-<p>​        <strong>其它：</strong> [NOT] LIKE | [NOT] BETWEEN | [NOT] IN | [NOT] NULL | [NOT] EXISTS | [NOT] REGEXP | [NOT] BETWEEN TIME </p>
-<p>​	<strong>EXP：</strong> exp表达式</p>
-<p><strong>范例：</strong></p>
-<ul>
-<li><p><strong>[NOT] LIKE</strong> 字符串模糊查询，<strong>支持数组</strong></p>
-<p><strong>示例：</strong>where(‘name’, ‘like’, ‘%ab%’) | where(‘name’, ‘like’, [‘%ab’, ‘php%’]) </p>
-</li>
-<li><p><strong>[NOT] BETWEEN</strong></p>
-<p><strong>示例：</strong>where(‘id’, ‘between’, ‘1,8’) | where(‘id’, ‘between’, [1,8])</p>
-</li>
-<li><p><strong>[NOT] In</strong></p>
-<p><strong>示例：</strong>where(‘id’, ‘in’, ‘1,2,3’) | where(‘id’, ‘in’, [1,2,3]) | where(‘id’, ‘not in’, [1,2,3])</p>
-</li>
-<li><p><strong>[NOT]NULL</strong>         </p>
-<p><strong>示例：</strong>where(‘name’, ‘null’) | where(‘name’, ‘not null’)</p>
-</li>
-<li><p><strong>时间查询</strong></p>
-<p>where(‘createtime’, ‘&gt; time’, ‘2006-1-1’);</p>
-<p>where(‘createtime’, ‘&lt; time’, ‘2006-1-1’); </p>
-<p>where(‘createtime’, ‘between time’, [‘2006-1-1’,’2006-2-1’]);</p>
-</li>
-</ul>
-<p>​	<strong>&gt;time | &lt;time**<br>​	和’&gt;|&lt;’类似，不同的是用&gt;time | &lt;time之类的操作符，后面的条件可以用形如</strong>today** | <strong>last week</strong> | <strong>-2 hour</strong>之类的时间区间，</p>
-<p>​	例如：where(‘createtime’, ‘-2 hour’)</p>
-<p>​	<strong>Query::whereTime</strong>用法和where类似，不同的是当参数3($range)为null时，$op可以用特殊字段来表示时间区间，支持的特殊日期时间区间格式有：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_ invoke__">where</span>(<span class="string">&#x27;birthday&#x27;</span>, <span class="string">&#x27;today&#x27;</span>)表示日期范围是今天</span><br><span class="line"><span class="title function_ invoke__">where</span>(<span class="string">&#x27;birthday&#x27;</span>, <span class="string">&#x27;yesterday&#x27;</span>)表示日期范围是今天</span><br><span class="line"><span class="title function_ invoke__">where</span>(<span class="string">&#x27;birthday&#x27;</span>, <span class="string">&#x27;week&#x27;</span>)表示日期范围是本周</span><br><span class="line"><span class="title function_ invoke__">where</span>(<span class="string">&#x27;birthday&#x27;</span>, <span class="string">&#x27;last week&#x27;</span>)表示日期范围是上周</span><br><span class="line"><span class="title function_ invoke__">where</span>(<span class="string">&#x27;birthday&#x27;</span>, <span class="string">&#x27;month&#x27;</span>)表示日期范围是本月</span><br><span class="line"><span class="title function_ invoke__">where</span>(<span class="string">&#x27;birthday&#x27;</span>, <span class="string">&#x27;last month&#x27;</span>)表示日期范围是上月</span><br><span class="line"><span class="title function_ invoke__">where</span>(<span class="string">&#x27;birthday&#x27;</span>, <span class="string">&#x27;year&#x27;</span>)表示日期范围是本年</span><br><span class="line"><span class="title function_ invoke__">where</span>(<span class="string">&#x27;birthday&#x27;</span>, <span class="string">&#x27;last year&#x27;</span>)表示日期范围是上年</span><br><span class="line"><span class="title function_ invoke__">whereTime</span>(<span class="string">&#x27;create_time&#x27;</span>,<span class="string">&#x27;-2 hours&#x27;</span>) 表示两小时以内 等价于 <span class="title function_ invoke__">where</span>(<span class="string">&#x27;create_time&#x27;</span>, <span class="string">&#x27;&gt;&#x27;</span>, <span class="string">&#x27;-2 hours&#x27;</span>);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><strong>EXP</strong></p>
-<p><strong>使用：</strong></p>
-<p>​	where(‘字段名’, ‘exp’, ‘条件字符串’)；</p>
-<p>​	where(‘字段名’, null, Expression())  可以用DB::raw(“查询字符串”)构造Expression形式的查询条件</p>
-<p><strong>示例：</strong></p>
-<p>​	where(‘id’, ‘exp’, ‘in(1,2,3)’) <strong>[推荐使用]</strong> ；等价于where(‘id’, ‘in’, ‘1,2,3’) ;</p>
-<p>​	where(‘id’, null, DB::raw(“FIND_IN_SET(1, id)”))，其内部也是转为where(‘id’, ‘exp’, ‘in (1,2,3)’);</p>
-<p><strong>说明：</strong>exp查询条件不会被当做字符串，可以使用任何sql语法，包括函数和字段名称。</p>
-</li>
-</ul>
-<p><strong>注意：</strong>使用字符串条件查找最好使用<em><strong>预处理机制</strong></em>，确保安全，例如：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Db</span>::<span class="title function_ invoke__">table</span>(<span class="string">&#x27;think_user&#x27;</span>)-&gt;<span class="title function_ invoke__">where</span>(<span class="string">&quot;id=:id and username=:name&quot;</span>)</span><br><span class="line">	-&gt;<span class="title function_ invoke__">bind</span>([<span class="string">&#x27;id&#x27;</span>=&gt;[<span class="number">1</span>,\PDO::<span class="variable constant_">PARAM_INT</span>],<span class="string">&#x27;name&#x27;</span>=&gt;<span class="string">&#x27;thinkphp&#x27;</span>])</span><br><span class="line"> 	-&gt;<span class="title function_ invoke__">select</span>();</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li><p><strong>Query::whereOr</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 指定OR查询条件</span><br><span class="line"> * @access public</span><br><span class="line"> * @param mixed $field     查询字段</span><br><span class="line"> * @param mixed $op        查询表达式</span><br><span class="line"> * @param mixed $condition 查询条件</span><br><span class="line"> * @return $this</span><br><span class="line"> */</span><br><span class="line">public function whereOr($field, $op = null, $condition = null)    </span><br></pre></td></tr></table></figure>
-<p><strong>描述：</strong>设置Or查询条件</p>
-</li>
-<li><p><strong>Query::whereXOR</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 指定XOR查询条件</span><br><span class="line"> * @access public</span><br><span class="line"> * @param mixed $field     查询字段</span><br><span class="line"> * @param mixed $op        查询表达式</span><br><span class="line"> * @param mixed $condition 查询条件</span><br><span class="line"> * @return $this</span><br><span class="line"> */</span><br><span class="line">public function whereXor($field, $op = null, $condition = null)</span><br></pre></td></tr></table></figure>
-<p><strong>描述：</strong>设置XOR查询条件</p>
-</li>
-<li><p><strong>Query::parseWhereExp</strong></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 分析查询表达式</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@access</span> public</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string                $logic     查询逻辑 and or xor</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string|array|\Closure $field     查询字段</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> mixed                 $op        查询表达式</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> mixed                 $condition 查询条件</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> array                 $param     查询参数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  bool                 $strict    严格模式</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">parseWhereExp</span>(<span class="params"><span class="variable">$logic</span>, <span class="variable">$field</span>, <span class="variable">$op</span>, <span class="variable">$condition</span>, <span class="variable">$param</span> = [], <span class="variable">$strict</span> = <span class="literal">false</span></span>)</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<p><strong>描述：</strong>查询条件表达式解析。</p>
-<p><strong>示例：</strong></p>
-<ul>
-<li><p><strong>And条件</strong><br>  where(“id”, 25)<br>  where(“id &#x3D; 25”)<br>  where(“id”, ‘&#x3D;’, 25)<br>  where(“id”, “in”, [1,2,3])</p>
-</li>
-<li><p><strong>Or条件</strong><br>  whereOr(“id”, 25)</p>
-</li>
-<li><p>Xor条件</p>
-<p>  whereXor</p>
-</li>
-<li><p>null条件</p>
-<p>  whereNull | whereNotNull</p>
-</li>
-<li><p>time条件</p>
-<p>  whereTime</p>
-</li>
-<li><p>raw条件</p>
-<p>  whereRaw</p>
-</li>
-<li><p>Exists</p>
-<p>  whereExists | whereNotExists</p>
-</li>
-<li><p>In</p>
-<p>  whereIn | whereNotIn</p>
-</li>
-<li><p>like</p>
-<p>  whereLike | whereNotLike</p>
-</li>
-<li><p>between</p>
-<p>  whereBetween | whereNotBetween</p>
-</li>
-<li><p>EXP</p>
-<p>  whereExp</p>
-</li>
-</ul>
-<p><strong>注意：</strong></p>
-<p>​	同一级条件中，And和Or平级，如果想实现Or的关系，一般用闭包查询，将Or的条件包在闭包里头，然后整体和外围的条件And<br>例如：想实现condA and condB &amp; (condC or condD)，就将condC&#x2F;condD通过闭包（内部or）然后和condA&#x2F;condB一起链如查询。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$where_extra</span> = <span class="function"><span class="keyword">function</span>(<span class="params"><span class="variable">$query</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$query</span>-&gt;<span class="title function_ invoke__">where</span>(<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="number">3</span>)</span><br><span class="line">        -&gt;<span class="title function_ invoke__">whereOr</span>(<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;=&#x27;</span>, <span class="number">4</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$result</span> = <span class="title class_">Db</span>::<span class="title function_ invoke__">table</span>(<span class="string">&#x27;fa_admin&#x27;</span>)-&gt;<span class="title function_ invoke__">where</span>(<span class="string">&quot;id&quot;</span>, <span class="string">&quot;=&quot;</span>, <span class="number">25</span>)-&gt;<span class="title function_ invoke__">where</span>(<span class="variable">$where_extra</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">field</span>([<span class="string">&quot;id&quot;</span>, <span class="string">&quot;username&quot;</span> =&gt; <span class="string">&quot;name&quot;</span>])</span><br><span class="line">    -&gt;<span class="title function_ invoke__">fetchSql</span>(<span class="literal">true</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">select</span>();      </span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成的查询sql： &quot;SELECT `id`,`username` AS `name` FROM `fa_admin` WHERE  `id` = 25  AND (  `id` = 3 OR `id` = 4 )&quot;</span></span><br></pre></td></tr></table></figure>
-
-
-<ul>
-<li><strong>Query::fetchSql</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 获取执行的SQL语句</span><br><span class="line"> * @access public</span><br><span class="line"> * @param boolean $fetch 是否返回sql</span><br><span class="line"> * @return $this</span><br><span class="line"> */</span><br><span class="line">public function fetchSql($fetch = true)</span><br></pre></td></tr></table></figure>
-<p><strong>描述：</strong>$fetch为ture则不执行sql，仅仅返回querySql，方便调试sql语句。</p>
-<ul>
-<li><strong>Builder::select</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 生成查询SQL</span><br><span class="line"> * @access public</span><br><span class="line"> * @param array $options 表达式</span><br><span class="line"> * @return string</span><br><span class="line"> */</span><br><span class="line">public function select($options = [])</span><br></pre></td></tr></table></figure>
-<p><strong>描述：</strong>生成查询SQL语句。</p>
-<ul>
-<li><strong>Builder::alias</strong></li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 指定数据表别名</span><br><span class="line"> * @access public</span><br><span class="line"> * @param mixed $alias 数据表别名</span><br><span class="line"> * @return $this</span><br><span class="line"> */</span><br><span class="line">public function alias($alias)</span><br></pre></td></tr></table></figure>
-<p><strong>描述：</strong>设置数据库别名<br><strong>范例：</strong></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Db</span>::<span class="title function_ invoke__">table</span>(<span class="string">&quot;fa_admin&quot;</span>)-&gt;<span class="title function_ invoke__">alias</span>([<span class="string">&#x27;fa_admin&#x27;</span>=&gt;<span class="string">&quot;admin&quot;</span>, <span class="string">&quot;fa_customer&quot;</span>=&gt;<span class="string">&quot;customer&quot;</span>])</span><br><span class="line">    -&gt;<span class="title function_ invoke__">join</span>(<span class="string">&#x27;fa_customer&#x27;</span>, <span class="string">&#x27;customer.id=admin.id&#x27;</span>)-&gt;<span class="title function_ invoke__">select</span>();</span><br><span class="line"><span class="title class_">Db</span>::<span class="title function_ invoke__">table</span>(<span class="string">&#x27;fa_admin&#x27;</span>)-&gt;<span class="title function_ invoke__">where</span>(<span class="string">&quot;admin.id&quot;</span>, <span class="string">&quot;=&quot;</span>, <span class="number">25</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">field</span>(<span class="string">&quot;admin.id, admin.username, admin.nickname, staff.mobile, staff.id, staff.post&quot;</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">alias</span>([</span><br><span class="line">        <span class="string">&quot;fa_admin&quot;</span> =&gt; <span class="string">&quot;admin&quot;</span>,</span><br><span class="line">        <span class="string">&quot;fa_qingdong_staff&quot;</span> =&gt; <span class="string">&quot;staff&quot;</span></span><br><span class="line">    ])-&gt;<span class="title function_ invoke__">join</span>(<span class="string">&#x27;fa_qingdong_staff&#x27;</span>, <span class="string">&#x27;staff.admin_id = admin.id&#x27;</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">fetchSql</span>(<span class="literal">false</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">select</span>();</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="高级查询"><a href="#高级查询" class="headerlink" title="高级查询"></a><strong>高级查询</strong></h1><ul>
-<li><p><strong>快速查询</strong></p>
-<p>​	快捷查询是多个字段使用同一个查询条件的简写，在多个字段之间用|或者&amp;，表示Or和And查询，例如：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Db</span>::<span class="title function_ invoke__">table</span>(<span class="string">&#x27;think_user&#x27;</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">where</span>(<span class="string">&#x27;name|title&#x27;</span>,<span class="string">&#x27;like&#x27;</span>,<span class="string">&#x27;thinkphp%&#x27;</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">where</span>(<span class="string">&#x27;create_time&amp;update_time&#x27;</span>,<span class="string">&#x27;&gt;&#x27;</span>,<span class="number">0</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">find</span>();</span><br></pre></td></tr></table></figure>
-
-<p>生成的SQL：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM `think_user` WHERE ( `name` LIKE &#x27;thinkphp%&#x27; OR `title` LIKE &#x27;thinkphp%&#x27; ) AND ( `create_time` &gt; 0 AND `update_time` &gt; 0 ) LIMIT 1</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p><strong>区间查询</strong></p>
-<p>​	区间查询是同一个字段多个查询条件的简化写法，例如：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Db</span>::<span class="title function_ invoke__">table</span>(<span class="string">&#x27;think_user&#x27;</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">where</span>(<span class="string">&#x27;name&#x27;</span>,[<span class="string">&#x27;like&#x27;</span>,<span class="string">&#x27;thinkphp%&#x27;</span>],[<span class="string">&#x27;like&#x27;</span>,<span class="string">&#x27;%thinkphp&#x27;</span>])</span><br><span class="line">    -&gt;<span class="title function_ invoke__">where</span>(<span class="string">&#x27;id&#x27;</span>,[<span class="string">&#x27;&gt;&#x27;</span>,<span class="number">0</span>],[<span class="string">&#x27;&lt;&gt;&#x27;</span>,<span class="number">10</span>],<span class="string">&#x27;or&#x27;</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">find</span>();</span><br></pre></td></tr></table></figure>
-
-<p>生成的SQL：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM `think_user` WHERE ( `name` LIKE &#x27;thinkphp%&#x27; AND `name` LIKE &#x27;%thinkphp&#x27; ) AND ( `id` &gt; 0 OR `id` &lt;&gt; 10 ) LIMIT 1</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p><strong>批量查询</strong></p>
-<p>​	批量查询可以进行多个条件的批量条件查询，例如：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Db</span>::<span class="title function_ invoke__">table</span>(<span class="string">&#x27;think_user&#x27;</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">where</span>([</span><br><span class="line">        <span class="string">&#x27;name&#x27;</span>  =&gt;  [<span class="string">&#x27;like&#x27;</span>,<span class="string">&#x27;thinkphp%&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;title&#x27;</span> =&gt;  [<span class="string">&#x27;like&#x27;</span>,<span class="string">&#x27;%thinkphp&#x27;</span>],</span><br><span class="line">        <span class="string">&#x27;id&#x27;</span>    =&gt;  [<span class="string">&#x27;&gt;&#x27;</span>,<span class="number">0</span>],</span><br><span class="line">        <span class="string">&#x27;status&#x27;</span>=&gt;  <span class="number">1</span></span><br><span class="line">    ])</span><br><span class="line">    -&gt;<span class="title function_ invoke__">select</span>();</span><br></pre></td></tr></table></figure>
-
-<p>生成的SQL：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM `think_user` WHERE `name` LIKE &#x27;thinkphp%&#x27; AND `title` LIKE &#x27;%thinkphp&#x27; AND `id` &gt; 0 AND `status` = &#x27;1&#x27;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p><strong>闭包查询</strong></p>
-<p>​	闭包查询可以很好的执行多个查询条件的与或关系。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Db::table(&#x27;think_user&#x27;)-&gt;select(function($query)&#123;</span><br><span class="line">    $query-&gt;where(&#x27;name&#x27;,&#x27;thinkphp&#x27;)</span><br><span class="line">        -&gt;whereOr(&#x27;id&#x27;,&#x27;&gt;&#x27;,10);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>生成的SQL：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM `think_user` WHERE `name` = &#x27;thinkphp&#x27; OR `id` &gt; 10</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p><strong>使用Query对象查询</strong></p>
-<p>​	可以事先封装Query对象，并且传入select方法，例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$query = new \think\db\Query;</span><br><span class="line">$query-&gt;name(&#x27;user&#x27;)</span><br><span class="line">    -&gt;where(&#x27;name&#x27;,&#x27;like&#x27;,&#x27;%think%&#x27;)</span><br><span class="line">    -&gt;where(&#x27;id&#x27;,&#x27;&gt;&#x27;,10)</span><br><span class="line">    -&gt;limit(10);</span><br><span class="line">Db::select($query);    </span><br></pre></td></tr></table></figure>
-
-<p>注意：使用Query对象的话，select方法之前的调用的任何链式操作都是无效的。</p>
-</li>
-<li><p><strong>混合查询</strong></p>
-<p>​	混合前面的查询方式，比如普通查询、快捷查询、批量查询、闭包查询。</p>
-</li>
-<li><p><strong>字符串条件查询</strong></p>
-<p>​	对于一些复杂的查询，可以直接使用原生SQL语句查询，例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Db::table(&#x27;think_user&#x27;)</span><br><span class="line">    -&gt;where(&#x27;id &gt; 0 AND name LIKE &quot;thinkphp%&quot;&#x27;)</span><br><span class="line">    -&gt;select();</span><br></pre></td></tr></table></figure>
-
-<p>为了安全起见，我们可以对字符串查询条件使用参数绑定，例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Db::table(&#x27;think_user&#x27;)</span><br><span class="line">    -&gt;where(&#x27;id &gt; 0 AND name LIKE &quot;thinkphp%&quot;&#x27;)</span><br><span class="line">    -&gt;select();</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p><strong>快捷方法</strong></p>
-<table>
-<thead>
-<tr>
-<th align="left">方法</th>
-<th align="left">作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left"><code>whereNull</code></td>
-<td align="left">查询字段是否为Null</td>
-</tr>
-<tr>
-<td align="left"><code>whereNotNull</code></td>
-<td align="left">查询字段是否不为Null</td>
-</tr>
-<tr>
-<td align="left"><code>whereIn</code></td>
-<td align="left">字段IN查询</td>
-</tr>
-<tr>
-<td align="left"><code>whereNotIn</code></td>
-<td align="left">字段NOT IN查询</td>
-</tr>
-<tr>
-<td align="left"><code>whereBetween</code></td>
-<td align="left">字段BETWEEN查询</td>
-</tr>
-<tr>
-<td align="left"><code>whereNotBetween</code></td>
-<td align="left">字段NOT BETWEEN查询</td>
-</tr>
-<tr>
-<td align="left"><code>whereLike</code></td>
-<td align="left">字段LIKE查询</td>
-</tr>
-<tr>
-<td align="left"><code>whereNotLike</code></td>
-<td align="left">字段NOT LIKE查询</td>
-</tr>
-<tr>
-<td align="left"><code>whereExists</code></td>
-<td align="left">EXISTS条件查询</td>
-</tr>
-<tr>
-<td align="left"><code>whereNotExists</code></td>
-<td align="left">NOT EXISTS条件查询</td>
-</tr>
-<tr>
-<td align="left"><code>whereExp</code></td>
-<td align="left">表达式查询</td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-<h1 id="视图查询"><a href="#视图查询" class="headerlink" title="视图查询"></a>视图查询</h1><p>​	视图查询主要是进行多表查询，不需要数据库支持视图。例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Db::view(&#x27;User&#x27;,&#x27;id,name&#x27;)</span><br><span class="line">    -&gt;view(&#x27;Profile&#x27;,&#x27;truename,phone,email&#x27;,&#x27;Profile.user_id=User.id&#x27;)</span><br><span class="line">    -&gt;view(&#x27;Score&#x27;,&#x27;score&#x27;,&#x27;Score.user_id=Profile.id&#x27;)</span><br><span class="line">    -&gt;where(&#x27;score&#x27;,&#x27;&gt;&#x27;,80)</span><br><span class="line">    -&gt;select();</span><br></pre></td></tr></table></figure>
-
-<p>生成的SQL语句类似于：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT User.id,User.name,Profile.truename,Profile.phone,Profile.email,Score.score FROM think_user User </span><br><span class="line">INNER JOIN think_profile Profile ON Profile.user_id=User.id </span><br><span class="line">INNER JOIN think_socre Score ON Score.user_id=Profile.id WHERE Score.score &gt; 80</span><br></pre></td></tr></table></figure>
-
-<p>默认是inner join，如果需要更改，可以使用</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Db::view(&#x27;User&#x27;,&#x27;id,name&#x27;)</span><br><span class="line">    -&gt;view(&#x27;Profile&#x27;,&#x27;truename,phone,email&#x27;,&#x27;Profile.user_id=User.id&#x27;,&#x27;LEFT&#x27;)</span><br><span class="line">    -&gt;view(&#x27;Score&#x27;,&#x27;score&#x27;,&#x27;Score.user_id=Profile.id&#x27;,&#x27;RIGHT&#x27;)</span><br><span class="line">    -&gt;where(&#x27;score&#x27;,&#x27;&gt;&#x27;,80)</span><br><span class="line">    -&gt;select();</span><br></pre></td></tr></table></figure>
-
-<p>生成的SQL语句类似于：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT User.id,User.name,Profile.truename,Profile.phone,Profile.email,Score.score FROM think_user User </span><br><span class="line">LEFT JOIN think_profile Profile ON Profile.user_id=User.id </span><br><span class="line">RIGHT JOIN think_socre Score ON Score.user_id=Profile.id WHERE Score.score &gt; 80</span><br></pre></td></tr></table></figure>
-
-<p>可以使用别名，例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Db::view(&#x27;User&#x27;,[&#x27;id&#x27;=&gt;&#x27;uid&#x27;,&#x27;name&#x27;=&gt;&#x27;account&#x27;])</span><br><span class="line">    -&gt;view(&#x27;Profile&#x27;,&#x27;truename,phone,email&#x27;,&#x27;Profile.user_id=User.id&#x27;)</span><br><span class="line">    -&gt;view(&#x27;Score&#x27;,&#x27;score&#x27;,&#x27;Score.user_id=Profile.id&#x27;)</span><br><span class="line">    -&gt;where(&#x27;score&#x27;,&#x27;&gt;&#x27;,80)</span><br><span class="line">    -&gt;select();</span><br></pre></td></tr></table></figure>
-
-<p>生成的SQL语句类似于：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT User.id AS uid,User.name AS account,Profile.truename,Profile.phone,Profile.email,Score.score </span><br><span class="line">FROM think_user User INNER JOIN think_profile Profile ON Profile.user_id=User.id </span><br><span class="line">INNER JOIN think_socre Score ON Score.user_id=Profile.id WHERE Score.score &gt; 80</span><br></pre></td></tr></table></figure>
-
-<p>可以使用数组的方式定义表名以及别名，例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Db::view([&#x27;think_user&#x27;=&gt;&#x27;member&#x27;],[&#x27;id&#x27;=&gt;&#x27;uid&#x27;,&#x27;name&#x27;=&gt;&#x27;account&#x27;])</span><br><span class="line">    -&gt;view(&#x27;Profile&#x27;,&#x27;truename,phone,email&#x27;,&#x27;Profile.user_id=member.id&#x27;)</span><br><span class="line">    -&gt;view(&#x27;Score&#x27;,&#x27;score&#x27;,&#x27;Score.user_id=Profile.id&#x27;)</span><br><span class="line">    -&gt;where(&#x27;score&#x27;,&#x27;&gt;&#x27;,80)</span><br><span class="line">    -&gt;select();</span><br></pre></td></tr></table></figure>
-
-<p>生成的SQL语句类似于：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT member.id AS uid,member.name AS account,Profile.truename,Profile.phone,Profile.email,Score.score </span><br><span class="line">FROM think_user member INNER JOIN think_profile Profile ON Profile.user_id=member.id </span><br><span class="line">INNER JOIN think_socre Score ON Score.user_id=Profile.id WHERE Score.score &gt; 80</span><br></pre></td></tr></table></figure>
-
-
-
-<h1 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h1><ul>
-<li><p><strong>使用select()</strong></p>
-<p>Query::select()参数为false时，不进行查询而是返回构建的SQL语句，例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT member.id AS uid,member.name AS account,Profile.truename,Profile.phone,Profile.email,</span><br><span class="line">Score.score FROM think_user member INNER JOIN think_profile Profile ON Profile.user_id=member.id </span><br><span class="line">INNER JOIN think_socre Score ON Score.user_id=Profile.id WHERE Score.score &gt; 80</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p><strong>使用fetchSql()</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$subQuery = Db::table(&#x27;think_user&#x27;)</span><br><span class="line">    -&gt;field(&#x27;id,name&#x27;)</span><br><span class="line">    -&gt;where(&#x27;id&#x27;,&#x27;&gt;&#x27;,10)</span><br><span class="line">    -&gt;fetchSql(true)</span><br><span class="line">    -&gt;select();</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p><strong>使用buildSql构造子查询</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$subQuery = Db::table(&#x27;think_user&#x27;)</span><br><span class="line">    -&gt;field(&#x27;id,name&#x27;)</span><br><span class="line">    -&gt;where(&#x27;id&#x27;,&#x27;&gt;&#x27;,10)</span><br><span class="line">    -&gt;buildSql();</span><br></pre></td></tr></table></figure>
-
-<p>生成subQuery结果为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">( SELECT `id`,`name` FROM `think_user` WHERE `id` &gt; 10 )</span><br></pre></td></tr></table></figure>
-
-<p><em><strong>注意：此方法会自动加括号，前面两个方法需要手动添加括号。</strong></em></p>
-<p>然后使用子查询构造新的查询：</p>
-<p>生成的SQL语句为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM ( SELECT `id`,`name` FROM `think_user` WHERE `id` &gt; 10 ) a WHERE a.name LIKE &#x27;thinkphp&#x27;</span><br><span class="line">ORDER BY `id` desc</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p><strong>使用闭包构造子查询</strong></p>
-<p><code>IN/NOT IN</code>和<code>EXISTS/NOT EXISTS</code>之类的查询可以直接使用闭包作为子查询，例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Db::table(&#x27;think_user&#x27;)</span><br><span class="line">-&gt;where(&#x27;id&#x27;,&#x27;IN&#x27;,function($query)&#123;</span><br><span class="line">    $query-&gt;table(&#x27;think_profile&#x27;)-&gt;where(&#x27;status&#x27;,1)-&gt;field(&#x27;id&#x27;);</span><br><span class="line">&#125;)</span><br><span class="line">-&gt;select();</span><br></pre></td></tr></table></figure>
-
-<p>生成的SQL语句类似：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM `think_user` WHERE `id` IN ( SELECT `id` FROM `think_profile` WHERE `status` = 1 )</span><br></pre></td></tr></table></figure>
-
-<p>又例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Db::table(&#x27;think_user&#x27;)</span><br><span class="line">-&gt;where(function($query)&#123;</span><br><span class="line">    $query-&gt;table(&#x27;think_profile&#x27;)-&gt;where(&#x27;status&#x27;,1);</span><br><span class="line">&#125;,&#x27;exists&#x27;)</span><br><span class="line">-&gt;find();</span><br></pre></td></tr></table></figure>
-
-<p>生成的SQL语句类似：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM `think_user` WHERE EXISTS ( SELECT * FROM `think_profile` WHERE `status` = 1 ) </span><br></pre></td></tr></table></figure></li>
-</ul>
-<h1 id="原生查询"><a href="#原生查询" class="headerlink" title="原生查询"></a>原生查询</h1><ul>
-<li><p><strong>Query::query方法</strong></p>
-<p>用于执行SQL查询操作，如果数据非法或者查询错误返回false，否则返回结果集。例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Db::query(&quot;select * from think_user where status=1&quot;);</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p><strong>Query::execute()</strong></p>
-<p>execute用于更新和写入数据的sql操作，如果数据非法或者查询错误则返回false ，否则返回影响的记录数。例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Db::execute(&quot;update think_user set name=&#x27;thinkphp&#x27; where status=1&quot;);</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p><strong>参数绑定</strong></p>
-<p>支持在原生查询的时候使用参数绑定，包括问号占位符或者命名占位符，例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Db::query(&quot;select * from think_user where id=? AND status=?&quot;,[8,1]);</span><br><span class="line">// 命名绑定</span><br><span class="line">Db::execute(&quot;update think_user set name=:name where status=:status&quot;,[&#x27;name&#x27;=&gt;&#x27;thinkphp&#x27;,&#x27;status&#x27;=&gt;1]);</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p><strong>存储过程</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$result = Db::query(&#x27;call sp_query(8)&#x27;);</span><br></pre></td></tr></table></figure>
-
-<p>也可以用参数绑定：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$result = Db::query(&#x27;call sp_query(?)&#x27;,[8]);</span><br><span class="line">// 或者命名绑定</span><br><span class="line">$result = Db::query(&#x27;call sp_query(:id)&#x27;,[&#x27;id&#x27;=&gt;8]);</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h1 id="关联查询"><a href="#关联查询" class="headerlink" title="关联查询"></a>关联查询</h1><ul>
-<li><p>一对一关联</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hasOne(&#x27;关联模型名&#x27;,&#x27;外键名&#x27;,&#x27;主键名&#x27;,[&#x27;模型别名定义&#x27;],&#x27;join类型&#x27;);</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">belongsTo(&#x27;关联模型名&#x27;,&#x27;外键名&#x27;,&#x27;关联表主键名&#x27;,[&#x27;模型别名定义&#x27;],&#x27;join类型&#x27;);</span><br></pre></td></tr></table></figure>
-
-<p>例如：customer表通过owner_staff_id关联到staff表，外键名为staff表的主键id，主键名为customer表的owner_staff_id，customer表通过字段owner_staff_id与staff表的id外键关联起来。这里的本地的称之为主键，关联的外部模型的字段称之为外键，这么说可能更容易理解：</p>
-<p>hasOne(‘关联模型’, ‘关联模型的关联字段名’, ‘本地字段名’)  其中’本地字段名’和’关联模型的关联字段名’是相关联的。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public function ownerStaff() &#123;</span><br><span class="line"></span><br><span class="line">    return $this-&gt;hasOne(Staff::class, &#x27;id&#x27;, &#x27;owner_staff_id&#x27;)-&gt;field(&#x27;id,name,group_ids&#x27;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>一对多关联</p>
-</li>
-<li><p>多对多关联</p>
-</li>
-<li><p>关联预载入</p>
-</li>
-<li><p>关联统计</p>
-</li>
-</ul>
-<h1 id="ThinkPHP5-DB模块可能存在的问题"><a href="#ThinkPHP5-DB模块可能存在的问题" class="headerlink" title="ThinkPHP5 DB模块可能存在的问题"></a><strong>ThinkPHP5 DB模块可能存在的问题</strong></h1><ul>
-<li><p><strong>参数绑定性能</strong></p>
-<p>比如设置了一个查询条件where(‘id’, ‘in’, $idlist) 其中$idlist是一个数组格式的id集合，如果$idlist数据量比较大，在解析where参数的时候进行。当参数绑定耗时会比较多，此时可以用字符串的where代替，就是逻辑层直接用$idlist转为字符串$strids，然后where(“id in (${strids})”);<br><strong>例如：</strong></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$idlist</span> = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">10</span>,<span class="number">20</span>,<span class="number">21</span>,<span class="number">22</span>,<span class="number">23</span>,<span class="number">24</span>,<span class="number">25</span>,<span class="number">26</span>,<span class="number">27</span>,<span class="number">28</span>,<span class="number">29</span>,<span class="number">30</span>];</span><br><span class="line"><span class="variable">$strids</span> = <span class="title function_ invoke__">implode</span>(<span class="string">&#x27;,&#x27;</span>, <span class="variable">$idlist</span>);</span><br><span class="line"><span class="variable">$result</span> = <span class="title class_">Db</span>::<span class="title function_ invoke__">table</span>(<span class="string">&#x27;fa_admin&#x27;</span>)</span><br><span class="line">    <span class="comment">// 当$idlist很大时，用字符串where条件替代</span></span><br><span class="line">    <span class="comment">//-&gt;where(&quot;id&quot;, &#x27;in&#x27;, $idlist)</span></span><br><span class="line">    -&gt;<span class="title function_ invoke__">where</span>(<span class="string">&quot;id in ($&#123;strids&#125;)&quot;</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">field</span>([<span class="string">&quot;id&quot;</span>, <span class="string">&quot;username&quot;</span> =&gt; <span class="string">&quot;name&quot;</span>])</span><br><span class="line">    -&gt;<span class="title function_ invoke__">fetchSql</span>(<span class="literal">false</span>)</span><br><span class="line">    -&gt;<span class="title function_ invoke__">select</span>();</span><br></pre></td></tr></table></figure>
-
-</li>
-<li><p><strong>Model结果序列化性能</strong></p>
-<p>​	通常情况下如果数据量比较大一般会采取分页机制来减少每次查询和处理的记录集。但是如果用户确实就想一次性查看大量数据比如(1000)条记录，测试发现通过Model查询db获取记录之后调用json(model)会触发Model::jsonSerialize()，进而调用Model::toArray()，此函数对Model中每个属性进行处理，很耗时。可行的优化方案如下：</p>
-<ul>
-<li><p><strong>降低查询的fields</strong></p>
-<p>通过fields(“xxx”)来过滤需要的字段列表，或者通过设置模型的显示属性$visible和隐藏属性$hidden</p>
-</li>
-<li><p><strong>降低pageNum</strong></p>
-<p>毕竟都有分页了，没必要将每页记录数量设置太大</p>
-</li>
-<li><p><strong>优化Model::toArray()</strong></p>
-<p>测试从customer表中查出1000条件记录，代码如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$result = Customer::where(&quot;id&quot;, &#x27;exp&#x27;, &quot;&gt; 0&quot;)-&gt;limit(1000)-&gt;select();</span><br><span class="line"></span><br><span class="line">$timeprofile[] = Debug::getUseTime();</span><br><span class="line"></span><br><span class="line">$result_json = json_encode($result);</span><br><span class="line"></span><br><span class="line">$timeprofile[] = Debug::getUseTime();</span><br></pre></td></tr></table></figure>
-
-<p>打印出的时间：</p>
-<p>​	select耗时：0.03s</p>
-<p>​	json_encode耗时：6.95s</p>
-<p>由上可见Model::toArray()耗时非常大。</p>
-</li>
-<li><p><strong>优化Query::select()</strong></p>
-<p>select()会先准备要执行的最终查询sql，然后查询，查询完毕后还会对结果集进行处理，比如创建模型对象，并且用结果集中的每条记录数据来初始化模型对象，此过程也是非常耗时，对于大部分只需要数据并不会后续处理的应用场景而言，可以省略这一步操作。其实，Query::select()如果没有model对象，这一步本来就是可以省略的。</p>
-</li>
-</ul>
-</li>
-</ul>
-<p>​	</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/04/27/ThinkPHP%E4%B9%8BDB-Query/" data-id="clwbg5x4l0004z44qfy6ab9hx" data-title="ThinkPHP之DB::Query" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -2168,7 +1768,7 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
     </div>
   </div>
 
@@ -2179,6 +1779,10 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/">&#39;QObject简单笔记&#39;</a>
+          </li>
         
           <li>
             <a href="/2024/05/27/c-11/">c++11</a>
@@ -2194,10 +1798,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
         
           <li>
             <a href="/2024/05/11/%E7%94%A8libharu%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BD%9C%E4%B8%9A/">用libharu完成一个小作业</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/09/%E5%AE%9D%E5%A1%94%E9%9D%A2%E6%9D%BFApacheServer%E9%85%8D%E7%BD%AE/">宝塔面板ApacheServer配置</a>
           </li>
         
       </ul>
