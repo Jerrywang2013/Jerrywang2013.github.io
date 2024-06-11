@@ -72,6 +72,105 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-git常用操作" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/06/11/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" class="article-date">
+  <time class="dt-published" datetime="2024-06-11T15:50:53.000Z" itemprop="datePublished">2024-06-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/06/11/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">git常用操作</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>git clone </p>
+<p>克隆项目到本地</p>
+<p>git add</p>
+<p>将本地变动文件（新加、修改）添加到暂存区</p>
+<p>git commit -m “comment”</p>
+<p>将暂存区内容提交到本地版本服务器，形成一次提交操作，有对应的日志，后续可以根据此日志来恢复</p>
+<p>git push [&lt;远程主机名&gt; [&lt;远程分支名&gt;]]</p>
+<p>将本地仓库提交推送到远程。</p>
+<p>git push origin 将当前分支推送到远程仓库的同名分支</p>
+<p>git push origin &lt;远程分支名&gt; 将当前分支推送到远程仓库的指定分支</p>
+<p>如果设置了上游分支，直接用git push就行</p>
+<p>git push –set-upstream <remote> <breanch>  </breanch></remote></p>
+<p>git branch –set-upstream-to&#x3D;<remote>&#x2F;<branch> &lt;本地分支名&gt;</branch></remote></p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//  设置上游分支</span><br><span class="line">git branch --set-upstream-to=origin/another-branch</span><br></pre></td></tr></table></figure>
+
+<p>如果没有设置上游分支，第一次push的时候可以用git push -u origin <branch> 来设置，之后就可以直接用git push推送当前分支的修改。</branch></p>
+<p>分支</p>
+<p>git branch -v | -a</p>
+<p>查看分支，本地分支和远程分支颜色显示不同，当前分支颜色也特殊标记</p>
+<p>git branch -vv 查看上游分支</p>
+<p>git branch -r 查看远程分支</p>
+<p>git branch -b &lt;新分支名&gt;</p>
+<p>创建分支并且切换到新分支</p>
+<p>git checkout -b new-feature origin&#x2F;feature-branch</p>
+<p>从远程分支origin&#x2F;feature-branch创建本地分支</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 从develop创建分支</span><br><span class="line">git checkout -b feature-branch develop</span><br></pre></td></tr></table></figure>
+
+<p>推送到远程服务器并且创建一个同名的远程分支</p>
+<p>git push origin new-feature</p>
+<p>创建本地分支后，推送并创建远程分支 -u可以设置上游分支</p>
+<p>git push -u origin feature-branch</p>
+<p>git checkout new-feature</p>
+<p>切换到分支new-feature</p>
+<p>git merge new-feature</p>
+<p>将new-feature分支内容合并到当前分支。如果有冲突，需要手动编辑冲突文件然后再add | commit | push</p>
+<p>git reset head</p>
+<p>重置暂存区为，将其恢复到当前分支head指针指向的提交相同的状态。不影响工作区文件，只会影响暂存区且尚未提交的更改。</p>
+<p>git rm</p>
+<p>从版本控制中删除文件。</p>
+<p>例如：将1.txt文件从版本中删除，但是保留在文件系统中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git  rm --cached 1.txt </span><br><span class="line">git commit -m &quot;Remove 1.txt from version control&quot;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+
+<p>移除版本控制之后，本地工作区文件存在，此时如果切换到其它分支会提示此untracked的工作区文件可能会被重写。主要是其它分支有此文件，切换工作区可能会改写此未被跟踪的文件造成意外情况，解决办法有：</p>
+<p>手动备份</p>
+<p>move 1.txt 1.txt.bak</p>
+<p>git checkout new-feature</p>
+<p>暂存未被追踪的文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git stash push -m &quot;sss&quot; --include-untracked</span><br><span class="line">git checkout new-feature</span><br><span class="line">git stash pop</span><br></pre></td></tr></table></figure>
+
+<p>强制切换分支</p>
+<p>git checkout -f new-feature</p>
+<p>此时可能存在未被追踪的文件数据丢失。</p>
+<p>git log</p>
+<p>显示日志</p>
+<p>git relog</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li><strong>暂存区（Index&#x2F;Staging Area）</strong>：这是一个临时区域，用于存储即将提交的更改。当你使用 <code>git add</code> 命令时，文件的更改会被添加到暂存区。</li>
+<li><strong>工作区（Working Directory）</strong>：这是你实际进行开发和修改文件的地方。工作区中的文件可能已经被修改，但还没有被添加到暂存区。</li>
+<li><strong>HEAD</strong>：这是一个指针，指向当前分支的最新提交。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/06/11/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" data-id="clxamrsc80000k44q0u412w05" data-title="git常用操作" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-QObject简单笔记" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/" class="article-date">
@@ -97,6 +196,9 @@
         <p>记录一下QObject有关元对象一些数据和实现细节。</p>
 <p>用ProcessOn在线画了一张图，导出为图片，直接附上。</p>
 <p><img src="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/QObjectUML.png" alt="QObject类图"></p>
+<ul>
+<li>SIGNAL&#x2F;SLOT宏会在函数原型字符串前面增加一个数字编号1或者2，这个是创建连接的时候用于区分signal和slot。</li>
+</ul>
 
       
     </div>
@@ -1588,163 +1690,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
 
 
   
-    <article id="post-Hexo-简介" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/04/30/Hexo-%E7%AE%80%E4%BB%8B/" class="article-date">
-  <time class="dt-published" datetime="2024-04-30T12:37:16.000Z" itemprop="datePublished">2024-04-30</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/04/30/Hexo-%E7%AE%80%E4%BB%8B/">在Github上部署Hexo</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p><strong>简述</strong>：用Hexo本地创建Blog，然后将博客部署到Github上</p>
-<ul>
-<li><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a><strong>安装</strong></h2><h3 id="安装git和npm"><a href="#安装git和npm" class="headerlink" title="安装git和npm"></a>安装git和npm</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此部分省略</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="进阶安装和使用"><a href="#进阶安装和使用" class="headerlink" title="进阶安装和使用"></a>进阶安装和使用</h3><p>​	局部安装hexo包 </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo</span><br></pre></td></tr></table></figure>
-
-<p>​	然后可以使用hexo 命令</p>
-</li>
-<li><h3 id="创建Hexo项目"><a href="#创建Hexo项目" class="headerlink" title="创建Hexo项目"></a><strong>创建Hexo项目</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hexo init &lt;folder&gt;</span><br><span class="line"></span><br><span class="line">cd &lt;folder&gt;</span><br><span class="line"></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h1 id="创建SSH-Key"><a href="#创建SSH-Key" class="headerlink" title="创建SSH Key"></a>创建SSH Key</h1><ul>
-<li><h2 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen -t ras -C &quot;yourmail@xxx.com&quot;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：</strong>邮箱地址是你github账号关联的邮箱，配置的目的是将github仓库和本地机器连起来，这样可以将文件提交到仓库，不需要账号密码。进入github的对应仓库，点击‘setting’进入设置，点击“SSH and GPG key”，点击”New SSH Key”, 将前面生成的c:&#x2F;users&#x2F;用户名&#x2F;.ssh&#x2F;目录下的id_ras.pub内容	复制过去，title 随便取，点击保存，至此本地与github之间连接就配置好了。</p>
-<p><strong>测试：</strong>   	</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">执行命令：ssh -T git@github.com</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h1 id="配置git账号邮箱"><a href="#配置git账号邮箱" class="headerlink" title="配置git账号邮箱"></a>配置git账号邮箱</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;github账号&quot;</span><br><span class="line"></span><br><span class="line">git config --global user.email &quot;github账号关联的邮箱&quot;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h1 id="创建github仓库目录"><a href="#创建github仓库目录" class="headerlink" title="创建github仓库目录"></a>创建github仓库目录</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># mkdir myblob</span><br><span class="line"></span><br><span class="line"># 	git clone xxxxx.git</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h2 id="初始化hexo"><a href="#初始化hexo" class="headerlink" title="初始化hexo"></a>初始化hexo</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd myblob</span><br><span class="line"></span><br><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h2 id="查看初始文件"><a href="#查看初始文件" class="headerlink" title="查看初始文件"></a>查看初始文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h2 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-<p>  服务会监听本地4000端口，可以访问<a target="_blank" rel="noopener" href="http://localhost:4000/">http://localhost:4000</a></p>
-</li>
-</ul>
-<h1 id="上传blog到github"><a href="#上传blog到github" class="headerlink" title="上传blog到github"></a>上传blog到github</h1><ul>
-<li><h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><h2 id="修改根目录下的-config-yml中的deploy部分："><a href="#修改根目录下的-config-yml中的deploy部分：" class="headerlink" title="修改根目录下的_config.yml中的deploy部分："></a>修改根目录下的_config.yml中的deploy部分：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line"></span><br><span class="line"> type: git</span><br><span class="line"></span><br><span class="line"> repository: https://github.com/Jerrywang2013/Jerrywang2013.github.io.git</span><br><span class="line"></span><br><span class="line"> branch: main</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h2 id="生成"><a href="#生成" class="headerlink" title="生成"></a>生成</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h2 id="部署-提交"><a href="#部署-提交" class="headerlink" title="部署(提交)"></a>部署(提交)</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean &amp;&amp; hexo deplot</span><br></pre></td></tr></table></figure>
-
-<p><strong>备注</strong>：如果出现 ERROR Deployer not found: git w，请安装hexo部署插件： </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-gi</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h2 id="访问博客"><a href="#访问博客" class="headerlink" title="访问博客"></a>访问博客</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">浏览： &lt;Github用户名&gt;.github.io</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h1 id="hexo使用"><a href="#hexo使用" class="headerlink" title="hexo使用"></a>hexo使用</h1><ul>
-<li><h2 id="修改主题"><a href="#修改主题" class="headerlink" title="修改主题"></a>修改主题</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-theme-volantis</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h2 id="添加文章"><a href="#添加文章" class="headerlink" title="添加文章"></a>添加文章</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new 英语测试</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="编辑文章"><a href="#编辑文章" class="headerlink" title="编辑文章"></a>编辑文章</h2><p>进入source__posts\英语测试.md 下编写具体内容即可</p>
-</li>
-<li><h2 id="生成文件"><a href="#生成文件" class="headerlink" title="生成文件"></a>生成文件</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo generate | hexo g</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h2 id="启动服务器"><a href="#启动服务器" class="headerlink" title="启动服务器"></a>启动服务器</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo server | hexo s</span><br></pre></td></tr></table></figure>
-
-<p>可选参数</p>
-<p>​        -p –port 监听端口</p>
-<p>​        -s –static 只使用静态文件</p>
-<p>​        -l –log 启动日记记录，使用覆盖记录格式</p>
-</li>
-<li><h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy | hexo d</span><br></pre></td></tr></table></figure>
-
-<p>​	-g –generate 部署之前预先生成静态文件</p>
-</li>
-<li><h2 id="渲染"><a href="#渲染" class="headerlink" title="渲染"></a>渲染</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo render &lt;file1&gt; &lt;file2&gt;...</span><br></pre></td></tr></table></figure>
-
-<p>​	 -o –output 设置输出路径</p>
-</li>
-<li><h2 id="清除缓存"><a href="#清除缓存" class="headerlink" title="清除缓存"></a>清除缓存</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
-
-<p>​	清除缓存文件(db.json)和已生成的静态文件(public)</p>
-<p>​	在某些情况下（更换主题后）如果发现对站点的更改无论如何也不生效，可以尝试此命令。</p>
-</li>
-<li><h2 id="列出网站数据"><a href="#列出网站数据" class="headerlink" title="列出网站数据"></a>列出网站数据</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo list &lt;type&gt;</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h2 id="显示版本"><a href="#显示版本" class="headerlink" title="显示版本"></a>显示版本</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo version</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h2 id="列出网站配置"><a href="#列出网站配置" class="headerlink" title="列出网站配置"></a>列出网站配置</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo config [key] [value]</span><br></pre></td></tr></table></figure>
-
-<p>​	列出网站的配置(_config.yml)，如果指定了key，则只展示对应key的值，如果同时指定key和value，则将此key值修改为value。</p>
-</li>
-<li><h2 id="调试模式"><a href="#调试模式" class="headerlink" title="调试模式"></a>调试模式</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo --debug</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><h2 id="简洁模式"><a href="#简洁模式" class="headerlink" title="简洁模式"></a>简洁模式</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo --silent</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><strong>markdown基本语法</strong><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/nickchen121/p/10821946.html">https://www.cnblogs.com/nickchen121/p/10821946.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/04/30/Hexo-%E7%AE%80%E4%BB%8B/" data-id="clwbg5x4f0000z44qdvc2c6i5" data-title="在Github上部署Hexo" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -1781,6 +1726,10 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       <ul>
         
           <li>
+            <a href="/2024/06/11/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">git常用操作</a>
+          </li>
+        
+          <li>
             <a href="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/">QObject简单笔记</a>
           </li>
         
@@ -1794,10 +1743,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
         
           <li>
             <a href="/2024/05/14/c-%E8%B0%83%E8%AF%95/">c++调试</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/11/%E7%94%A8libharu%E5%AE%8C%E6%88%90%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BD%9C%E4%B8%9A/">用libharu完成一个小作业</a>
           </li>
         
       </ul>

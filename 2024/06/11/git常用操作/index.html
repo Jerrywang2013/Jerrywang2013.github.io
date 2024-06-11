@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>git常用操作 | Jerry Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="git clone  克隆项目到本地 git add 将本地变动文件（新加、修改）添加到暂存区 git commit -m “comment” 将暂存区内容提交到本地版本服务器，形成一次提交操作，有对应的日志，后续可以根据此日志来恢复 git push [&lt;远程主机名&gt; [&lt;远程分支名&gt;]] 将本地仓库提交推送到远程。 git push origin 将当前分支推送到远程仓">
+<meta property="og:type" content="article">
+<meta property="og:title" content="git常用操作">
+<meta property="og:url" content="https://jerrywang2013.github.io/2024/06/11/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/index.html">
+<meta property="og:site_name" content="Jerry Blogs">
+<meta property="og:description" content="git clone  克隆项目到本地 git add 将本地变动文件（新加、修改）添加到暂存区 git commit -m “comment” 将暂存区内容提交到本地版本服务器，形成一次提交操作，有对应的日志，后续可以根据此日志来恢复 git push [&lt;远程主机名&gt; [&lt;远程分支名&gt;]] 将本地仓库提交推送到远程。 git push origin 将当前分支推送到远程仓">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-06-11T15:50:53.000Z">
+<meta property="article:modified_time" content="2024-06-11T16:41:17.088Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="c++ lua php js python">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Jerry Blogs" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jerry Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jerrywang2013.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-git常用操作" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/06/11/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" class="article-date">
+  <time class="dt-published" datetime="2024-06-11T15:50:53.000Z" itemprop="datePublished">2024-06-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      git常用操作
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>git clone </p>
+<p>克隆项目到本地</p>
+<p>git add</p>
+<p>将本地变动文件（新加、修改）添加到暂存区</p>
+<p>git commit -m “comment”</p>
+<p>将暂存区内容提交到本地版本服务器，形成一次提交操作，有对应的日志，后续可以根据此日志来恢复</p>
+<p>git push [&lt;远程主机名&gt; [&lt;远程分支名&gt;]]</p>
+<p>将本地仓库提交推送到远程。</p>
+<p>git push origin 将当前分支推送到远程仓库的同名分支</p>
+<p>git push origin &lt;远程分支名&gt; 将当前分支推送到远程仓库的指定分支</p>
+<p>如果设置了上游分支，直接用git push就行</p>
+<p>git push –set-upstream <remote> <breanch>  </breanch></remote></p>
+<p>git branch –set-upstream-to&#x3D;<remote>&#x2F;<branch> &lt;本地分支名&gt;</branch></remote></p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//  设置上游分支</span><br><span class="line">git branch --set-upstream-to=origin/another-branch</span><br></pre></td></tr></table></figure>
+
+<p>如果没有设置上游分支，第一次push的时候可以用git push -u origin <branch> 来设置，之后就可以直接用git push推送当前分支的修改。</branch></p>
+<p>分支</p>
+<p>git branch -v | -a</p>
+<p>查看分支，本地分支和远程分支颜色显示不同，当前分支颜色也特殊标记</p>
+<p>git branch -vv 查看上游分支</p>
+<p>git branch -r 查看远程分支</p>
+<p>git branch -b &lt;新分支名&gt;</p>
+<p>创建分支并且切换到新分支</p>
+<p>git checkout -b new-feature origin&#x2F;feature-branch</p>
+<p>从远程分支origin&#x2F;feature-branch创建本地分支</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 从develop创建分支</span><br><span class="line">git checkout -b feature-branch develop</span><br></pre></td></tr></table></figure>
+
+<p>推送到远程服务器并且创建一个同名的远程分支</p>
+<p>git push origin new-feature</p>
+<p>创建本地分支后，推送并创建远程分支 -u可以设置上游分支</p>
+<p>git push -u origin feature-branch</p>
+<p>git checkout new-feature</p>
+<p>切换到分支new-feature</p>
+<p>git merge new-feature</p>
+<p>将new-feature分支内容合并到当前分支。如果有冲突，需要手动编辑冲突文件然后再add | commit | push</p>
+<p>git reset head</p>
+<p>重置暂存区为，将其恢复到当前分支head指针指向的提交相同的状态。不影响工作区文件，只会影响暂存区且尚未提交的更改。</p>
+<p>git rm</p>
+<p>从版本控制中删除文件。</p>
+<p>例如：将1.txt文件从版本中删除，但是保留在文件系统中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git  rm --cached 1.txt </span><br><span class="line">git commit -m &quot;Remove 1.txt from version control&quot;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
+
+<p>移除版本控制之后，本地工作区文件存在，此时如果切换到其它分支会提示此untracked的工作区文件可能会被重写。主要是其它分支有此文件，切换工作区可能会改写此未被跟踪的文件造成意外情况，解决办法有：</p>
+<p>手动备份</p>
+<p>move 1.txt 1.txt.bak</p>
+<p>git checkout new-feature</p>
+<p>暂存未被追踪的文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git stash push -m &quot;sss&quot; --include-untracked</span><br><span class="line">git checkout new-feature</span><br><span class="line">git stash pop</span><br></pre></td></tr></table></figure>
+
+<p>强制切换分支</p>
+<p>git checkout -f new-feature</p>
+<p>此时可能存在未被追踪的文件数据丢失。</p>
+<p>git log</p>
+<p>显示日志</p>
+<p>git relog</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li><strong>暂存区（Index&#x2F;Staging Area）</strong>：这是一个临时区域，用于存储即将提交的更改。当你使用 <code>git add</code> 命令时，文件的更改会被添加到暂存区。</li>
+<li><strong>工作区（Working Directory）</strong>：这是你实际进行开发和修改文件的地方。工作区中的文件可能已经被修改，但还没有被添加到暂存区。</li>
+<li><strong>HEAD</strong>：这是一个指针，指向当前分支的最新提交。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/06/11/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" data-id="clxamrsc80000k44q0u412w05" data-title="git常用操作" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">QObject简单笔记</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/06/11/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">git常用操作</a>
+          </li>
+        
+          <li>
+            <a href="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/">QObject简单笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/27/c-11/">c++11</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/18/QT/">QT</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/14/c-%E8%B0%83%E8%AF%95/">c++调试</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
