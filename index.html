@@ -72,6 +72,44 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-cuda初接触" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/06/15/cuda%E5%88%9D%E6%8E%A5%E8%A7%A6/" class="article-date">
+  <time class="dt-published" datetime="2024-06-14T23:32:52.000Z" itemprop="datePublished">2024-06-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/06/15/cuda%E5%88%9D%E6%8E%A5%E8%A7%A6/">cuda初接触</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/06/15/cuda%E5%88%9D%E6%8E%A5%E8%A7%A6/" data-id="clxpujbsw00003c4qdp0d38jd" data-title="cuda初接触" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-git常用操作" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/06/11/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" class="article-date">
@@ -94,62 +132,93 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>git clone </p>
-<p>克隆项目到本地</p>
-<p>git add</p>
-<p>将本地变动文件（新加、修改）添加到暂存区</p>
-<p>git commit -m “comment”</p>
-<p>将暂存区内容提交到本地版本服务器，形成一次提交操作，有对应的日志，后续可以根据此日志来恢复</p>
-<p>git push [&lt;远程主机名&gt; [&lt;远程分支名&gt;]]</p>
-<p>将本地仓库提交推送到远程。</p>
-<p>git push origin 将当前分支推送到远程仓库的同名分支</p>
-<p>git push origin &lt;远程分支名&gt; 将当前分支推送到远程仓库的指定分支</p>
+        <ul>
+<li><p><strong>克隆项目到本地</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone </span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>将本地变动文件（新加、修改）添加到暂存区</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git add</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>提交</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git commit -m &quot;comment&quot;</span><br></pre></td></tr></table></figure>
+
+<p>说明：将暂存区内容提交到本地版本服务器，形成一次提交操作，有对应的日志，后续可以根据此日志来恢复</p>
+</li>
+<li><p><strong>推送</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git push [&lt;远程主机名&gt; [&lt;远程分支名&gt;]]</span><br><span class="line">git push origin 将当前分支推送到远程仓库的同名分支</span><br><span class="line">git push origin &lt;远程分支名&gt; 将当前分支推送到远程仓库的指定分支</span><br></pre></td></tr></table></figure>
+
 <p>如果设置了上游分支，直接用git push就行</p>
-<p>git push –set-upstream <remote> <breanch>  </breanch></remote></p>
-<p>git branch –set-upstream-to&#x3D;<remote>&#x2F;<branch> &lt;本地分支名&gt;</branch></remote></p>
-<p>例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//  设置上游分支</span><br><span class="line">git branch --set-upstream-to=origin/another-branch</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git push --set-upstream &lt;remote&gt; &lt;breanch&gt;  </span><br><span class="line">git branch --set-upstream-to=&lt;remote&gt;/&lt;branch&gt; &lt;本地分支名&gt;</span><br><span class="line">//  设置上游分支</span><br><span class="line">git branch --set-upstream-to=origin/another-branch</span><br></pre></td></tr></table></figure>
 
 <p>如果没有设置上游分支，第一次push的时候可以用git push -u origin <branch> 来设置，之后就可以直接用git push推送当前分支的修改。</branch></p>
-<p>分支</p>
-<p>git branch -v | -a</p>
-<p>查看分支，本地分支和远程分支颜色显示不同，当前分支颜色也特殊标记</p>
-<p>git branch -vv 查看上游分支</p>
-<p>git branch -r 查看远程分支</p>
-<p>git branch -b &lt;新分支名&gt;</p>
-<p>创建分支并且切换到新分支</p>
-<p>git checkout -b new-feature origin&#x2F;feature-branch</p>
-<p>从远程分支origin&#x2F;feature-branch创建本地分支</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 从develop创建分支</span><br><span class="line">git checkout -b feature-branch develop</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>重置暂存区</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset head</span><br></pre></td></tr></table></figure>
 
-<p>推送到远程服务器并且创建一个同名的远程分支</p>
-<p>git push origin new-feature</p>
-<p>创建本地分支后，推送并创建远程分支 -u可以设置上游分支</p>
-<p>git push -u origin feature-branch</p>
-<p>git checkout new-feature</p>
-<p>切换到分支new-feature</p>
-<p>git merge new-feature</p>
-<p>将new-feature分支内容合并到当前分支。如果有冲突，需要手动编辑冲突文件然后再add | commit | push</p>
-<p>git reset head</p>
 <p>重置暂存区为，将其恢复到当前分支head指针指向的提交相同的状态。不影响工作区文件，只会影响暂存区且尚未提交的更改。</p>
-<p>git rm</p>
-<p>从版本控制中删除文件。</p>
-<p>例如：将1.txt文件从版本中删除，但是保留在文件系统中</p>
+</li>
+<li><p><strong>取消暂存</strong></p>
+<p>  比如1.txt文件修改了并且git add被加入到暂存区，此时如果想将1.txt从暂存区中移出（避免下次提交到）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git restore --staged 1.txt</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><strong>恢复工作区文件</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git restore file.txt 恢复file.txt到当前分支最新提交</span><br><span class="line">git restore --<span class="built_in">source</span>=main file.txt 将file.txt恢复到main分支的最新提交</span><br><span class="line">git restore --staged file.txt 恢复暂存区中的文件</span><br><span class="line">git restore --<span class="built_in">source</span>=1a2b3c4d file.txt  从提交 1a2b3c4d 恢复 file.txt</span><br><span class="line">// git checkout  已经不建议使用</span><br><span class="line">git checkout main -- file.txt  恢复工作区文件file.txt到main分支的状态</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>从版本控制中删除文件</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git  rm --cached 1.txt </span><br><span class="line">git commit -m &quot;Remove 1.txt from version control&quot;</span><br><span class="line">git push</span><br></pre></td></tr></table></figure>
 
 <p>移除版本控制之后，本地工作区文件存在，此时如果切换到其它分支会提示此untracked的工作区文件可能会被重写。主要是其它分支有此文件，切换工作区可能会改写此未被跟踪的文件造成意外情况，解决办法有：</p>
-<p>手动备份</p>
-<p>move 1.txt 1.txt.bak</p>
-<p>git checkout new-feature</p>
-<p>暂存未被追踪的文件</p>
+<ul>
+<li><p><strong>手动备份</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">move 1.txt 1.txt.bak</span><br><span class="line">git checkout new-feature</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>暂存未被追踪的文件</strong></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git stash push -m &quot;sss&quot; --include-untracked</span><br><span class="line">git checkout new-feature</span><br><span class="line">git stash pop</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>强制切换分支</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -f new-feature</span><br></pre></td></tr></table></figure>
 
-<p>强制切换分支</p>
-<p>git checkout -f new-feature</p>
-<p>此时可能存在未被追踪的文件数据丢失。</p>
-<p>git log</p>
-<p>显示日志</p>
-<p>git relog</p>
+<p>可能存在未被追踪的文件数据丢失！</p>
+</li>
+</ul>
+</li>
+<li><p><strong>显示日志</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git log</span><br><span class="line">git reflog</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="分支"><a href="#分支" class="headerlink" title="分支"></a>分支</h3><ul>
+<li><strong>查看分支</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">git branch -v   查看本地分支</span><br><span class="line">git branch -v   查看本地分支 带详细信息</span><br><span class="line">git branch -vv  查看本地分支，带上游信息</span><br><span class="line">git branch -r  查看远程分支</span><br><span class="line">git branch -rv  查看远程分支，带详细信息</span><br><span class="line">git branch -r  查看全部分支</span><br><span class="line">本地分支和远程分支颜色显示不同，当前分支颜色也特殊标记</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p><strong>创建分支</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git branch new-feature </span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>切换分支</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git switch new-feature</span><br><span class="line">git checout new-feature  // 不推荐使用</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>创建分支并且切换到新分支</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git switch -c new-feature </span><br><span class="line">git branch -b new-feature </span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>从远程分支origin&#x2F;feature-branch创建本地分支</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b new-feature origin/feature-branch</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从本地develop创建分支</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b feature-branch develop</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>推送到远程服务器并且创建一个同名的远程分支</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push origin new-feature</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>创建本地分支后，推送并创建远程分支 -u可以设置上游分支</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin feature-branch</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>合并分支</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git merge new-feature  </span><br><span class="line">将new-feature分支内容合并到当前分支。如果有冲突，需要手动编辑冲突文件然后再add | commit | push</span><br></pre></td></tr></table></figure></li>
+</ul>
 <h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
 <li><strong>暂存区（Index&#x2F;Staging Area）</strong>：这是一个临时区域，用于存储即将提交的更改。当你使用 <code>git add</code> 命令时，文件的更改会被添加到暂存区。</li>
 <li><strong>工作区（Working Directory）</strong>：这是你实际进行开发和修改文件的地方。工作区中的文件可能已经被修改，但还没有被添加到暂存区。</li>
@@ -1461,235 +1530,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
 
 
   
-    <article id="post-windows网络编程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="article-date">
-  <time class="dt-published" datetime="2024-05-01T09:42:08.000Z" itemprop="datePublished">2024-05-01</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">windows网络编程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="网络常见知识"><a href="#网络常见知识" class="headerlink" title="网络常见知识"></a>网络常见知识</h1><ul>
-<li><h2 id="大小端"><a href="#大小端" class="headerlink" title="大小端"></a>大小端</h2><p>​	一般用于指示多字节数据存储方式。</p>
-<ul>
-<li><p>​	<strong>大端（Little Endian)：</strong> 高位字节（MSB）存储在起始地址，低位字节（LSB）存储在结束地址。换句话说：数据的高位存储在内存的低地址处，低位字节存储在高地址处。</p>
-</li>
-<li><p>​	<strong>小端（Little Endian)：</strong> 和大端相反。</p>
-<p>举例：假设一个32位整数<code>num</code>，其十六进制表示为 **<code>0x12345678</code>**，在内存中存储如下：</p>
-<p><strong>大端字节序</strong>：存储方式为<code>**12 34 56 78**</code></p>
-<p><strong>小端字节序：</strong>存储方式为<code>**78 56 34 12**</code></p>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="重要函数"><a href="#重要函数" class="headerlink" title="重要函数"></a>重要函数</h1><ul>
-<li><p><strong>WSAGetLastError</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">WSAGetLastError</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>获取WinSocket函数调用的错误码</p>
-<p><strong>说明：</strong>WinSocket错误码定义在winsocket2.h文件中</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#define WSABASEERR              10000</span><br></pre></td></tr></table></figure>
-
-<p>​		错误码基础偏移是WSABASEERR，通过WSAGetLastError()获取到的错误码可以直接通过VS自带的错误查找工具查找对应错误码的信息。</p>
-</li>
-<li><p><strong>WSAStartup</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">WSAStartup</span><span class="params">(wVersion,  &amp;wsadata)</span></span></span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>初始化WinSocket库</p>
-<p><strong>说明：</strong></p>
-<p>​		应作为Socket库首个函数被调用。wVersion指定winsocket库版本。此函数直接返回错误码（0表示正常），无需额外调用WSAGetLastError()获取错误码。</p>
-</li>
-<li><p><strong>WSACleanup</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">WSACleanup</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>终于使用Winsock2 DLL(ws2_32.dll)</p>
-<p><strong>返回值：</strong>成功返回0，否则返回SOCKET_ERROR</p>
-<p><strong>说明：</strong></p>
-<p>​		失败时可以调用WSAGetLastError获取错误码。在多线程环境下，WSACleanup调用会终止所有线程的Windows套接字操作。</p>
-</li>
-<li><p><strong>socket</strong></p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SOCKET <span class="title">socket</span><span class="params">(<span class="type">int</span> af, <span class="type">int</span> type, <span class="type">int</span> protocol)</span></span></span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>创建套接字**</p>
-<p><strong>返回值：</strong></p>
-<p>​		如果没有错误会返回新创建的套接字描述符（整数），否则返回INVALID_SOCKET，并且可以调用WSAGetLastError()获取错误。</p>
-<p><strong>说明：</strong></p>
-<p>​	af： 地址家族，常见的有<strong>AF_INET</strong>（IPV4）、 <strong>AF_INET6</strong>（IPV6）</p>
-<p>​	type: 套接字类型，常见有<strong>SOCK_STREAM</strong>、<strong>SOCK_DGRAM</strong>、<strong>SOCK_RAW</strong>(原始套接字)</p>
-<p>​	protocol：协议，常见有<strong>IPPROTO_TCP</strong>、**IPPROTO_UDP</p>
-</li>
-<li><p><strong>bind</strong> </p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">bind</span><span class="params">(SOCKET s, <span class="type">const</span> sockaddr *addr, <span class="type">int</span> namelen)</span></span></span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>socket绑定地址</p>
-<p><strong>返回值：</strong>如果没有错误，返回0；否则返回SOCKET_ERROR；</p>
-<p><strong>说明：</strong></p>
-<ul>
-<li><p>如果不指定IP，可以使用INADDR_ANY（IPV4）或者in6addr_any（IPV6）</p>
-</li>
-<li><p>如果指定端口为0，则自动选择一个可用的动态端口（vista之后系统动态端口区间49152 - 65535）。</p>
-</li>
-<li><p>注意sockaddr结构会根据所选协议不同而不同的。比如IPV4，我们使用的是sockaddr_in； IPV6我们使用的是sockaddr_in6</p>
-</li>
-<li><p>bind之后可以用getsockname来获取分配给套接字的地址和端口。如果指定绑定IP是INADDR_ANY，则在连接建立之前getsockname不一定提供地址，因为如果主机是多宿主，可能有多个地址。客户端程序一般指定port为0避免端口冲突。</p>
-<p>例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">// bind  and listen</span><br><span class="line">SOCKADDR_IN serverAddr;</span><br><span class="line">serverAddr.sin_family = AF_INET;</span><br><span class="line">serverAddr.sin_addr.S_un.S_addr = htonl(INADDR_ANY);</span><br><span class="line">serverAddr.sin_port = htons(8889);</span><br><span class="line">ret = bind(listen_socket, (const sockaddr*)&amp;serverAddr, sizeof(serverAddr));</span><br><span class="line">if (SOCKET_ERROR == ret) &#123;</span><br><span class="line">	Helper::log(&quot;bind listen socket failed with error:%d\n&quot;, WSAGetLastError());</span><br><span class="line">	closesocket(listen_socket);</span><br><span class="line">	WSACleanup();</span><br><span class="line">	return false;</span><br><span class="line">&#125;</span><br><span class="line">SOCKADDR_IN bind_addr;</span><br><span class="line">int bind_addr_len = sizeof(bind_addr);</span><br><span class="line">ret = getsockname(listen_socket, (sockaddr*)&amp;bind_addr, &amp;bind_addr_len);</span><br><span class="line">if (SOCKET_ERROR == ret) &#123;</span><br><span class="line">	Helper::log(&quot;get listen socket bind addr failed with error:%d\n&quot;, WSAGetLastError());</span><br><span class="line">	closesocket(listen_socket);</span><br><span class="line">	WSACleanup();</span><br><span class="line">	return false;</span><br><span class="line"></span><br><span class="line">&#125;	</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p><strong>listen</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int listen(SOCKET s, int backlog)</span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>将套接字设置为监听模式。</p>
-<p><strong>返回值：</strong>成功返回0，失败返回SOCKET_ERROR。</p>
-<p><strong>说明：</strong></p>
-<p>​		backlog是后台等待连接队列。将套接字设置为监听模式后，os会维护等待连接队列，这个参数指定了此队列长度。当有客户尝试连接时，如果等待连接队列已满，则客户端可能收到连接被拒绝的错误。</p>
-<p>​		距离说明如果设置了backlog为2，有两个客户端连接服务器，服务器暂时还没有处理客户端的连接（就是没有accept），如果这时候再来第三个客户端连接就会出现连接被拒绝。</p>
-<p>​		</p>
-</li>
-<li><p><strong>accept</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SOCKET accept(SOCKET s, sockaddr *addr, int *addrlen)</span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>在套接字上进行连接操作</p>
-<p><strong>返回值</strong>：如果没有错误，返回新建连接的SOCKET；否则返回INVALID_SOCKET。</p>
-<p><strong>说明：</strong></p>
-<ul>
-<li><p>accept会一直阻塞直到有客户连接的到来；</p>
-</li>
-<li><p>addr返回的是新建连接的客户地址信息，可以用inet_ntop将IPV4&#x2F;6的网络地址(sockaddr.sin_addr)转为internet标准格式字符串</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">char ipstr[INET_ADDRSTRLEN] = &#123; 0 &#125;;</span><br><span class="line">inet_ntop(AF_INET, &amp;(clientAddr.sin_addr), ipstr, sizeof(ipstr));</span><br><span class="line">WORD port = ntohs(clientAddr.sin_port);</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p><strong>send</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int send(SOCKET s, const char *buf, int len, int flags)</span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>在建立连接的套接字上发送数据</p>
-<p><strong>返回值：</strong>如果没有错误，返回发送的总字节数，字节数可能小于请求发送的长度(len)；否则返回SOCKET_ERROR。</p>
-<p><strong>说明：</strong></p>
-<ul>
-<li>发送函数成功完成并不表示数据传递并接收给，只是指示待发送数据已经成功写入套接字的发送缓冲区。</li>
-<li>如果发送缓冲区没有空间，此函数会block；如果是非阻塞套接字，那么send会立刻返回，写入字节数取决于缓冲区可用性。</li>
-<li>数据成功写入缓冲区后，操作系统会负责将数据通过网络发送给目标主机。</li>
-</ul>
-</li>
-<li><p><strong>recv</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int recv(SOCKET s, char *buf, int len, int flags)</span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>从套接字上接收数据</p>
-<p><strong>返回值：</strong>成功返回接收的字节数；失败返回SOCKET_ERROR。</p>
-<p><strong>说明：</strong></p>
-<ul>
-<li><p>当套接字接收缓冲区没有数据的时候，recv调用会阻塞</p>
-</li>
-<li><p>当套接字接收缓冲区有数据的时候，recv会尝试将套接字缓冲区的内容拷贝到recv定义的用户缓冲区中，实际接收的数据和用户缓冲区buf大小以及套接字接收缓冲区数据的长度有关。</p>
-</li>
-<li><p>阻塞模式下，recv返回0意味着对方调用了closesocket或者shutdown关闭了连接。</p>
-</li>
-</ul>
-</li>
-<li><p><strong>shutdown</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int shutdown(SOCKET s, int how)</span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>关闭套接字的发送和接收</p>
-<p><strong>返回值：</strong>成功返回0，失败返回SOCKET_ERROR</p>
-<p><strong>说明：</strong></p>
-<ul>
-<li>how可选 SD_SEND | SD_RECEIVE | SD_BOTH</li>
-<li>shutdown是关闭套接字功能；closesocket是关闭套接字功能，清理套接字资源</li>
-</ul>
-</li>
-<li><p><strong>closesocket</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int closesocket(SOCKET s)</span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>关闭套接字</p>
-<p><strong>返回值：</strong>成功返回0，失败返回SOCKET_ERROR</p>
-<p><strong>说明：</strong></p>
-<ul>
-<li>可以结合linger选项来控制closesocket后的套接字接收发送行为</li>
-</ul>
-</li>
-<li><p><strong>select</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, const timeval *timeout)</span><br></pre></td></tr></table></figure>
-
-<p><strong>描述：</strong>确定套接字状态，并在必要时等待执行同步IO</p>
-<p>返回值：成功返回fd_set中已就绪的套接字数量；如果超时时间到，返回0；如果有错误，返回SOCKET_ERROR。</p>
-<p><strong>说明：</strong></p>
-<ul>
-<li><p>nfds 参数已忽略。</p>
-</li>
-<li><p>如果用select查询套接字状态，需要将套接字设置为非阻塞。利用ioctlsocket设置套接字的IO模式</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">unsigned long nonBlocking = 1;</span><br><span class="line"></span><br><span class="line">ioctlsocket(pSockInfo-&gt;sock, FIONBIO, &amp;nonBlocking)</span><br></pre></td></tr></table></figure>
-
-<p>注意，WSAEventSelect和WSAAsyncSelect函数会自动将socket设置为NonBlock模式，无需手动设置。</p>
-</li>
-<li><p>放大</p>
-</li>
-</ul>
-</li>
-<li></li>
-</ul>
-<h1 id="套接字模式"><a href="#套接字模式" class="headerlink" title="套接字模式"></a>套接字模式</h1><ul>
-<li><p>同步模式</p>
-<p>​	默认行为，套接字的读写(包括accept)都是阻塞式的。</p>
-</li>
-<li><p>异步模式</p>
-<p>​	套接字读写都是非阻塞的，可以通过ioctlsocket设置套接字为非阻塞。</p>
-</li>
-</ul>
-<h1 id="常见IO模型"><a href="#常见IO模型" class="headerlink" title="常见IO模型"></a>常见IO模型</h1><h3 id="select"><a href="#select" class="headerlink" title="select"></a>select</h3><p>​		类似unix的select模型，注意，windows下select最多支持64个套接字。可以使用WSAPoll。</p>
-<h3 id="WSAAsyncSelect"><a href="#WSAAsyncSelect" class="headerlink" title="WSAAsyncSelect"></a>WSAAsyncSelect</h3><p>​		和select不同，他不是同步等待，是基于windows消息来通知socket的变化，换句话说，需要windows窗口和消息循环。另外，使用了WSAAsyncSelect会自动将套接字设置为非阻塞。</p>
-<h3 id="WSAEventSelect"><a href="#WSAEventSelect" class="headerlink" title="WSAEventSelect"></a>WSAEventSelect</h3><p>​		和WSAAsyncSelect类似，不过是基于事件来异步通知套接字状态的变化，使用了WSAAsyncSelect会自动将套接字设置为非阻塞。他是基于windows事件，不需要windows窗口。</p>
-<h3 id="WSAPoll"><a href="#WSAPoll" class="headerlink" title="WSAPoll"></a>WSAPoll</h3><p>​		类似select的轮询方式，没有套接字数量限制。</p>
-<h3 id="重叠模型"><a href="#重叠模型" class="headerlink" title="重叠模型"></a>重叠模型</h3><h3 id="IOCP"><a href="#IOCP" class="headerlink" title="IOCP"></a>IOCP</h3><p>​		windows下高性能高并发量常用的模型，通过将套接字与完成端口关联来完成高性能异步操作。IOCP提供了一种高性能方式处理大并发量的异步操作，它是一种基于事件驱动的模型，基于事件通知机制来实现异步操作结束的通知。通过IOCP，避免了传统的同步和select的轮询，提高性能。</p>
-<ul>
-<li><p>使用流程</p>
-<ul>
-<li><strong>创建端口</strong>：首先，需要创建一个 I&#x2F;O 完成端口对象（IOCP 对象），通过调用 <code>CreateIoCompletionPort()</code> 函数来完成。</li>
-<li><strong>关联套接字</strong>：然后，将需要进行异步 I&#x2F;O 操作的套接字句柄与创建的 IOCP 对象关联起来，可以关联一个或多个套接字。这通常通过调用 <code>CreateIoCompletionPort()</code> 函数来实现。</li>
-<li><strong>发起异步操作</strong>：一旦套接字与 IOCP 关联成功，就可以通过调用异步 I&#x2F;O 函数（如 <code>WSASend()</code>、<code>WSARecv()</code>）来发起异步 I&#x2F;O 操作。在调用这些函数时，需要传递一个与操作相关的 <code>OVERLAPPED</code> 结构体，用于接收完成通知。</li>
-<li><strong>处理完成通知</strong>：当异步 I&#x2F;O 操作完成时，系统会将完成结果通知到关联的 IOCP 对象上。应用程序可以通过调用 <code>GetQueuedCompletionStatus()</code> 函数来获取完成的 I&#x2F;O 操作，并进行相应的处理。</li>
-</ul>
-</li>
-<li><p>简单流程分析</p>
-<ul>
-<li>通过CreateIoCompletionPort()创建IOCP对象，这个IOCP对象就充当了事件队列的管理者，负责管理所有与该IOCP相关的IO操作；</li>
-<li>对某个IO（这里我们值得是套接字）对象上进行异步IO操作之前，我们需要将此IO对象与前面创建的IOCP关联起来，关联之后，此对象的完成事件就会被通知到该IOCO对象；</li>
-<li>在IO对象上执行异步操作（WSASend &#x2F; WSAReceive，包括ReadFileEx &#x2F; WriteFileEx等），这些操作都会立即返回，不会阻塞当前线程；</li>
-<li>当一个异步IO操作在后台完成时，系统会将对应的完成事件放入到IOCP对象的事件队列中，这个完成事件包含了操作相关的信息，包括操作类型和结果等；</li>
-<li>应用程序的一个或多个线程调用GetQueuedCompletionStatus函数等待并处理事件队列中的完成事件，这些线程我们通常称之为完成端口线程。一旦某个完成事件进入队列，一个完成端口线程就会被唤醒；</li>
-<li>当完成端口被唤醒，我们可以根据完成事件的信息来处理，比如某个异步Read操作完成，我们可以获取读取的内容往上派发给上层进行处理，同时，我们可以通过投递一个新的异步Read操作用于继续读取内容（等待新数据的到来）；</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/05/01/windows%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" data-id="clwbg5x4m0008z44qb6jc0x1a" data-title="windows网络编程" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -1726,6 +1566,10 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       <ul>
         
           <li>
+            <a href="/2024/06/15/cuda%E5%88%9D%E6%8E%A5%E8%A7%A6/">cuda初接触</a>
+          </li>
+        
+          <li>
             <a href="/2024/06/11/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">git常用操作</a>
           </li>
         
@@ -1739,10 +1583,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
         
           <li>
             <a href="/2024/05/18/QT/">QT</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/14/c-%E8%B0%83%E8%AF%95/">c++调试</a>
           </li>
         
       </ul>
