@@ -94,7 +94,103 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        
+        <h1 id="安装cuda-toolkit"><a href="#安装cuda-toolkit" class="headerlink" title="安装cuda toolkit"></a>安装cuda toolkit</h1><ul>
+<li><strong>安装</strong></li>
+</ul>
+<p>​		直接去nvdia官网<a target="_blank" rel="noopener" href="https://developer.nvidia.com/cuda-downloads%E4%B8%8B%E8%BD%BD%EF%BC%8C%E9%80%89%E6%8B%A9%E5%A5%BD%E4%BD%A0%E7%9A%84%E5%BD%93%E5%89%8D%E7%8E%AF%E5%A2%83%E5%8D%B3%E5%8F%AF%E8%8E%B7%E5%8F%96%E5%AF%B9%E5%BA%94%E7%9A%84%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6%E9%93%BE%E6%8E%A5(windows)%E6%88%96%E8%80%85%E5%AE%89%E8%A3%85%E5%91%BD%E4%BB%A4%E6%8F%90%E7%A4%BA(linux)%E3%80%82%E8%BF%99%E9%87%8C%E6%88%91%E6%9C%AC%E6%9C%BAwindows11+4060Ti%EF%BC%8C%E5%AE%89%E8%A3%85%E7%9A%84%E6%98%AFV12.5%E7%89%88%E6%9C%AC%E3%80%82linux%E4%B8%8B%E5%AE%89%E8%A3%85%E6%8C%89%E7%85%A7%E5%AE%98%E7%BD%91%E7%BB%99%E5%87%BA%E7%9A%84%E6%8F%90%E7%A4%BA%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%E5%8D%B3%E5%8F%AF%E3%80%82">https://developer.nvidia.com/cuda-downloads下载，选择好你的当前环境即可获取对应的下载文件链接(windows)或者安装命令提示(linux)。这里我本机windows11+4060Ti，安装的是V12.5版本。linux下安装按照官网给出的提示执行命令即可。</a></p>
+<ul>
+<li><strong>多版本</strong></li>
+</ul>
+<p>​		可以安装多个cuda版本，比如我装了cuda12.4和12.5，可以同时存在，不冲突。环境变量PATH包含的搜索路径前面的是当前启用的版本，另外就是注意CUDA_PATH这个环境变量要正确。</p>
+<ul>
+<li><strong>范例代码</strong></li>
+</ul>
+<p>​		据官网介绍，cuda11.6之后，sample不再在cuda-toolkit包中提供，而是单独的在github提供，仓库地址：<a target="_blank" rel="noopener" href="https://github.com/nvidia/cuda-samples%E3%80%82%E5%85%B7%E4%BD%93%E7%9A%84%E5%8F%82%E8%A7%81nvdia%E6%9C%89%E5%85%B3cuda">https://github.com/nvidia/cuda-samples。具体的参见nvdia有关cuda</a> sample的说明：<a target="_blank" rel="noopener" href="https://docs.nvidia.com/cuda/cuda-samples/index.html%E3%80%82%E6%97%A7%E7%89%88%E6%9C%AC%E7%9A%84sample%E6%98%AF%E5%8C%85%E5%90%AB%E5%9C%A8cuda">https://docs.nvidia.com/cuda/cuda-samples/index.html。旧版本的sample是包含在cuda</a> toolkit中，完全安装cuda toolkit本地就有sample代码。</p>
+<h1 id="cuda版本和显卡兼容"><a href="#cuda版本和显卡兼容" class="headerlink" title="cuda版本和显卡兼容"></a>cuda版本和显卡兼容</h1><p>运行cuda程序，需要与构建cuda程序兼容的nvdia显卡驱动。应用程序依赖于库的动态链接，那么系统必须也要有此类库的正确版本。工具包都对于显卡驱动版本有一定的要求，比如：</p>
+<table>
+<thead>
+<tr>
+<th>CUDA toolkit</th>
+<th>Windows最低驱动版本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CUDA 10.2</td>
+<td>441.22</td>
+</tr>
+<tr>
+<td>CUDA 10.1</td>
+<td>418.96</td>
+</tr>
+</tbody></table>
+<p>​		查看本机驱动，windows下在“NVDIA控制器”面板中，点击左下角”系统信息”，可以看到驱动版本，例如本机T4060T驱动版本是555.85。或者运行nvdia-smi命令。</p>
+<ul>
+<li><strong>nvdia-smi</strong></li>
+</ul>
+<p>​		在之前的cuda toolkit里头会带有nvsmi，不过在cuda toolkit12里头并没有找到nvdia-smi工具。这个可以尝试去英伟达官网下载驱动重新安装，驱动里头一般带有此工具。我是直接安装了Studio版本的555.99-desktop-win10-win11-64bit-international-nsd-dch-whql.exe驱动，安装完毕后命令行运行nvdia-smi即可显示驱动信息</p>
+<p>C:\Users\Administrator&gt;nvidia-smi<br>Sat Jun 22 17:31:15 2024<br>+—————————————————————————————–+<br>| NVIDIA-SMI 555.99                 Driver Version: 555.99         CUDA Version: 12.5     |<br>|—————————————–+————————+———————-+<br>| GPU  Name                  Driver-Model | Bus-Id          Disp.A | Volatile Uncorr. ECC |<br>| Fan  Temp   Perf          Pwr:Usage&#x2F;Cap |           Memory-Usage | GPU-Util  Compute M. |<br>|                                         |                        |               MIG M. |<br>|&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;+&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;|<br>|   0  NVIDIA GeForce RTX 4060 Ti   WDDM  |   00000000:01:00.0  On |                  N&#x2F;A |<br>| 33%   39C    P8             15W &#x2F;  165W |     242MiB &#x2F;  16380MiB |      2%      Default |<br>|                                         |                        |                  N&#x2F;A |<br>+—————————————–+————————+———————-+</p>
+<p>+—————————————————————————————–+<br>| Processes:                                                                              |<br>|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |<br>|        ID   ID                                                               Usage      |<br>|&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;|<br>|    0   N&#x2F;A  N&#x2F;A     20132    C+G   C:\Windows\explorer.exe                     N&#x2F;A      |<br>|    0   N&#x2F;A  N&#x2F;A     20636    C+G   …GeForce Experience\NVIDIA Share.exe      N&#x2F;A      |<br>|    0   N&#x2F;A  N&#x2F;A     21524    C+G   …siveControlPanel\SystemSettings.exe      N&#x2F;A      |<br>|    0   N&#x2F;A  N&#x2F;A     21664    C+G   …crosoft\Edge\Application\msedge.exe      N&#x2F;A      |<br>|    0   N&#x2F;A  N&#x2F;A     22632    C+G   …2txyewy\StartMenuExperienceHost.exe      N&#x2F;A      |<br>|    0   N&#x2F;A  N&#x2F;A     24856    C+G   …CBS_cw5n1h2txyewy\TextInputHost.exe      N&#x2F;A      |<br>|    0   N&#x2F;A  N&#x2F;A     26152    C+G   …__8wekyb3d8bbwe\WindowsTerminal.exe      N&#x2F;A      |<br>|    0   N&#x2F;A  N&#x2F;A     26792    C+G   C:\Program Files\Typora\Typora.exe          N&#x2F;A      |<br>+—————————————————————————————–+</p>
+<ul>
+<li><strong>首个cuda项目</strong></li>
+</ul>
+<p>​		打开VS创建第一个包含cuda运行时的项目。安装cuda会默认安装了vs支持的插件，因此在创建项目的时候选择“CUDA 12.5 Runtime”类型。创建项目后默认会创建一个kernel.cu文件，打开工程设置，可以看到原来的c++替换为cuda c++，这里配置了c++的编译选项和命令（原来的cl这里变成了nvcc)。直接编译，成功构建。运行构建好的CudaRuntime1.exe，打印出:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;1,2,3,4,5&#125; + &#123;10,20,30,40,50&#125; = &#123;11,22,33,44,55&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>备注</strong>：在linux环境下安装和创建类似，可以直接写cu或cpp文件，然后用nvcc编译或者写个简单的makefile。使用简单的makefile好处是可以自动搜索编译目标.cu&#x2F;.cpp文件而不用手动添加源文件（大致思路：通过find -name搜索出项目目录的所有.cu .cpp文件；然后使用patsubst替换.cu .cpp为.o，这样就构造出ALL_OBJECT目录，然后写TARGET依赖于ALL_OBJECT即可；最后记得为.o定义编译规则即可）。</p>
+<p>​		公司用的是服务器上编译运行cuda测试代码；家里直接用windows，后续测试环境就在windows下测试，</p>
+<h1 id="线程网格模型"><a href="#线程网格模型" class="headerlink" title="线程网格模型"></a>线程网格模型</h1><p>​		关于线程网格模型，在公司有些总结，不过公司网络和外面隔断，这里简单总结一下：</p>
+<ul>
+<li><p><strong>内置变量</strong></p>
+<p>​		核函数有几个内置变量用于标记核函数被调度执行线程的标记信息</p>
+<p>​		<strong>threadIdx</strong>[dim3(x,y,z)]: 线程索引，dim3类型，标记线程相对block在xyz三个方向上的偏移</p>
+<p>​		<strong>blockIdx</strong>[dim3(x,y,z)]: 块索引，dim3类型，标记线程块相对grid在xyz三个方向上的偏移</p>
+<p>​		<strong>blockDim</strong>[dim3(x,yz)]: 块维度(尺寸)，dim3类型，标记每个线程块在xyz三个方向的尺寸（或者说线程数量）</p>
+<p>​		<strong>gridDim</strong>[dim3(x,yz)]: 网格维度(尺寸)，dim3类型，标记每个线程网格在xyz三个方向的尺寸（或者说块数量）</p>
+<p>​		学习cuda并发编程必然会接触线程模型，这里只需要记住上面4个内置变量的含义即可。基本所有书籍都会花费比较多的篇章将网格模型以及核函数所在线程相关的id&#x2F;idx计算，有些还有错误。比如有些把grid中的block横向的xy都搞反了。</p>
+<p>举个简单例子：		</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 定义网格尺寸和block_size</span><br><span class="line">grid_size = dim3(2,3,4);</span><br><span class="line">block_size = dim3(3,4,5);</span><br><span class="line">// 调用核函数</span><br><span class="line">kernel_fun&lt;&lt;&lt;grid_size , block_size &gt;&gt;&gt;()</span><br><span class="line"></span><br><span class="line">我们可以在kernel_fun中增加一条printf语句，将threadIdx.xyz和blockIdx.xyz打印出来，结合gridDim和blockDim</span><br><span class="line">就能很好的理解上述有关内置变量的定义。</span><br><span class="line">threadIdx.x取值范围是[0, block_size.x] 注意，不是[0, block_size.y]，对照打印输出的值就能看明白。</span><br><span class="line">其它的threadIdx.yz、blockIdx类似。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>维度使用场景</strong></p>
+<p>​		线程模型支持三维，具体的使用几维视我们的需求而定。</p>
+<ul>
+<li><p><strong>一维</strong></p>
+<p>简单的任务分解，比如我们想计算两个N维矢量相加的结果，Z(i) &#x3D; U(i) + V(i)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">U = [1,2,3,4,5]</span><br><span class="line">V = [10,20,30,40,50]</span><br><span class="line">Z = [11,22,33,44,55]</span><br><span class="line">__global__ void kernel_fun(z, u, v) &#123;</span><br><span class="line">	int index = threadIdx.x;</span><br><span class="line">	z[index] = u[index] + v[index];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>二维</strong></p>
+<p>二维空间的数据处理，比如二维矩阵运算以及典型的图像处理（涉及到宽高）</p>
+</li>
+<li><p><strong>三维</strong></p>
+<p>二维空间可能之外还有属性，比如3维空间图形处理，平面之外还有高度；或者说图形处理中，颜色Color部分和透明度Alpha部分分开处理。</p>
+</li>
+</ul>
+<p><strong>总结：</strong></p>
+<p>​		起始所谓的二维三维都是为了更好的理解业务层面的内容而引入的，我们把这里线程模型理解为c&#x2F;c++中数组，起始也没有什么二维三维甚至n维数据，在计算机看来，所有N维数组也都是一维数组，其内部都是线性连续存储，只有一个start_ptr和end_ptr的概念。之所以引入多维是为了更好的展示或者索引数据，比如二维数组<code>bitmap[row][col]</code>可以很直观的定位出像素位置，它是第row行第col列，非常直观，但是计算机内部，其位置仍然是数组bitmap的起始地址加上偏移，大概的就是：<code>pixel_ptr = bitmap_array_start_ptr + col * width_pitch + row</code> 。</p>
+<p>​		嗯，多维指示业务层面更好的展示和理解，本质仍然是一维，结合数组理解。知道这个足够了！</p>
+</li>
+</ul>
+<p>		</p>
+<h1 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h1><p>​		这块在公司也做了一些测试，这里也只是简单记录一下。</p>
+<ul>
+<li><p><strong>寄存器</strong></p>
+<p>​      kernel函数内部的变量，数量有限，速度最快，线程独享</p>
+</li>
+<li><p><strong>局部内存</strong></p>
+<p>​       kernel函数内部的变量，线程独享。比较多的变量或者比较大的变量就会被降级为局部内存处理，位于处理单元上的，速度也很快，大小有限</p>
+</li>
+<li><p><strong>共享内存</strong></p>
+<p>​       在kernel函数中用__shared__定义的内存，block中线程共享，速度也比较块，大小有限。</p>
+</li>
+<li><p><strong>全局内存&#x2F;常量内存</strong></p>
+<p>​        也就是我们说的显存，速度慢，空间大。纹理内存类似，只不过针对性的优化处理。全局内存第一种形式是用<code>__device__</code>声明的静态全局内存；第二种方式是用<code>__cudaMalloc__</code>动态创建。</p>
+</li>
+</ul>
+<p><strong>记录踩坑</strong>：</p>
+<p>1、<code>__device__</code>定义的变量，其静态全局内存定义的是符号，不是地址，这个和我们在c中定义数组，数组名可以当地址用是不一样的。你在host端代码不能直接用cudaMemcpy通过变量名拷贝；因为cudaMemory只能拷贝地址。解决办法是调用cudaMemcpyFromSymbol或者先获取symbol地址再调用cudaMemcpy拷贝；</p>
+<p>2、多思考共享内存的使用，这个还是非常有用的，这个对于设计好的核函数是很有帮助。</p>
+<p>​		</p>
+<p>​		</p>
+
       
     </div>
     <footer class="article-footer">
