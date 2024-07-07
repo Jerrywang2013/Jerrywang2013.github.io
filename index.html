@@ -144,44 +144,6 @@
 
 
   
-    <article id="post-cuda-gbd记录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/07/07/cuda-gbd%E8%AE%B0%E5%BD%95/" class="article-date">
-  <time class="dt-published" datetime="2024-07-07T03:08:12.000Z" itemprop="datePublished">2024-07-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/07/07/cuda-gbd%E8%AE%B0%E5%BD%95/">cuda-gbd记录</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/07/07/cuda-gbd%E8%AE%B0%E5%BD%95/" data-id="clyb1o1uq0001xw4qgeupgon7" data-title="cuda-gbd记录" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-cuda初接触" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/06/22/cuda%E5%88%9D%E6%8E%A5%E8%A7%A6/" class="article-date">
@@ -1496,6 +1458,70 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
 
 
   
+    <article id="post-vscode调试php" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" class="article-date">
+  <time class="dt-published" datetime="2024-05-07T07:04:35.000Z" itemprop="datePublished">2024-05-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/">vscode调试php</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h1><ul>
+<li><p>已经安装apache、php（本地测试是用的宝塔面板批量安装的apache2.4以及php7.4)</p>
+</li>
+<li><p>已经安装vscode（测试安装的是vscode v1.87.0)</p>
+</li>
+<li><p>安装xdebug。vscode调试借助于xdebug，确保你的php已经安装了此插件，如果没有安装，可以去下载php_xdebug.dll，将其放入到php的ext目录。</p>
+</li>
+<li><p>vscode安装php debug插件（xdebug.org出品）</p>
+</li>
+</ul>
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><ul>
+<li><p>在php中配置xdebug</p>
+<p>​		打开php.ini文件，假如如下配置，注意端口配置项要和后面项目调试配置json文件中的端口保持一致；最后一行xdebug.remote_autostart&#x3D;1要加上。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[XDebug]</span><br><span class="line"></span><br><span class="line">xdebug.profiler_append = 0</span><br><span class="line"></span><br><span class="line">xdebug.profiler_enable = 1</span><br><span class="line"></span><br><span class="line">xdebug.profiler_enable_trigger = 0</span><br><span class="line"></span><br><span class="line">xdebug.profiler_output_dir =&quot;D:\BtSoft\temp\xdebug&quot;</span><br><span class="line"></span><br><span class="line">xdebug.trace_output_dir =&quot;D:\BtSoft\temp\xdebug&quot;</span><br><span class="line"></span><br><span class="line">xdebug.profiler_output_name = &quot;cache.out.%t-%s&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_enable = 1</span><br><span class="line"></span><br><span class="line">xdebug.remote_handler = &quot;dbgp&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_host = &quot;127.0.0.1&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_port = 9999</span><br><span class="line"></span><br><span class="line">zend_extension=php_xdebug.dll</span><br><span class="line"></span><br><span class="line">xdebug.remote_autostart = 1</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>配置php项目</p>
+<p>​	打开php项目，点击调试php，生成项目配置文件.vscode&#x2F;launch.json</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&quot;configurations&quot;: [</span><br><span class="line"></span><br><span class="line">​    &#123;</span><br><span class="line"></span><br><span class="line">​      &quot;name&quot;: &quot;Listen for Xdebug&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;type&quot;: &quot;php&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;request&quot;: &quot;launch&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;port&quot;: 9999,</span><br><span class="line"></span><br><span class="line">​      &quot;xdebugSettings&quot;: &#123;</span><br><span class="line"></span><br><span class="line">​        &quot;max_data&quot;: 10240</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>​		这里这里的port要和php.ini中配置xdebug的debug监听端口保持一致</p>
+<p>​	</p>
+<p>​	到此就可以愉快的断点、单步了！</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" data-id="clwbg5x4m0007z44q41aabiul" data-title="vscode调试php" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
 
 
   <nav id="page-nav">
@@ -1536,10 +1562,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
           </li>
         
           <li>
-            <a href="/2024/07/07/cuda-gbd%E8%AE%B0%E5%BD%95/">cuda-gbd记录</a>
-          </li>
-        
-          <li>
             <a href="/2024/06/22/cuda%E5%88%9D%E6%8E%A5%E8%A7%A6/">cuda初接触</a>
           </li>
         
@@ -1549,6 +1571,10 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
         
           <li>
             <a href="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/">QObject简单笔记</a>
+          </li>
+        
+          <li>
+            <a href="/2024/05/27/c-11/">c++11</a>
           </li>
         
       </ul>
