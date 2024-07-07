@@ -72,6 +72,116 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-cuda-gdb记录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2024-07-07T03:08:45.000Z" itemprop="datePublished">2024-07-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/">cuda-gdb记录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>昨天简单记录了一下cuda-gdb使用，这里继续补充一些内容。</p>
+<h1 id="调试前的目标编译选项"><a href="#调试前的目标编译选项" class="headerlink" title="调试前的目标编译选项"></a>调试前的目标编译选项</h1><p>​		在linux下，使用-g -G编译目标代码，使得编译带上调试信息。其中-g生成host代码debug info；-G是生成device代码的调试信息。</p>
+<p>​		当然，可能有些编译过程中还用了类似OXX的优化选项，我们也可以关闭或者指定O0</p>
+<p>​		在windows里头，这个类似产生pdb，优化选项在c++选项设置里头可以设置，禁用优化即可。</p>
+<h1 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h1><p>拿个简单的vectorAdd示例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line">cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);</span><br><span class="line"></span><br><span class="line">__global__ void addKernel(int *c, const int *a, const int *b)</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;kernel block(%d,%d), thread(%d, %d)\n&quot;, blockIdx.x, blockIdx.y, threadIdx.x, threadIdx.y);</span><br><span class="line">    int i = threadIdx.x;</span><br><span class="line">    c[i] = a[i] + b[i];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    const int arraySize = 5;</span><br><span class="line">    const int a[arraySize] = &#123; 1, 2, 3, 4, 5 &#125;;</span><br><span class="line">    const int b[arraySize] = &#123; 10, 20, 30, 40, 50 &#125;;</span><br><span class="line">    int c[arraySize] = &#123; 0 &#125;;</span><br><span class="line"></span><br><span class="line">    // Add vectors in parallel.</span><br><span class="line">    cudaError_t cudaStatus = addWithCuda(c, a, b, arraySize);</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;addWithCuda failed!&quot;);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    printf(&quot;&#123;1,2,3,4,5&#125; + &#123;10,20,30,40,50&#125; = &#123;%d,%d,%d,%d,%d&#125;\n&quot;,</span><br><span class="line">        c[0], c[1], c[2], c[3], c[4]);</span><br><span class="line"></span><br><span class="line">    // cudaDeviceReset must be called before exiting in order for profiling and</span><br><span class="line">    // tracing tools such as Nsight and Visual Profiler to show complete traces.</span><br><span class="line">    cudaStatus = cudaDeviceReset();</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaDeviceReset failed!&quot;);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Helper function for using CUDA to add vectors in parallel.</span><br><span class="line">cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)</span><br><span class="line">&#123;</span><br><span class="line">    int *dev_a = 0;</span><br><span class="line">    int *dev_b = 0;</span><br><span class="line">    int *dev_c = 0;</span><br><span class="line">    cudaError_t cudaStatus;</span><br><span class="line"></span><br><span class="line">    // Choose which GPU to run on, change this on a multi-GPU system.</span><br><span class="line">    cudaStatus = cudaSetDevice(0);</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaSetDevice failed!  Do you have a CUDA-capable GPU installed?&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Allocate GPU buffers for three vectors (two input, one output)    .</span><br><span class="line">    cudaStatus = cudaMalloc((void**)&amp;dev_c, size * sizeof(int));</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMalloc failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cudaStatus = cudaMalloc((void**)&amp;dev_a, size * sizeof(int));</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMalloc failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cudaStatus = cudaMalloc((void**)&amp;dev_b, size * sizeof(int));</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMalloc failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Copy input vectors from host memory to GPU buffers.</span><br><span class="line">    cudaStatus = cudaMemcpy(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice);</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMemcpy failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cudaStatus = cudaMemcpy(dev_b, b, size * sizeof(int), cudaMemcpyHostToDevice);</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMemcpy failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cudaEvent_t event;</span><br><span class="line">    cudaEventCreate(&amp;event);</span><br><span class="line">    // Launch a kernel on the GPU with one thread for each element.</span><br><span class="line">    addKernel&lt;&lt;&lt;1, size&gt;&gt;&gt;(dev_c, dev_a, dev_b);</span><br><span class="line">    cudaEventRecord(event);</span><br><span class="line"></span><br><span class="line">    // Check for any errors launching the kernel</span><br><span class="line">    cudaStatus = cudaGetLastError();</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;addKernel launch failed: %s\n&quot;, cudaGetErrorString(cudaStatus));</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // cudaDeviceSynchronize waits for the kernel to finish, and returns</span><br><span class="line">    // any errors encountered during the launch.</span><br><span class="line">    /*cudaStatus = cudaDeviceSynchronize();</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaDeviceSynchronize returned error code %d after launching addKernel!\n&quot;, cudaStatus);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;*/</span><br><span class="line"></span><br><span class="line">    //cudaEventSynchronize(event);</span><br><span class="line"></span><br><span class="line">    // Copy output vector from GPU buffer to host memory.</span><br><span class="line">    cudaStatus = cudaMemcpy(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMemcpy failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">Error:</span><br><span class="line">    cudaFree(dev_c);</span><br><span class="line">    cudaFree(dev_a);</span><br><span class="line">    cudaFree(dev_b);</span><br><span class="line">    </span><br><span class="line">    return cudaStatus;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	info cuda blocks</span><br><span class="line">    info cuda threads</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111557119.png" alt="image-20240707111557119"></p>
+<h2 id="开启调试，设置断点"><a href="#开启调试，设置断点" class="headerlink" title="开启调试，设置断点"></a>开启调试，设置断点</h2><p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111727502.png" alt="image-20240707111727502"></p>
+<p>也可以设置条件断点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">break test.cu:11 if threadIdx.x==1 &amp;&amp; blockIdx.x==0</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="查看block-thread"><a href="#查看block-thread" class="headerlink" title="查看block&#x2F;thread"></a>查看block&#x2F;thread</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	info cuda blocks</span><br><span class="line">    info cuda threads</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707112224621.png" alt="image-20240707112224621"></p>
+<p>注意：上图显示是进行了合并，我们可以关闭合并set cuda coalescing off，显示如下：</p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707114805982.png" alt="image-20240707114805982"></p>
+<h2 id="线程的同步"><a href="#线程的同步" class="headerlink" title="线程的同步"></a>线程的同步</h2><p>注意gpu并行运行SIMT特性，一个warp里头的所有线程是指令级并发执行，我们在某个kernel线程中调试，当执行完某个操作查看某个变量或者显存数据的时候会发现其它数据也可能被修改，这就是SIMT特性。拿上面的VectorAdd代码例子，当核函数执行<code>c[i]=a[i]+b[i]</code>后，这里我们打印出结果c缓冲器，看看内容：</p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707113337414.png" alt="image-20240707113337414"></p>
+<h2 id="打印gridDim和blockDim"><a href="#打印gridDim和blockDim" class="headerlink" title="打印gridDim和blockDim"></a>打印gridDim和blockDim</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	print threadIdx / blockIdx</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120012890.png" alt="image-20240707120012890"></p>
+<h2 id="显示当前grid-block-thread信息"><a href="#显示当前grid-block-thread信息" class="headerlink" title="显示当前grid&#x2F;block&#x2F;thread信息"></a>显示当前grid&#x2F;block&#x2F;thread信息</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	cuda device sm warp lane block thread</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120138426.png" alt="image-20240707120138426"></p>
+<h2 id="切换线程"><a href="#切换线程" class="headerlink" title="切换线程"></a>切换线程</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">命令: </span><br><span class="line">	cuda thread &lt;thread索引&gt;</span><br><span class="line">	cuda thread &lt;block索引&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707112408652.png" alt="image-20240707112408652"></p>
+<p>我们可以切换不同的线程，去单步跟踪线程的执行。</p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120600773.png" alt="image-20240707120600773"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/" data-id="clyb1o1un0000xw4q2qt0cm7w" data-title="cuda-gdb记录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-cuda-gbd记录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/07/07/cuda-gbd%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2024-07-07T03:08:12.000Z" itemprop="datePublished">2024-07-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2024/07/07/cuda-gbd%E8%AE%B0%E5%BD%95/">cuda-gbd记录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/07/07/cuda-gbd%E8%AE%B0%E5%BD%95/" data-id="clyb1o1uq0001xw4qgeupgon7" data-title="cuda-gbd记录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-cuda初接触" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2024/06/22/cuda%E5%88%9D%E6%8E%A5%E8%A7%A6/" class="article-date">
@@ -188,8 +298,12 @@
 <p><strong>记录踩坑</strong>：</p>
 <p>1、<code>__device__</code>定义的变量，其静态全局内存定义的是符号，不是地址，这个和我们在c中定义数组，数组名可以当地址用是不一样的。你在host端代码不能直接用cudaMemcpy通过变量名拷贝；因为cudaMemory只能拷贝地址。解决办法是调用cudaMemcpyFromSymbol或者先获取symbol地址再调用cudaMemcpy拷贝；</p>
 <p>2、多思考共享内存的使用，这个还是非常有用的，这个对于设计好的核函数是很有帮助。</p>
-<p>​		</p>
-<p>​		</p>
+<h1 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h1><p>​		cudaEvent主要用于host和device之间的同步和性能分析。常见的api有如下：</p>
+<p>cdaEventCreate()</p>
+<p>cudaEventRecord()</p>
+<p>cudaEventSynchronize()</p>
+<p>cudaEventQuery()</p>
+<p>cudaEventDestroy()</p>
 
       
     </div>
@@ -1382,246 +1496,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
 
 
   
-    <article id="post-vscode调试php" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" class="article-date">
-  <time class="dt-published" datetime="2024-05-07T07:04:35.000Z" itemprop="datePublished">2024-05-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/07/vscode%E8%B0%83%E8%AF%95php/">vscode调试php</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h1><ul>
-<li><p>已经安装apache、php（本地测试是用的宝塔面板批量安装的apache2.4以及php7.4)</p>
-</li>
-<li><p>已经安装vscode（测试安装的是vscode v1.87.0)</p>
-</li>
-<li><p>安装xdebug。vscode调试借助于xdebug，确保你的php已经安装了此插件，如果没有安装，可以去下载php_xdebug.dll，将其放入到php的ext目录。</p>
-</li>
-<li><p>vscode安装php debug插件（xdebug.org出品）</p>
-</li>
-</ul>
-<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><ul>
-<li><p>在php中配置xdebug</p>
-<p>​		打开php.ini文件，假如如下配置，注意端口配置项要和后面项目调试配置json文件中的端口保持一致；最后一行xdebug.remote_autostart&#x3D;1要加上。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[XDebug]</span><br><span class="line"></span><br><span class="line">xdebug.profiler_append = 0</span><br><span class="line"></span><br><span class="line">xdebug.profiler_enable = 1</span><br><span class="line"></span><br><span class="line">xdebug.profiler_enable_trigger = 0</span><br><span class="line"></span><br><span class="line">xdebug.profiler_output_dir =&quot;D:\BtSoft\temp\xdebug&quot;</span><br><span class="line"></span><br><span class="line">xdebug.trace_output_dir =&quot;D:\BtSoft\temp\xdebug&quot;</span><br><span class="line"></span><br><span class="line">xdebug.profiler_output_name = &quot;cache.out.%t-%s&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_enable = 1</span><br><span class="line"></span><br><span class="line">xdebug.remote_handler = &quot;dbgp&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_host = &quot;127.0.0.1&quot;</span><br><span class="line"></span><br><span class="line">xdebug.remote_port = 9999</span><br><span class="line"></span><br><span class="line">zend_extension=php_xdebug.dll</span><br><span class="line"></span><br><span class="line">xdebug.remote_autostart = 1</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>配置php项目</p>
-<p>​	打开php项目，点击调试php，生成项目配置文件.vscode&#x2F;launch.json</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&quot;configurations&quot;: [</span><br><span class="line"></span><br><span class="line">​    &#123;</span><br><span class="line"></span><br><span class="line">​      &quot;name&quot;: &quot;Listen for Xdebug&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;type&quot;: &quot;php&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;request&quot;: &quot;launch&quot;,</span><br><span class="line"></span><br><span class="line">​      &quot;port&quot;: 9999,</span><br><span class="line"></span><br><span class="line">​      &quot;xdebugSettings&quot;: &#123;</span><br><span class="line"></span><br><span class="line">​        &quot;max_data&quot;: 10240</span><br><span class="line"></span><br><span class="line">​      &#125;</span><br><span class="line"></span><br><span class="line">​    &#125;,</span><br></pre></td></tr></table></figure>
-
-<p>​		这里这里的port要和php.ini中配置xdebug的debug监听端口保持一致</p>
-<p>​	</p>
-<p>​	到此就可以愉快的断点、单步了！</p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/05/07/vscode%E8%B0%83%E8%AF%95php/" data-id="clwbg5x4m0007z44q41aabiul" data-title="vscode调试php" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-libevent" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/05/05/libevent/" class="article-date">
-  <time class="dt-published" datetime="2024-05-05T14:54:09.000Z" itemprop="datePublished">2024-05-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2024/05/05/libevent/">libevent</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>libevent是一个跨平台高效的异步网络库，支持各平台最高效的异步模型，例如epoll和iocp。</p>
-<h1 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h1><ul>
-<li><p><strong>设置debug级别日志记录策略</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void event_enable_debug_logging(ev_uint32_t which)</span><br></pre></td></tr></table></figure>
-
-<p>描述：</p>
-<p>说明： which可为 EVENT_DBG_NONE 和 EVENT_DBG_ALL</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define EVENT_DBG_NONE 0</span><br><span class="line"></span><br><span class="line">#define EVENT_DBG_ALL 0xffffffffu</span><br></pre></td></tr></table></figure>
-
-<p>注意：设置为EVENT_DBG_NONE仍可用event_warn(“&#x3D;”);输出日志，因为此函数只控制debug级别的日志策略。</p>
-</li>
-<li><p><strong>设置自定义日志handler</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typedef void (*event_log_cb)(int severity, const char *msg);</span><br><span class="line">void event_set_log_callback(event_log_cb cb)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><strong>设置自定义fatal日志handler</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">typedef void (*event_fatal_cb)(int err);</span><br><span class="line">void event_set_fatal_callback(event_fatal_cb cb)</span><br></pre></td></tr></table></figure>
-
-<p>说明：默认libevent检测到不可恢复的内部错误默认行为是调用abort()或者exit()结束当前的进场，你也可以自定义处理致命错误。</p>
-</li>
-</ul>
-<h1 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h1><p>自定义内存分配&#x2F;释放函数</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void event_set_mem_functions(void *(*malloc_fn)(size_t sz),</span><br><span class="line">                             void *(*realloc_fn)(void *ptr, size_t sz),</span><br><span class="line">                             void (*free_fn)(void *ptr));</span><br></pre></td></tr></table></figure>
-
-<p>说明：比如可以自定义malloc等来实现更加安全的内存管理函数</p>
-<h1 id="锁和线程"><a href="#锁和线程" class="headerlink" title="锁和线程"></a>锁和线程</h1><p>Libevent 结构通常可以通过三种方式处理多线程。</p>
-<ul>
-<li>有些结构本质上是单线程的：同时从多个线程使用它们永远是不安全的。</li>
-<li>有些结构可以选择锁定：您可以告诉 Libevent 对于每个对象是否需要同时从多个线程使用它。</li>
-<li>有些结构始终是锁定的：如果 Libevent 在锁定支持下运行，那么它们始终可以安全地同时从多个线程使用。</li>
-</ul>
-<p>​	可以使用windows thread和posix thread，在windows平台，也是可以选择默认的os thread或者pthread。另外还可以使用自定义的线程库，写好自己的内存管理以及同步函数后，需要注册之：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int evthread_set_lock_callbacks(const struct evthread_lock_callbacks *);</span><br><span class="line">void evthread_set_id_callback(unsigned long (*id_fn)(void));</span><br><span class="line">int evthread_set_condition_callbacks(const struct evthread_condition_callbacks *);</span><br></pre></td></tr></table></figure>
-
-<p>​		上述的自定义线程库注册这种c的代码风格你可以理解为面向对象的的接口重写，比如IThread接口定义了create() &#x2F; destroy() &#x2F; lock() &#x2F; unlock()，自定义Thread库需要实现IThread的功能接口。</p>
-<h1 id="Event使用"><a href="#Event使用" class="headerlink" title="Event使用"></a>Event使用</h1><h3 id="Event"><a href="#Event" class="headerlink" title="Event"></a>Event</h3><p>​	libevent的event代表一组条件，包括：</p>
-<h3 id="事件标志"><a href="#事件标志" class="headerlink" title="事件标志"></a>事件标志</h3><ul>
-<li><p>EV_TIMEOUT</p>
-<p>​	构造事件的时候EV_TIMEOUT会被忽略，需要在event_add()中设置操作。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ev1 = event_new(base, 0, EV_TIMEOUT|EV_PERSIST, cb_func,(char*)&quot;Reading event&quot;);</span><br><span class="line">struct timeval tv;</span><br><span class="line">tv.tv_sec = 5;</span><br><span class="line">tv.tv_usec = 0;</span><br><span class="line">event_add(timeout_event, &amp;tv); </span><br></pre></td></tr></table></figure>
-
-<p>相关函数或者宏：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">evtimer_assign(ev, b, cb, arg)</span><br><span class="line">evtimer_new(b, cb, arg)	</span><br><span class="line">evtimer_add(ev, tv)</span><br><span class="line">evtimer_del(ev)</span><br><span class="line">evtimer_pending(ev, tv)</span><br><span class="line">evtimer_initialized(ev)</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>EV_READ</p>
-</li>
-<li><p>EV_WRITE</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE); </span><br><span class="line">bufferevent_setcb(bev, conn_readcb, conn_writecb, conn_eventcb, NULL);</span><br><span class="line">bufferevent_enable(bev, EV_READ | EV_WRITE);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>EV_SIGNAL</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">signal_event = evsignal_new(base, SIGINT, signal_cb, (void *)base);</span><br><span class="line">event_add(signal_event, NULL)</span><br></pre></td></tr></table></figure>
-
-<p>相关函数或者宏：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">evsignal_add(ev, tv)</span><br><span class="line">evsignal_assign(ev, b, x, cb, arg)</span><br><span class="line">evsignal_new(b, x, cb, arg)</span><br><span class="line">evsignal_del(ev)</span><br><span class="line">evsignal_pending(ev, tv)</span><br><span class="line">evsignal_initialized(ev)</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意：</strong></p>
-<p>​		对于大多数后端来说，每个进程只有一个event_base可以监听信号，如果同时向多个event_base添加信号事件，即便信号不同，也只有一个event_base会收到新招。kqueeue后端没有此限制。</p>
-</li>
-<li><p>用户触发事件</p>
-<p>所谓的用户事件就是不与预定义那些事件关联，一般我们把event_new()参数的event参数设置为0即可。</p>
-<p>示例：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">struct event_base *base = event_base_new(); </span><br><span class="line">struct event *user_event = event_new(base, -1, 0, user_event_cb, NULL); </span><br><span class="line">event_add(user_event, NULL); </span><br><span class="line">event_active(user_event, EV_WRITE, 0);  // 触发用户事件 </span><br><span class="line">event_base_dispatch(base);</span><br><span class="line">event_free(user_event);</span><br><span class="line">event_base_free(base); </span><br></pre></td></tr></table></figure>
-
-<p>相关函数或者宏：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">evuser_new(b, cb, arg)</span><br><span class="line">evuser_del(ev)</span><br><span class="line">evuser_pending(ev, tv)</span><br><span class="line">evuser_initialized(ev)</span><br><span class="line">evuser_trigger(ev)	</span><br></pre></td></tr></table></figure>
-
-
-</li>
-<li><p>EV_PERSIST</p>
-<p>​		通常情况下，当事件被激活后，它会被移除并在回调函数中处理。但是，如果事件被设置了 <code>EV_PERSIST</code> 标志，那么即使在回调函数中处理后，它仍然会留在事件循环中，并等待下一次相同类型的事件发生。使用 <code>EV_PERSIST</code> 标志的事件通常用于需要持续监听某种类型事件的场景，例如长期监听套接字的可读、可写事件等。</p>
-</li>
-</ul>
-<h3 id="event-self-cbarg"><a href="#event-self-cbarg" class="headerlink" title="event_self_cbarg()"></a>event_self_cbarg()</h3><p>​		这个函数是libevent预定义的一个函数，用于返回一个magic指针，告诉event_new创建一个接受自己作为回调函数参数的event。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ev = event_new(base, -1, EV_PERSIST, cb_func, event_self_cbarg());</span><br></pre></td></tr></table></figure>
-
-<p>此函数创建一个event，并且让事件触发的时候执行cb_func()时，将ev参数传给cb_func()。因为调用者调用event_new()时对象还不存在，这里用event_self_cbarg()原理也很简单，相当于给传一个flag告知event_new()。</p>
-<h3 id="事件待处理-非待处理"><a href="#事件待处理-非待处理" class="headerlink" title="事件待处理&#x2F;非待处理"></a>事件待处理&#x2F;非待处理</h3><p>​		事件被创建后，不会执行任何操作，直到你通过event_add()将其处于挂起状态。</p>
-<ul>
-<li><p>event_add</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int event_add(struct event *ev, const struct timeval *tv);</span><br></pre></td></tr></table></figure>
-
-<p>​		对于已挂起的事件调用event_add()，会将其保持挂起状态，并使用提供的超时重新设置。如果事件已经挂起，然后使用超时NULL重新设置它，则event_add()不起作用。</p>
-</li>
-<li><p>event_del</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int event_del(struct event *ev);</span><br></pre></td></tr></table></figure>
-
-<p>​		event_del会使得事件变为非挂起 、非活动状态。如果event本来是非挂起非激活状态，调用event_del没有效果。</p>
-</li>
-<li><p>event_remove_timer</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int event_remove_timer(struct event *ev);</span><br></pre></td></tr></table></figure>
-
-<p>​		删除挂起事件的超时，而无需删除事件的IO或者信号组件。如果event没有超时挂起，则event_remove_timer()无效。如果event只有超时但没有IO或者信号组件，则event_remove_timer()和event_del()效果一样。</p>
-</li>
-</ul>
-<h3 id="event优先级"><a href="#event优先级" class="headerlink" title="event优先级"></a>event优先级</h3><ul>
-<li><p>event_priority_set</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int event_priority_set(struct event *event, int priority);</span><br></pre></td></tr></table></figure>
-
-<p>​		priority是0-1的数字。当多个事件变为活动状态时，低优先级的不会运行。libevent会运行高优先级事件，然后再次检测事件，只有没有高优先级事件处于活动状态时，低优先级事件才会运行。</p>
-</li>
-</ul>
-<h3 id="检测事件状态"><a href="#检测事件状态" class="headerlink" title="检测事件状态"></a>检测事件状态</h3><ul>
-<li><p>常用接口</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">int event_pending(const struct event *ev, short what, struct timeval *tv_out);</span><br><span class="line"></span><br><span class="line">#define event_get_signal(ev) /* ... */</span><br><span class="line">evutil_socket_t event_get_fd(const struct event *ev);</span><br><span class="line">struct event_base *event_get_base(const struct event *ev);</span><br><span class="line">short event_get_events(const struct event *ev);</span><br><span class="line">event_callback_fn event_get_callback(const struct event *ev);</span><br><span class="line">void *event_get_callback_arg(const struct event *ev);</span><br><span class="line">int event_get_priority(const struct event *ev);</span><br><span class="line"></span><br><span class="line">void event_get_assignment(const struct event *event,</span><br><span class="line">        struct event_base **base_out,</span><br><span class="line">        evutil_socket_t *fd_out,</span><br><span class="line">        short *events_out,</span><br><span class="line">        event_callback_fn *callback_out,</span><br><span class="line">        void **arg_out);</span><br><span class="line">struct event *event_base_get_running_event(struct event_base *base);</span><br></pre></td></tr></table></figure>
-
-<p>event_pending()： 判断event是待处理还是活动的。</p>
-<p>event_get_fd()&#x2F;event_get_signal()： 返回event的描述符或者信号</p>
-<p>event_get_base(): 返回event的event_base</p>
-<p>event_get_events(): 返回event的时间标记(EV_READ&#x2F;EV_WRITE等)</p>
-<p>event_get_callback(): 返回callback函数</p>
-<p>event_get_callback_arg(): 返回回调函数参数指针</p>
-<p>event_get_priority(): 返回event优先级</p>
-<p>event_base_get_running_event(): 获得指向当前正在运行的event指针</p>
-</li>
-</ul>
-<h3 id="配置一次性事件"><a href="#配置一次性事件" class="headerlink" title="配置一次性事件"></a>配置一次性事件</h3><ul>
-<li><p>event_base_once()</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int event_base_once(struct event_base *, evutil_socket_t, short,</span><br><span class="line">  void (*)(evutil_socket_t, short, void *), void *, const struct timeval *);</span><br></pre></td></tr></table></figure>
-
-<p>​		参数和event_new()类似，只不过它不支持EV_SIGNAL和EV_PERSIST。在回调完成后，libevent会释放event结构。event_base_once()插入的事件无法删除或者手动激活；如果想取消event，只能使用常规的event_new()或者event_assign()创建。</p>
-</li>
-</ul>
-<h3 id="手动激活"><a href="#手动激活" class="headerlink" title="手动激活"></a>手动激活</h3><ul>
-<li><p>event_active</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void event_active(struct event *ev, int what, short ncalls);</span><br></pre></td></tr></table></figure>
-
-<p>​		手动激活的事件不需要先处于挂起状态，并且激活它也不会使其处于挂起状态。</p>
-</li>
-</ul>
-<h3 id="定时器事件优化"><a href="#定时器事件优化" class="headerlink" title="定时器事件优化"></a>定时器事件优化</h3><p><strong>公共超时</strong></p>
-<p>​		Libevent 使用二进制堆算法来跟踪待处理事件的超时。二叉堆为添加和删除每个事件超时提供了 O(lg n) 阶的性能。如果您要添加具有随机分布的超时值集的事件，则这是最佳选择，但如果您有大量具有相同超时值的事件，则这不是最佳选择。</p>
-<p>例如，假设您有一万个事件，每个事件都应在添加后五秒触发超时。在这种情况下，通过使用双链接队列实现，您可以在每次超时时获得 O(1) 性能。</p>
-<p>当然，您不会希望对所有超时值使用队列，因为队列仅对于恒定超时值更快。如果某些超时或多或少是随机分布的，那么将其中一个超时添加到队列将花费 O(n) 时间，这比二进制堆要糟糕得多。</p>
-<p>Libevent 可以让您通过将一些超时放入队列中，将其他超时放入二进制堆中来解决此问题。为此，您需要向 Libevent 请求一个特殊的“公共超时”时间值，然后使用该时间值添加具有该时间值的事件。如果您有大量具有单个公共超时的事件，则使用此优化应该可以提高超时性能。</p>
-<ul>
-<li><strong>TODO 这块得研究一下</strong></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://jerrywang2013.github.io/2024/05/05/libevent/" data-id="clwbg5x4m0006z44qf23gch0w" data-title="libevent" class="article-share-link"><span class="fa fa-share">Share</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -1645,7 +1519,7 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
     </div>
   </div>
 
@@ -1658,6 +1532,14 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
       <ul>
         
           <li>
+            <a href="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/">cuda-gdb记录</a>
+          </li>
+        
+          <li>
+            <a href="/2024/07/07/cuda-gbd%E8%AE%B0%E5%BD%95/">cuda-gbd记录</a>
+          </li>
+        
+          <li>
             <a href="/2024/06/22/cuda%E5%88%9D%E6%8E%A5%E8%A7%A6/">cuda初接触</a>
           </li>
         
@@ -1667,14 +1549,6 @@ HPDF_STATUS HPDF_Outline_SetDestination (HPDF_Outline outline, HPDF_Destination 
         
           <li>
             <a href="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/">QObject简单笔记</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/27/c-11/">c++11</a>
-          </li>
-        
-          <li>
-            <a href="/2024/05/18/QT/">QT</a>
           </li>
         
       </ul>

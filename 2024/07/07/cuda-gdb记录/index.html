@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>cuda-gdb记录 | Jerry Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="昨天简单记录了一下cuda-gdb使用，这里继续补充一些内容。 调试前的目标编译选项​		在linux下，使用-g -G编译目标代码，使得编译带上调试信息。其中-g生成host代码debug info；-G是生成device代码的调试信息。 ​		当然，可能有些编译过程中还用了类似OXX的优化选项，我们也可以关闭或者指定O0 ​		在windows里头，这个类似产生pdb，优化选项在c++选项设置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cuda-gdb记录">
+<meta property="og:url" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="Jerry Blogs">
+<meta property="og:description" content="昨天简单记录了一下cuda-gdb使用，这里继续补充一些内容。 调试前的目标编译选项​		在linux下，使用-g -G编译目标代码，使得编译带上调试信息。其中-g生成host代码debug info；-G是生成device代码的调试信息。 ​		当然，可能有些编译过程中还用了类似OXX的优化选项，我们也可以关闭或者指定O0 ​		在windows里头，这个类似产生pdb，优化选项在c++选项设置">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111557119.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111727502.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707112224621.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707114805982.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707113337414.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120012890.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120138426.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707112408652.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120600773.png">
+<meta property="article:published_time" content="2024-07-07T03:08:45.000Z">
+<meta property="article:modified_time" content="2024-07-07T04:19:27.829Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="c++ lua php js python">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111557119.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Jerry Blogs" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Jerry Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://jerrywang2013.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-cuda-gdb记录" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/" class="article-date">
+  <time class="dt-published" datetime="2024-07-07T03:08:45.000Z" itemprop="datePublished">2024-07-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      cuda-gdb记录
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>昨天简单记录了一下cuda-gdb使用，这里继续补充一些内容。</p>
+<h1 id="调试前的目标编译选项"><a href="#调试前的目标编译选项" class="headerlink" title="调试前的目标编译选项"></a>调试前的目标编译选项</h1><p>​		在linux下，使用-g -G编译目标代码，使得编译带上调试信息。其中-g生成host代码debug info；-G是生成device代码的调试信息。</p>
+<p>​		当然，可能有些编译过程中还用了类似OXX的优化选项，我们也可以关闭或者指定O0</p>
+<p>​		在windows里头，这个类似产生pdb，优化选项在c++选项设置里头可以设置，禁用优化即可。</p>
+<h1 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h1><p>拿个简单的vectorAdd示例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line">cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size);</span><br><span class="line"></span><br><span class="line">__global__ void addKernel(int *c, const int *a, const int *b)</span><br><span class="line">&#123;</span><br><span class="line">    printf(&quot;kernel block(%d,%d), thread(%d, %d)\n&quot;, blockIdx.x, blockIdx.y, threadIdx.x, threadIdx.y);</span><br><span class="line">    int i = threadIdx.x;</span><br><span class="line">    c[i] = a[i] + b[i];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    const int arraySize = 5;</span><br><span class="line">    const int a[arraySize] = &#123; 1, 2, 3, 4, 5 &#125;;</span><br><span class="line">    const int b[arraySize] = &#123; 10, 20, 30, 40, 50 &#125;;</span><br><span class="line">    int c[arraySize] = &#123; 0 &#125;;</span><br><span class="line"></span><br><span class="line">    // Add vectors in parallel.</span><br><span class="line">    cudaError_t cudaStatus = addWithCuda(c, a, b, arraySize);</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;addWithCuda failed!&quot;);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    printf(&quot;&#123;1,2,3,4,5&#125; + &#123;10,20,30,40,50&#125; = &#123;%d,%d,%d,%d,%d&#125;\n&quot;,</span><br><span class="line">        c[0], c[1], c[2], c[3], c[4]);</span><br><span class="line"></span><br><span class="line">    // cudaDeviceReset must be called before exiting in order for profiling and</span><br><span class="line">    // tracing tools such as Nsight and Visual Profiler to show complete traces.</span><br><span class="line">    cudaStatus = cudaDeviceReset();</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaDeviceReset failed!&quot;);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// Helper function for using CUDA to add vectors in parallel.</span><br><span class="line">cudaError_t addWithCuda(int *c, const int *a, const int *b, unsigned int size)</span><br><span class="line">&#123;</span><br><span class="line">    int *dev_a = 0;</span><br><span class="line">    int *dev_b = 0;</span><br><span class="line">    int *dev_c = 0;</span><br><span class="line">    cudaError_t cudaStatus;</span><br><span class="line"></span><br><span class="line">    // Choose which GPU to run on, change this on a multi-GPU system.</span><br><span class="line">    cudaStatus = cudaSetDevice(0);</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaSetDevice failed!  Do you have a CUDA-capable GPU installed?&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Allocate GPU buffers for three vectors (two input, one output)    .</span><br><span class="line">    cudaStatus = cudaMalloc((void**)&amp;dev_c, size * sizeof(int));</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMalloc failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cudaStatus = cudaMalloc((void**)&amp;dev_a, size * sizeof(int));</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMalloc failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cudaStatus = cudaMalloc((void**)&amp;dev_b, size * sizeof(int));</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMalloc failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Copy input vectors from host memory to GPU buffers.</span><br><span class="line">    cudaStatus = cudaMemcpy(dev_a, a, size * sizeof(int), cudaMemcpyHostToDevice);</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMemcpy failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cudaStatus = cudaMemcpy(dev_b, b, size * sizeof(int), cudaMemcpyHostToDevice);</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMemcpy failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    cudaEvent_t event;</span><br><span class="line">    cudaEventCreate(&amp;event);</span><br><span class="line">    // Launch a kernel on the GPU with one thread for each element.</span><br><span class="line">    addKernel&lt;&lt;&lt;1, size&gt;&gt;&gt;(dev_c, dev_a, dev_b);</span><br><span class="line">    cudaEventRecord(event);</span><br><span class="line"></span><br><span class="line">    // Check for any errors launching the kernel</span><br><span class="line">    cudaStatus = cudaGetLastError();</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;addKernel launch failed: %s\n&quot;, cudaGetErrorString(cudaStatus));</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // cudaDeviceSynchronize waits for the kernel to finish, and returns</span><br><span class="line">    // any errors encountered during the launch.</span><br><span class="line">    /*cudaStatus = cudaDeviceSynchronize();</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaDeviceSynchronize returned error code %d after launching addKernel!\n&quot;, cudaStatus);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;*/</span><br><span class="line"></span><br><span class="line">    //cudaEventSynchronize(event);</span><br><span class="line"></span><br><span class="line">    // Copy output vector from GPU buffer to host memory.</span><br><span class="line">    cudaStatus = cudaMemcpy(c, dev_c, size * sizeof(int), cudaMemcpyDeviceToHost);</span><br><span class="line">    if (cudaStatus != cudaSuccess) &#123;</span><br><span class="line">        fprintf(stderr, &quot;cudaMemcpy failed!&quot;);</span><br><span class="line">        goto Error;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">Error:</span><br><span class="line">    cudaFree(dev_c);</span><br><span class="line">    cudaFree(dev_a);</span><br><span class="line">    cudaFree(dev_b);</span><br><span class="line">    </span><br><span class="line">    return cudaStatus;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	info cuda blocks</span><br><span class="line">    info cuda threads</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111557119.png" alt="image-20240707111557119"></p>
+<h2 id="开启调试，设置断点"><a href="#开启调试，设置断点" class="headerlink" title="开启调试，设置断点"></a>开启调试，设置断点</h2><p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111727502.png" alt="image-20240707111727502"></p>
+<p>也可以设置条件断点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">break test.cu:11 if threadIdx.x==1 &amp;&amp; blockIdx.x==0</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="查看block-thread"><a href="#查看block-thread" class="headerlink" title="查看block&#x2F;thread"></a>查看block&#x2F;thread</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	info cuda blocks</span><br><span class="line">    info cuda threads</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707112224621.png" alt="image-20240707112224621"></p>
+<p>注意：上图显示是进行了合并，我们可以关闭合并set cuda coalescing off，显示如下：</p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707114805982.png" alt="image-20240707114805982"></p>
+<h2 id="线程的同步"><a href="#线程的同步" class="headerlink" title="线程的同步"></a>线程的同步</h2><p>注意gpu并行运行SIMT特性，一个warp里头的所有线程是指令级并发执行，我们在某个kernel线程中调试，当执行完某个操作查看某个变量或者显存数据的时候会发现其它数据也可能被修改，这就是SIMT特性。拿上面的VectorAdd代码例子，当核函数执行<code>c[i]=a[i]+b[i]</code>后，这里我们打印出结果c缓冲器，看看内容：</p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707113337414.png" alt="image-20240707113337414"></p>
+<h2 id="打印gridDim和blockDim"><a href="#打印gridDim和blockDim" class="headerlink" title="打印gridDim和blockDim"></a>打印gridDim和blockDim</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	print threadIdx / blockIdx</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120012890.png" alt="image-20240707120012890"></p>
+<h2 id="显示当前grid-block-thread信息"><a href="#显示当前grid-block-thread信息" class="headerlink" title="显示当前grid&#x2F;block&#x2F;thread信息"></a>显示当前grid&#x2F;block&#x2F;thread信息</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	cuda device sm warp lane block thread</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120138426.png" alt="image-20240707120138426"></p>
+<h2 id="切换线程"><a href="#切换线程" class="headerlink" title="切换线程"></a>切换线程</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">命令: </span><br><span class="line">	cuda thread &lt;thread索引&gt;</span><br><span class="line">	cuda thread &lt;block索引&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707112408652.png" alt="image-20240707112408652"></p>
+<p>我们可以切换不同的线程，去单步跟踪线程的执行。</p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120600773.png" alt="image-20240707120600773"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/" data-id="clyb1o1un0000xw4q2qt0cm7w" data-title="cuda-gdb记录" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/07/07/cuda-gbd%E8%AE%B0%E5%BD%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">cuda-gbd记录</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/07/">July 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/06/">June 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">May 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">April 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/">cuda-gdb记录</a>
+          </li>
+        
+          <li>
+            <a href="/2024/07/07/cuda-gbd%E8%AE%B0%E5%BD%95/">cuda-gbd记录</a>
+          </li>
+        
+          <li>
+            <a href="/2024/06/22/cuda%E5%88%9D%E6%8E%A5%E8%A7%A6/">cuda初接触</a>
+          </li>
+        
+          <li>
+            <a href="/2024/06/11/git%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">git常用操作</a>
+          </li>
+        
+          <li>
+            <a href="/2024/06/06/QObject%E7%AE%80%E5%8D%95%E7%AC%94%E8%AE%B0/">QObject简单笔记</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
