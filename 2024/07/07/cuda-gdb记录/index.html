@@ -13,21 +13,21 @@
 <meta property="og:site_name" content="Jerry Blogs">
 <meta property="og:description" content="昨天简单记录了一下cuda-gdb使用，这里继续补充一些内容。 调试前的目标编译选项​		在linux下，使用-g -G编译目标代码，使得编译带上调试信息。其中-g生成host代码debug info；-G是生成device代码的调试信息。 ​		当然，可能有些编译过程中还用了类似OXX的优化选项，我们也可以关闭或者指定O0 ​		在windows里头，这个类似产生pdb，优化选项在c++选项设置">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111557119.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111727502.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707112224621.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707114805982.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707113337414.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120012890.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120138426.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707112408652.png">
-<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120600773.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707111557119.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707111727502.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707112224621.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707114805982.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707113337414.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707120012890.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707120138426.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707112408652.png">
+<meta property="og:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707120600773.png">
 <meta property="article:published_time" content="2024-07-07T03:08:45.000Z">
-<meta property="article:modified_time" content="2024-07-07T04:19:27.829Z">
+<meta property="article:modified_time" content="2024-07-07T04:23:37.099Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="c++ lua php js python">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111557119.png">
+<meta name="twitter:image" content="https://jerrywang2013.github.io/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707111557119.png">
   
     <link rel="alternate" href="/atom.xml" title="Jerry Blogs" type="application/atom+xml">
   
@@ -113,8 +113,8 @@
 
 <h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	info cuda blocks</span><br><span class="line">    info cuda threads</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111557119.png" alt="image-20240707111557119"></p>
-<h2 id="开启调试，设置断点"><a href="#开启调试，设置断点" class="headerlink" title="开启调试，设置断点"></a>开启调试，设置断点</h2><p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707111727502.png" alt="image-20240707111727502"></p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707111557119.png" alt="image-20240707111557119"></p>
+<h2 id="开启调试，设置断点"><a href="#开启调试，设置断点" class="headerlink" title="开启调试，设置断点"></a>开启调试，设置断点</h2><p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707111727502.png" alt="image-20240707111727502"></p>
 <p>也可以设置条件断点：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">break test.cu:11 if threadIdx.x==1 &amp;&amp; blockIdx.x==0</span><br></pre></td></tr></table></figure>
 
@@ -122,22 +122,22 @@
 
 <h2 id="查看block-thread"><a href="#查看block-thread" class="headerlink" title="查看block&#x2F;thread"></a>查看block&#x2F;thread</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	info cuda blocks</span><br><span class="line">    info cuda threads</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707112224621.png" alt="image-20240707112224621"></p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707112224621.png" alt="image-20240707112224621"></p>
 <p>注意：上图显示是进行了合并，我们可以关闭合并set cuda coalescing off，显示如下：</p>
-<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707114805982.png" alt="image-20240707114805982"></p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707114805982.png" alt="image-20240707114805982"></p>
 <h2 id="线程的同步"><a href="#线程的同步" class="headerlink" title="线程的同步"></a>线程的同步</h2><p>注意gpu并行运行SIMT特性，一个warp里头的所有线程是指令级并发执行，我们在某个kernel线程中调试，当执行完某个操作查看某个变量或者显存数据的时候会发现其它数据也可能被修改，这就是SIMT特性。拿上面的VectorAdd代码例子，当核函数执行<code>c[i]=a[i]+b[i]</code>后，这里我们打印出结果c缓冲器，看看内容：</p>
-<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707113337414.png" alt="image-20240707113337414"></p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707113337414.png" alt="image-20240707113337414"></p>
 <h2 id="打印gridDim和blockDim"><a href="#打印gridDim和blockDim" class="headerlink" title="打印gridDim和blockDim"></a>打印gridDim和blockDim</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	print threadIdx / blockIdx</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120012890.png" alt="image-20240707120012890"></p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707120012890.png" alt="image-20240707120012890"></p>
 <h2 id="显示当前grid-block-thread信息"><a href="#显示当前grid-block-thread信息" class="headerlink" title="显示当前grid&#x2F;block&#x2F;thread信息"></a>显示当前grid&#x2F;block&#x2F;thread信息</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">命令：</span><br><span class="line">	cuda device sm warp lane block thread</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120138426.png" alt="image-20240707120138426"></p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707120138426.png" alt="image-20240707120138426"></p>
 <h2 id="切换线程"><a href="#切换线程" class="headerlink" title="切换线程"></a>切换线程</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">命令: </span><br><span class="line">	cuda thread &lt;thread索引&gt;</span><br><span class="line">	cuda thread &lt;block索引&gt;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707112408652.png" alt="image-20240707112408652"></p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707112408652.png" alt="image-20240707112408652"></p>
 <p>我们可以切换不同的线程，去单步跟踪线程的执行。</p>
-<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/cuda-gdb%E8%AE%B0%E5%BD%95%5Cimage-20240707120600773.png" alt="image-20240707120600773"></p>
+<p><img src="/2024/07/07/cuda-gdb%E8%AE%B0%E5%BD%95/image-20240707120600773.png" alt="image-20240707120600773"></p>
 
       
     </div>
